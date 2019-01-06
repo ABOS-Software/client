@@ -1,0 +1,53 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@feathersjs/authentication-client": "^1.0.9",
+    "@feathersjs/client": "^3.7.6",
+    "@feathersjs/feathers": "^3.3.0",
+    "@feathersjs/rest-client": "^1.4.6",
+    "@material-ui/core": "3.3.2",
+    "@material-ui/icons": "^3.0.1",
+    "csv-parse": "^3.0.0",
+    "downloadjs": "^1.4.7",
+    "encoding-japanese": "^1.0.29",
+    "google-map-react": "^1.0.6",
+    "immutability-helper": "^2.7.1",
+    "jss": "^9.8.7",
+    "jwt-decode": "^2.2.0",
+    "points-cluster": "^0.1.4",
+    "ra-data-feathers": "^2.0.7",
+    "ra-data-json-server": "^2.2.3",
+    "ra-data-simple-rest": "^2.2.3",
+    "react": "^16.4.2",
+    "react-admin": "^2.3.2",
+    "react-contextmenu": "^2.9.3",
+    "react-data-grid": "^4.0.8",
+    "react-data-grid-addons": "^4.0.8",
+    "react-dom": "^16.4.2",
+    "react-jss": "^8.6.1",
+    "react-number-format": "^3.5.2",
+    "react-places-autocomplete": "^7.2.0",
+    "react-scripts": "2.0.3",
+    "xml-js": "^1.6.7"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "resolutions": {
+    "ra-ui-materialui/@material-ui/core": "3.3.2",
+    "ra-ui-materialui/@material-ui/icons": "^3.0.1",
+    "@material-ui/core": "3.3.2",
+    "@material-ui/icons": "3.0.1"
+  }
+}
