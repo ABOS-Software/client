@@ -5,8 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 import {ViewTitle} from 'react-admin';
 
 export default () => (
-    <Card>
-        <ViewTitle title="Welcome to the administration"/>
-        <CardContent>Lorem ipsum sic dolor amet...</CardContent>
-    </Card>
+  <Card>
+    <ViewTitle title='Welcome to the administration'/>
+    <CardContent>Lorem ipsum sic dolor amet...</CardContent>
+  </Card>
 );

@@ -8,31 +8,31 @@ import {translate} from 'react-admin';
 import CardIcon from './CardIcon';
 
 const styles = {
-    main: {
-        flex: '1',
-        marginRight: '1em',
-        marginTop: 20,
-    },
-    card: {
-        overflow: 'inherit',
-        textAlign: 'right',
-        padding: 16,
-        minHeight: 52,
-    },
+  main: {
+    flex: '1',
+    marginRight: '1em',
+    marginTop: 20
+  },
+  card: {
+    overflow: 'inherit',
+    textAlign: 'right',
+    padding: 16,
+    minHeight: 52
+  }
 };
 
 const TotalSales = ({value, translate, classes}) => (
-    <div className={classes.main}>
-        <CardIcon Icon={DollarIcon} bgColor="#31708f"/>
-        <Card className={classes.card}>
-            <Typography className={classes.title} color="textSecondary">
-                {'Total Sales'}
-            </Typography>
-            <Typography variant="headline" component="h2">
-                {value}
-            </Typography>
-        </Card>
-    </div>
+  <div className={classes.main}>
+    <CardIcon Icon={DollarIcon} bgColor='#31708f'/>
+    <Card className={classes.card}>
+      <Typography className={classes.title} color='textSecondary'>
+        {'Total Sales'}
+      </Typography>
+      <Typography variant='headline' component='h2'>
+        {value}
+      </Typography>
+    </Card>
+  </div>
 );
 
 export default translate(withStyles(styles)(TotalSales));

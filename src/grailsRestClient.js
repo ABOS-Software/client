@@ -3,10 +3,9 @@ import feathersClient from './feathersClient';
 
 export default restClient(feathersClient, {});
 
-export const GET_PLAIN_MANY = "GET_PLAIN_MANY";
+export const GET_PLAIN_MANY = 'GET_PLAIN_MANY';
 
-
-/*import {CREATE, DELETE, fetchUtils, GET_LIST, GET_MANY, GET_MANY_REFERENCE, GET_ONE, UPDATE,} from 'react-admin';
+/* import {CREATE, DELETE, fetchUtils, GET_LIST, GET_MANY, GET_MANY_REFERENCE, GET_ONE, UPDATE,} from 'react-admin';
 import hostURL from "./host";
 
 export const GET_PLAIN_MANY = "GET_PLAIN_MANY";
@@ -22,7 +21,6 @@ export default (httpClient = fetchUtils.fetchJson) => {
             }
             filterString += `${key}=${value}`;
         });
-
 
         return filterString + '';
     };
@@ -161,4 +159,4 @@ export default (httpClient = fetchUtils.fetchJson) => {
             return convertHTTPResponseToREST(response, type, resource, params);
         });
     };
-};*/
+}; */

@@ -4,14 +4,14 @@ import {Link} from 'react-admin';
 import FullNameField from './FullNameField';
 
 const CustomerLinkField = props => (
-    <Link to={`/customers/${props.record.id}`}>
-        <FullNameField {...props} />
-    </Link>
+  <Link to={`/customers/${props.record.id}`}>
+    <FullNameField {...props} />
+  </Link>
 );
 
 CustomerLinkField.defaultProps = {
-    source: 'id',
-    addLabel: true,
+  source: 'id',
+  addLabel: true
 };
 
 export default CustomerLinkField;
