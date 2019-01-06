@@ -1,2 +1,2 @@
-const url = 'https://abos-rf.herokuapp.com';
+const url = 'https://server.rfans.me';
 export default url;
