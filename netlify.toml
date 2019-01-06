@@ -1,0 +1,3 @@
+[build]
+  # This is the directory to change to before starting a build.
+  base    = "client/"
