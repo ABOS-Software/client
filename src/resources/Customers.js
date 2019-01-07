@@ -1,23 +1,23 @@
 import React from 'react';
 import {
-    BooleanField,
-    classes,
-    CREATE,
-    Datagrid,
-    EditButton,
-    fetchUtils,
-    Field,
-    Filter,
-    List,
-    NumberField,
-    ReferenceArrayInput,
-    SelectArrayInput,
-    TextField,
-    TextInput,
-    UPDATE
+  BooleanField,
+  classes,
+  CREATE,
+  Datagrid,
+  EditButton,
+  fetchUtils,
+  Field,
+  Filter,
+  List,
+  NumberField,
+  ReferenceArrayInput,
+  SelectArrayInput,
+  TextField,
+  TextInput,
+  UPDATE
 } from 'react-admin';
 import restClient from '../grailsRestClient';
-import CustomerLinkField from "./CustomerRecordLink";
+import CustomerLinkField from './CustomerRecordLink';
 import {withStyles} from '@material-ui/core/styles';
 import CustomerEditClass from './Customers/CustomerEdit';
 import CustomerCreateClass from './Customers/CustomerCreate';

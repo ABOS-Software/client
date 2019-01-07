@@ -67,7 +67,7 @@ build:
   image: node:8.10.0-alpine
   script:
     - yarn install
-    - yarn run build
+    - CI=false yarn run build
   only:
     - branches
 
@@ -76,7 +76,7 @@ test:
   image: node:8.10.0-alpine
   script:
     - yarn --dev install
-    - yarn run test
+    - CI=false yarn run test
   only:
     - branches
   except:
