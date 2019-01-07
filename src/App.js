@@ -1,7 +1,7 @@
 // in src/App.js
 import React from 'react';
 import {Admin, AppBar, Layout, MenuItemLink, Resource, UserMenu} from 'react-admin';
-
+import ErrorBoundry from './ErrorBoundry';
 import {CategoryCreate, CategoryEdit, CategoryList} from './resources/Categories.js';
 import {GroupCreate, GroupEdit, GroupList} from './resources/Group.js';
 import {YearCreate, YearEdit, YearList, YearShow} from './resources/Year.js';
@@ -21,6 +21,7 @@ import {createGenerateClassName, jssPreset} from '@material-ui/core/styles';
 import JssProvider from 'react-jss/lib/JssProvider';
 import {create} from 'jss';
 import feathersClient from './feathersClient';
+import * as Sentry from '@sentry/browser';
 
 const generateClassName = createGenerateClassName();
 const jss = create(jssPreset());
@@ -32,52 +33,76 @@ const MyUserMenu = props => (
     <MenuItemLink
       to='/about'
       primaryText='About'
-      leftIcon={<InfoIcon/>}
+      leftIcon={<InfoIcon />}
     />
   </UserMenu>
 );
-
+Sentry.init({
+  dsn: 'https://4bd4e85079aa4ba59ddb160b8bfd1484@sentry.io/1365370' });
+Sentry.configureScope(scope => {
+  scope.addEventProcessor(async (event, hint) => {
+    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+      event = null
+    }
+    return event;
+  });
+});
 const MyAppBar = props => <AppBar {...props} userMenu={<MyUserMenu />} />;
 const routes = [
-  <Route exact path='/about' component={About}/>
+  <Route exact path='/about' component={About} />
 ];
-const layout = (props) => <Layout {...props} appBar={MyAppBar}/>;
+const layout = (props) => {
+  const {
+    children,
+    ...rest
+  } = props;
+  return (
+    <Layout {...rest} appBar={MyAppBar}>
+      <ErrorBoundry>
+        {children}
+      </ErrorBoundry>
+    </Layout>
+
+  )
+};
 const App = () => (
-  <JssProvider jss={jss} generateClassName={generateClassName}>
+  <ErrorBoundry>
+    <JssProvider jss={jss} generateClassName={generateClassName}>
 
-    <Admin dashboard={Dashboard} dataProvider={dataProvider}
-           authProvider={authClient(feathersClient, authClientConfig)} appLayout={layout} customRoutes={routes}>
-      {permissions => [
-        <Resource name='customers' list={CustomerList} edit={CustomerEdit} create={CustomerCreate}/>,
-        <Resource name='Reports' list={Reports}/>,
-        <Resource name='Maps' list={Maps}/>,
-        // Reports
-        // <Resource name="customers"/>,
-        <Resource name='User' list={UserList} show={UserShow}/>,
-        <Resource name='Reps' options={{label: 'res'}} list={reps}/>,
-        permissions === 'manager'
-          ? <Resource name='User'/>
-          : null,
-        permissions === 'ROLE_ADMIN'
-          ? <Resource name='Categories' list={CategoryList} edit={CategoryEdit} create={CategoryCreate}/>
-          // UGY
-          : <Resource name='Categories'/>,
-        permissions === 'ROLE_ADMIN'
-          ? <Resource name='Years' show={YearShow} edit={YearEdit} list={YearList} create={YearCreate}/>
-          // UGY
-          : <Resource name='Years'/>,
-        permissions === 'ROLE_ADMIN'
-          ? <Resource name='Group' list={GroupList} edit={GroupEdit} create={GroupCreate}/>
-          // UGY
-          : <Resource name='Group'/>,
-        permissions === 'ROLE_ADMIN'
-          ? <Resource name='UsersProducts' options={{label: 'Users and Products'}} list={UGY}/>
-          // UGY
-          : <Resource name='UsersProducts' options={{label: 'Users and Products'}} list={UGY}/>
-      ]}
+      <Admin dashboard={Dashboard} dataProvider={dataProvider}
+        authProvider={authClient(feathersClient, authClientConfig)} appLayout={layout} customRoutes={routes}>
 
-    </Admin>
-  </JssProvider>
+        {permissions => [
+          <Resource name='customers' list={CustomerList} edit={CustomerEdit} create={CustomerCreate} />,
+          <Resource name='Reports' list={Reports} />,
+          <Resource name='Maps' list={Maps} />,
+          // Reports
+          // <Resource name="customers"/>,
+          <Resource name='User' list={UserList} show={UserShow} />,
+          <Resource name='Reps' options={{ label: 'res' }} list={reps} />,
+          permissions === 'manager'
+            ? <Resource name='User' />
+            : null,
+          permissions === 'ROLE_ADMIN'
+            ? <Resource name='Categories' list={CategoryList} edit={CategoryEdit} create={CategoryCreate} />
+          // UGY
+            : <Resource name='Categories' />,
+          permissions === 'ROLE_ADMIN'
+            ? <Resource name='Years' show={YearShow} edit={YearEdit} list={YearList} create={YearCreate} />
+          // UGY
+            : <Resource name='Years' />,
+          permissions === 'ROLE_ADMIN'
+            ? <Resource name='Group' list={GroupList} edit={GroupEdit} create={GroupCreate} />
+          // UGY
+            : <Resource name='Group' />,
+          permissions === 'ROLE_ADMIN'
+            ? <Resource name='UsersProducts' options={{ label: 'Users and Products' }} list={UGY} />
+          // UGY
+            : <Resource name='UsersProducts' options={{ label: 'Users and Products' }} list={UGY} />
+        ]}
+      </Admin>
+    </JssProvider>
+  </ErrorBoundry>
 );
 
 export default App;
