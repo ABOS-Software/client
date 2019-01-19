@@ -44,10 +44,10 @@ import {CREATE, fetchUtils, GET_LIST, showNotification, UPDATE} from 'react-admi
 
 import Paper from '@material-ui/core/Paper';
 
-import restClient from "../grailsRestClient";
-import UserPanel from "./UserPanel";
-import {rowStatus} from "./ProductsGrid";
-import hostURL from "../host";
+import restClient from '../grailsRestClient';
+import UserPanel from './UserPanel';
+import {rowStatus} from './ProductsGrid';
+import hostURL from '../host';
 
 import feathersClient from '../feathersClient';
 import {authClientConfig} from '../security/authProvider';
@@ -210,7 +210,7 @@ const styles = theme => ({
 
 
 
-class UGYEditor extends React.Component {
+class UGYEditor extends React.PureComponent {
     //users: {}, years: {}, customers: {}
     //users: {}, years: {}, customers: {}
     state = {
@@ -765,7 +765,14 @@ class UGYEditor extends React.Component {
         const {classes, theme} = this.props;
         let users = ['me', 'test1'];
         let userPanels = [];
+
+
         Object.keys(this.state.userChecks).forEach(user => {
+/*            console.log(user);
+            console.log(this.state.userChecks[user].status);
+
+            console.log(this.state.userChecks[user].status !== "ENABLED");
+            console.log(this.state.userChecks[user].status !== "ARCHIVED");*/
             if (this.state.userChecks[user].enabledYear !== this.state.year && this.state.userChecks[user].status !== "ENABLED" && this.state.userChecks[user].status !== "ARCHIVED") {
 
                 let userName = user;
@@ -1495,17 +1502,17 @@ class UGYEditor extends React.Component {
         this.setState({ready: true})
     }
 
-    shouldComponentUpdate(nextProps, nextState, ctx) {
+/*    shouldComponentUpdate(nextProps, nextState, ctx) {
 
         if (nextState.groups.length > 0 && Object.keys(nextState.userChecks).length > 0) {
             return true
         }
-        /*        if (this.state.update === true) {
+        /!*        if (this.state.update === true) {
                     this.setState({'update': false});
                     return true
-                }*/
+                }*!/
         return false
-    }
+    }*/
 }
 
 UGYEditor.propTypes = {

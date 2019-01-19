@@ -8,6 +8,9 @@ import {
   Edit,
   EditButton,
   List,
+  ReferenceField,
+  ReferenceInput,
+  SelectInput,
   SimpleForm,
   TextField,
   TextInput
@@ -23,6 +26,9 @@ export const CategoryList = (props) => (
       <TextField source='categoryName'/>
       <DateField source='deliveryDate'/>
       <EditButton basePath='/categories'/>
+      <ReferenceField label='Year' source='year.id' reference='Years'>
+        <TextField source='year'/>
+      </ReferenceField>
     </Datagrid>
   </List>
 );
@@ -44,6 +50,9 @@ export const CategoryCreate = props => (
   <Create title='Create a Category' {...props}>
     <SimpleForm>
       <TextInput source='categoryName'/>
+      <ReferenceInput label='Year' source='year' reference='Years'>
+        <SelectInput optionText='year'/>
+      </ReferenceInput>
       <DateInput source='deliveryDate'/>
     </SimpleForm>
   </Create>
