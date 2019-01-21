@@ -862,7 +862,13 @@ class UGYEditor extends React.PureComponent {
 
     }
 
+    handleUpdateUserChecks = (userChecks) => {
 
+    };
+
+    showDialog = (dialog) => {
+
+    };
 
     renderGroupItems = () => {
         let groupList = [];
