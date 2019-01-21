@@ -11,7 +11,6 @@ import authClient, {authClientConfig} from './security/authProvider';
 import {Dashboard} from './dashboard';
 import {Reports} from './Reports';
 import {UGY} from './UGY';
-import {reps} from './reps';
 import {UserList, UserShow} from './resources/User';
 import {Maps} from './maps';
 import {Route} from 'react-router-dom';
@@ -79,7 +78,6 @@ const App = () => (
           // Reports
           // <Resource name="customers"/>,
           <Resource name='User' list={UserList} show={UserShow} />,
-          <Resource name='Reps' options={{ label: 'res' }} list={reps} />,
           permissions === 'manager'
             ? <Resource name='User' />
             : null,
@@ -90,7 +88,7 @@ const App = () => (
           permissions === 'ROLE_ADMIN'
             ? <Resource name='Years' show={YearShow} edit={YearEdit} list={YearList} create={YearCreate} />
           // UGY
-            : <Resource name='Years' />,
+            : <Resource name='Years' show={YearShow} list={YearList} />,
           permissions === 'ROLE_ADMIN'
             ? <Resource name='Group' list={GroupList} edit={GroupEdit} create={GroupCreate} />
           // UGY
