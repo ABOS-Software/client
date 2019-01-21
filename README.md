@@ -20,6 +20,10 @@ This software has been developed as a side project of mine, starting back in 201
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgitlab.com%2FABOS-Software%2Fabos-client.svg?type=large)](https://app.fossa.io/projects/git%2Bgitlab.com%2FABOS-Software%2Fabos-client?ref=badge_large)
 
+Licenses
+--------
+[Click here to view the license report](https://app.fossa.io/attribution/03b58902-dacd-4ceb-b5b7-f4e6b2c84e37)
+
 As the Author and owner of the code in this project, I do not endorse or fault any of the author(s) of the used or included libraries.
 
     ABOS
