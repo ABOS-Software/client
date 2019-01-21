@@ -9,19 +9,46 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import PropTypes from 'prop-types';
+import MenuItem from '@material-ui/core/MenuItem';
+import update from 'immutability-helper';
 
-const styles = () => ({
+const drawerWidth = 240;
+
+const styles = theme => ({
 
 });
 
-class addUsersToGroup extends React.Component {
-  state = {};
+class AddUsersToGroupDialog extends React.Component {
+  state = {selectedGroup: 0};
+  renderGroupItems = () => {
+    let groupList = [];
+    this.props.groups.forEach(group => {
+      groupList.push(<MenuItem key={"AddGroupToUser-group-" + group.id}
+                               value={group.id}>{group.groupName}</MenuItem>);
 
+    });
+    return groupList;
+  };
+  addSelectedUsersToGroup = event => {
+    let parentState = this.props.userChecks;
+
+
+    Object.keys(this.props.userChecks).filter(userName => this.props.userChecks[userName].checked).forEach(userName => {
+      parentState = update(parentState, {
+        [userName]: {group: {$set: this.state.selectedGroup}}
+      });
+    });
+    this.props.updateUserChecks(parentState);
+    this.props.closeDialog();
+    //this.setState({userChecks: parentState, addUsersToGroupOpen: false});
+
+  };
   render() {
+    const {classes} = this.props;
     return(<Dialog
-      key={"addUsersToGroupDialog"}
-      open={this.state.addUsersToGroupOpen}
-      onClose={event => this.setState({addUsersToGroupOpen: false})}
+      open={this.props.open}
+      onClose={() => this.props.closeDialog()}
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">Add Selected Users to Group</DialogTitle>
@@ -48,7 +75,7 @@ class addUsersToGroup extends React.Component {
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={event => this.setState({addUsersToGroupOpen: false})} color="primary">
+        <Button onClick={() => this.props.closeDialog()} color="primary">
           Cancel
         </Button>
         <Button onClick={this.addSelectedUsersToGroup} color="primary">
@@ -61,6 +88,12 @@ class addUsersToGroup extends React.Component {
 
 }
 
-addUsersToGroup.PropTypes = {};
+AddUsersToGroupDialog.PropTypes = {
+  closeDialog: PropTypes.func.isRequired,
+  updateUserChecks: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  groups: PropTypes.array.isRequired,
+  userChecks: PropTypes.any.isRequired
+};
 
-export default (withStyles(styles, {withTheme: true})(addUsersToGroup));
+export default (withStyles(styles, {withTheme: true})(AddUsersToGroupDialog));

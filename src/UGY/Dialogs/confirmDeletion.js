@@ -10,18 +10,31 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types';
 
-const styles = () => ({});
+const styles = theme => ({
 
+  deleteButton: {
+    margin: theme.spacing.unit,
+    color: 'white',
+    backgroundColor: 'red',
+
+  },
+});
 class confirmDeletion extends React.Component {
-  state = {};
+  state = {        passwordError: false,
+    confirmDeletionPassword: '',
+
+  };
+
 
   render() {
+    const {classes} = this.props;
+
     return (
       <Dialog
-        key={"confirmDeletionDialog"}
-        open={this.state.confirmDeletionDialogOpen}
-        onClose={event => this.setState({confirmDeletionDialogOpen: false})}
+        open={this.props.open}
+        onClose={() => this.props.closeDialog()}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Are you sure you would like to delete any rows</DialogTitle>
@@ -54,10 +67,10 @@ class confirmDeletion extends React.Component {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button value={1} onClick={this.confirmPassword} color="primary" variant={"contained"}>
+          <Button value={1} onClick={this.props.confirmPassword} color="primary" variant={"contained"}>
             Don't Delete
           </Button>
-          <Button value={2} onClick={this.confirmPassword} variant={"contained"}
+          <Button value={2} onClick={this.props.confirmPassword} variant={"contained"}
                   className={classes.deleteButton} autoFocus>
             Delete
           </Button>
@@ -69,7 +82,11 @@ class confirmDeletion extends React.Component {
 
 }
 
-confirmDeletion.PropTypes = {};
+confirmDeletion.PropTypes = {
+  closeDialog: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  confirmPassword: PropTypes.func.isRequired,
+};
 
 export default (withStyles(styles, {withTheme: true})(confirmDeletion));
 

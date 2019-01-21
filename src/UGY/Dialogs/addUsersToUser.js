@@ -10,18 +10,50 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-const styles = () => ({});
+import update from 'immutability-helper';
+import PropTypes from 'prop-types';
+import MenuItem from '@material-ui/core/MenuItem';
 
+const drawerWidth = 240;
+
+const styles = theme => ({
+
+});
 class addUsersToUser extends React.Component {
-  state = {};
+  state = {
+    selectedUser: "",
+
+  };
+  renderUserItems = () => {
+    let userList = [];
+    Object.keys(this.props.userChecks).forEach(userName => {
+      userList.push(<MenuItem key={"AddUserToUser-user-" + userName} value={userName}>{userName}</MenuItem>);
+
+    });
+    return userList;
+  };
+  addSelectedUsersToUser = event => {
+    let parentState = this.props.userChecks;
+
+
+    Object.keys(this.props.userChecks[this.state.selectedUser].subUsers).filter(userName => this.props.userChecks[userName].checked).forEach(userName => {
+      parentState = update(parentState, {
+        [this.state.selectedUser]: {subUsers: {[userName]: {checked: {$set: true}}}}
+      });
+    });
+    this.props.updateUserChecks(parentState);
+    this.props.closeDialog();
+  };
 
   render() {
+    const {classes} = this.props;
+
     return (
       <Dialog
-        key={"addUsersToUserDialog"}
 
-        open={this.state.addUsersToUserOpen}
-        onClose={event => this.setState({addUsersToUserOpen: false})}
+
+        open={this.props.open}
+        onClose={() => this.props.closeDialog()}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Add Selected Users to User</DialogTitle>
@@ -48,7 +80,7 @@ class addUsersToUser extends React.Component {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={event => this.setState({addUsersToUserOpen: false})} color="primary">
+          <Button onClick={() => this.props.closeDialog()} color="primary">
             Cancel
           </Button>
           <Button onClick={this.addSelectedUsersToUser} color="primary">
@@ -62,7 +94,12 @@ class addUsersToUser extends React.Component {
 
 }
 
-addUsersToUser.PropTypes = {};
+addUsersToUser.PropTypes = {
+  closeDialog: PropTypes.func.isRequired,
+  updateUserChecks: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  userChecks: PropTypes.any.isRequired
+};
 
 export default (withStyles(styles, {withTheme: true})(addUsersToUser));
 

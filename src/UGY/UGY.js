@@ -17,51 +17,37 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Modal from '@material-ui/core/Modal';
 import classNames from 'classnames';
-import MenuItem from '@material-ui/core/MenuItem';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+
 import update from 'immutability-helper';
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import {push} from 'react-router-redux';
 import {connect} from 'react-redux';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
+
 import ProductsGrid from './ProductsGrid.js';
-import {CREATE, fetchUtils, GET_LIST, showNotification, UPDATE} from 'react-admin';
+import {CREATE, GET_LIST, showNotification, UPDATE} from 'react-admin';
 
 import Paper from '@material-ui/core/Paper';
 
 import restClient from '../grailsRestClient';
-import UserPanel from './UsersTab/UserPanel';
 import {rowStatus} from './ProductsGrid';
 import hostURL from '../host';
 
 import feathersClient from '../feathersClient';
 import {authClientConfig} from '../security/authProvider';
 import UsersTab from './UsersTab/UsersTab';
+import {
+    AddUserDialog,
+    AddUsersToGroupDialog,
+    AddUsersToUserDialog,
+    ConfirmDeletionDialog,
+    EditUserDialog
+} from './Dialogs';
 
 
 const drawerWidth = 240;
 
 
-const httpClient = (url, options = {}) => {
-    if (!options.headers) {
-        options.headers = new Headers({Accept: 'application/json'});
-    }
-    const token = localStorage.getItem('access_token');
-    options.headers.set('Authorization', `Bearer ${token}`);
-    return fetchUtils.fetchJson(url, options);
-};
 const dataProvider = restClient;
 
 function TabContainer(props) {
@@ -87,12 +73,8 @@ const styles = theme => ({
         width: '100%',
         height: '100%'
     },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-    },
-    userPanel: {
-        width: '100%',
-    },
+
+
     modal: {
         top: '10%',
         left: '10%',
@@ -106,11 +88,7 @@ const styles = theme => ({
         zIndex: theme.zIndex.drawer + 1,
 
     },
-    navIconHide: {
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        },
-    },
+
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
         width: drawerWidth,
@@ -131,30 +109,18 @@ const styles = theme => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
-    'content-left': {
-        marginLeft: -drawerWidth,
-    },
-    'content-right': {
-        marginRight: -drawerWidth,
-    },
+
     contentShift: {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    'contentShift-left': {
-        marginLeft: 0,
-    },
-    'contentShift-right': {
-        marginRight: 0,
-    },
+
     flex: {
         flexGrow: 1,
     },
-    topLevelExpansionPanel: {
-        display: 'block',
-    },
+
     'tabScroll': {
         height: '85%',
         overflow: 'scroll',
@@ -178,9 +144,7 @@ const styles = theme => ({
     leftIcon: {
         marginRight: theme.spacing.unit,
     },
-    rightIcon: {
-        marginLeft: theme.spacing.unit,
-    },
+
     iconSmall: {
         fontSize: 20,
     },
@@ -198,12 +162,7 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column'
     },
-    deleteButton: {
-        margin: theme.spacing.unit,
-        color: 'white',
-        backgroundColor: 'red',
 
-    },
 });
 
 
@@ -211,52 +170,42 @@ const styles = theme => ({
 class UGYEditor extends React.PureComponent {
     //users: {}, years: {}, customers: {}
     //users: {}, years: {}, customers: {}
-    state = {
-        tab: 0,
-        yearNavOpen: true,
-        anchor: 'left',
-        update: false,
-        userBulkMenuAnchor: null,
-        userAddMenuAnchor: null,
-        ready: false,
-        userChecks: [],
-        years: [],
-        groups: [],
-        open: true,
-        selectedGroup: 0,
-        addUsersToGroupOpen: false,
-        selectedUser: "",
-        addUsersToUserOpen: false,
-        addUserOpen: false,
-        addUser: {
-            userName: "",
-            password: "",
-            fullName: "",
-        },
-        importDialogOpen: false,
-        newProducts: [],
-        updatedProducts: [],
-        deletedProducts: [],
-        confirmDeletionPassword: '',
-        confirmDeletionDialogOpen: false,
-        passwordError: false,
-        importStepsContent: [],
-        importNumber: 0,
-        year: 5,
-        yearText: "2018",
-        categories: [],
-        editUser: {id: -1, userName: '', password: '', fullName: ""},
-        editUserOpen: false,
 
-
-    };
 
 
 
 
     constructor(props) {
         super(props);
+        this.state = {
+            tab: 0,
+            yearNavOpen: true,
+            anchor: 'left',
+            update: false,
+            ready: false,
+            userChecks: [],
+            years: [],
+            groups: [],
+            open: true,
+            selectedGroup: 0,
+            addUsersToGroupOpen: false,
+            addUsersToUserOpen: false,
+            addUserOpen: false,
+            importDialogOpen: false,
+            newProducts: [],
+            updatedProducts: [],
+            deletedProducts: [],
+            confirmDeletionDialogOpen: false,
+            importStepsContent: [],
+            importNumber: 0,
+            year: 5,
+            yearText: "2018",
+            categories: [],
+            editUser: {id: -1, userName: '', password: '', fullName: ""},
+            editUserOpen: false,
 
+
+        };
     }
 
     loadCategories = (yearId) => {
@@ -288,16 +237,7 @@ class UGYEditor extends React.PureComponent {
                     },
                     {
                         categories: [],
-                        /*
-                                                    humanProductId: '0',
-                                                    id: 0,
-                                                    year: {id: 0},
-                                                    productName: '',
-                                                    unitSize: '',
-                                                    unitCost: 0.0,
-                                                    quantity: 0,
-                                                    extended_cost: 0.0,
-                         */
+
                     }
                 )
             ).then(({categories}) => {
@@ -336,27 +276,9 @@ class UGYEditor extends React.PureComponent {
             data: {year: this.state.year, data: this.state.userChecks}
         }).then(response => {
             localStorage.setItem("enabledYear", response.data.enabledYear);
-            //console.log(response);
-            //this.setState({years: response.data})
+
         });
-        /*                fetch(url, {
-                            method: "POST",
-                            mode: "cors",
-                            cache: "no-cache",
-                            credentials: "same-origin", // include, same-origin, *omit
-                            headers: {
-                                "Content-Type": "application/json; charset=utf-8",
-                                'Authorization': `Bearer ${token}`
-                                // "Content-Type": "application/x-www-form-urlencoded",
-                            },
-                            redirect: "follow", // manual, *follow, error
-                            referrer: "no-referrer", // no-referrer, *client
-                            body: JSON.stringify({year: this.state.year, data: this.state.userChecks}),
-                        }).then(response => {
-                            //  this.setState({open: false});
-                            //  this.props.push('/');
-                        });*/
-        url = hostURL + '/ProductsMany';
+
         options = {};
         if (!options.headers) {
             options.headers = new Headers({Accept: 'application/json'});
@@ -378,32 +300,9 @@ class UGYEditor extends React.PureComponent {
                 //  this.setState({open: false});
                 this.props.push('/');
             });
-            /*fetch(url, {
-                method: "POST",
-                mode: "cors",
-                cache: "no-cache",
-                credentials: "same-origin", // include, same-origin, *omit
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-                    'Authorization': `Bearer ${token}`
-                    // "Content-Type": "application/x-www-form-urlencoded",
-                },
-                redirect: "follow", // manual, *follow, error
-                referrer: "no-referrer", // no-referrer, *client
-                body: JSON.stringify({
-                    newProducts: this.state.newProducts,
-                    updatedProducts: this.state.updatedProducts,
-                    deletedProducts: this.state.deletedProducts,
-                    year: this.state.year
-                }),
-            }).then(response => {
-                this.setState({open: false});
-                //  this.setState({open: false});
-                this.props.push('/');
-            });*/
+
         }
 
-        //console.log(fetchUtils.fetchJson(url, options));
 
 
     };
@@ -426,39 +325,7 @@ class UGYEditor extends React.PureComponent {
                     //  this.setState({open: false});
                     this.props.push('/');
                 });
-                /*this.setState({confirmDeletionDialogOpen: false, confirmDeletionPassword: ''});
-                localStorage.setItem('access_token', access_token);
-                localStorage.setItem('role', roles[0]);
-                let options = {};
-                if (!options.headers) {
-                    options.headers = new Headers({Accept: 'application/json'});
-                }
 
-                options.headers.set('Authorization', `Bearer ${access_token}`);
-
-                fetch(url, {
-                    method: "POST",
-                    mode: "cors",
-                    cache: "no-cache",
-                    credentials: "same-origin", // include, same-origin, *omit
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                        'Authorization': `Bearer ${access_token}`
-                        // "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    redirect: "follow", // manual, *follow, error
-                    referrer: "no-referrer", // no-referrer, *client
-                    body: JSON.stringify({
-                        newProducts: this.state.newProducts,
-                        updatedProducts: this.state.updatedProducts,
-                        deletedProducts: this.state.deletedProducts,
-                        year: this.state.year
-                    }),
-                }).then(response => {
-                    this.setState({open: false});
-                    //  this.setState({open: false});
-                    this.props.push('/');
-                });*/
             }).catch(() => {
                 this.setState({passwordError: true});
                 return {};
@@ -479,41 +346,9 @@ class UGYEditor extends React.PureComponent {
                 //  this.setState({open: false});
                 this.props.push('/');
             });
-            /* this.setState({deletedProducts: []});
-             let options = {};
-             if (!options.headers) {
-                 options.headers = new Headers({Accept: 'application/json'});
-             }
-             const token = localStorage.getItem('access_token');
 
-             options.headers.set('Authorization', `Bearer ${token}`);
-             fetch(url, {
-                 method: "POST",
-                 mode: "cors",
-                 cache: "no-cache",
-                 credentials: "same-origin", // include, same-origin, *omit
-                 headers: {
-                     "Content-Type": "application/json; charset=utf-8",
-                     'Authorization': `Bearer ${token}`
-                     // "Content-Type": "application/x-www-form-urlencoded",
-                 },
-                 redirect: "follow", // manual, *follow, error
-                 referrer: "no-referrer", // no-referrer, *client
-                 body: JSON.stringify({
-                     newProducts: this.state.newProducts,
-                     updatedProducts: this.state.updatedProducts,
-                     deletedProducts: this.state.deletedProducts,
-                     year: this.state.year
-                 }),
-             }).then(response => {
-                 this.setState({confirmDeletionDialogOpen: false, confirmDeletionPassword: '', open: false});
-
-                 //  this.setState({open: false});
-                 this.props.push('/');
-             });*/
 
         }
-        /**/
     };
 
 
@@ -521,75 +356,12 @@ class UGYEditor extends React.PureComponent {
         this.setState(state => ({yearNavOpen: !state.yearNavOpen}));
     };
 
-    handleCheckBoxChange = name => event => {
-        let parentState = update(this.state.userChecks, {
-            [name]: {checked: {$set: event.target.checked}}
-        });
-
-        this.setState({userChecks: parentState, update: true});
-        //this.setState({[name]: event.target.checked});
-    };
-
-    handleGroupChange = name => event => {
-        let parentState = update(this.state.userChecks, {
-            [name]: {group: {$set: event.target.value}}
-        });
-
-        this.setState({userChecks: parentState, update: true});
-        //this.setState({[name]: event.target.checked});
-    };
-
-    handleManageCheckBoxChange = (parent, name) => event => {
-
-        let parentState = update(this.state.userChecks, {
-            [parent]: {subUsers: {[name]: {checked: {$set: event.target.checked}}}}
-        });
-
-        this.setState({userChecks: parentState, update: true});
 
 
-    };
 
-    handleChangeAnchor = event => {
-        this.setState({
-            anchor: event.target.value,
-        });
-    };
 
-    handleUserBulkMenu = event => {
-        this.setState({userBulkMenuAnchor: event.currentTarget});
-    };
-
-    handleUserBulkMenuClose = () => {
-        this.setState({userBulkMenuAnchor: null});
-    };
-
-    handleUserAddMenu = event => {
-        this.setState({userAddMenuAnchor: event.currentTarget});
-    };
-
-    handleUserAddMenuClose = () => {
-        this.setState({userAddMenuAnchor: null});
-    };
-
-    handleChange = (event, value) => {
-        this.setState({value});
-    };
     handleTabChange = (event, value) => {
         this.setState({tab: value});
-    };
-    enableSelectedUsers = event => {
-        let parentState = this.state.userChecks;
-        let curYear = this.state.year;
-        Object.keys(this.state.userChecks).filter(userName => this.state.userChecks[userName].checked).forEach(userName => {
-            parentState = update(parentState, {
-                [userName]: {enabledYear: {$set: curYear}, status: {$set: "ENABLED"}}
-
-            });
-        });
-        this.setState({userChecks: parentState});
-
-        this.handleUserBulkMenuClose(event);
     };
     updateYear = year => event => {
         this.setState({year: year.id, yearText: year.year});
@@ -604,60 +376,7 @@ class UGYEditor extends React.PureComponent {
 
     };
 
-    addSelectedUsersToGroup = event => {
-        let parentState = this.state.userChecks;
 
-
-        Object.keys(this.state.userChecks).filter(userName => this.state.userChecks[userName].checked).forEach(userName => {
-            parentState = update(parentState, {
-                [userName]: {group: {$set: this.state.selectedGroup}}
-            });
-        });
-        this.setState({userChecks: parentState, addUsersToGroupOpen: false});
-
-    };
-
-    addSelectedUsersToGroupClicked = event => {
-
-        this.setState({addUsersToGroupOpen: true});
-        this.handleUserBulkMenuClose(event);
-    };
-
-
-    addSelectedUsersToUser = event => {
-        let parentState = this.state.userChecks;
-
-
-        Object.keys(this.state.userChecks[this.state.selectedUser].subUsers).filter(userName => this.state.userChecks[userName].checked).forEach(userName => {
-            parentState = update(parentState, {
-                [this.state.selectedUser]: {subUsers: {[userName]: {checked: {$set: true}}}}
-            });
-        });
-        this.setState({userChecks: parentState, addUsersToUserOpen: false});
-    };
-    addSelectedUsersToUserClicked = event => {
-
-        this.setState({addUsersToUserOpen: true});
-        this.handleUserBulkMenuClose(event);
-    };
-
-    addSingleUser = event => {
-        dataProvider(CREATE, 'User', {
-            data: {
-                username: this.state.addUser.userName,
-                full_name: this.state.addUser.fullName,
-                password: this.state.addUser.password
-            }
-        }).then(response => {
-            this.setState({addUserOpen: false});
-
-        });
-    };
-    addSingleUserClick = event => {
-        this.setState({addUserOpen: true});
-
-        this.handleUserAddMenuClose(event);
-    };
 
     editUser = event => {
         dataProvider(UPDATE, 'User', {
@@ -673,180 +392,8 @@ class UGYEditor extends React.PureComponent {
 
         });
     };
-    editUserClick = (uName, id, fName) => event => {
-        this.setState({editUserOpen: true, editUser: {id: id, userName: uName, password: '', fullName: fName}});
-
-        //this.handleUserAddMenuClose(event);
-    };
 
 
-    handleExportClick = event => {
-
-        this.handleUserAddMenuClose(event);
-
-
-    };
-
-
-    addBulkUser = event => {
-
-        this.handleUserAddMenuClose(event);
-    };
-    addBulkUserClick = event => {
-
-        this.handleUserAddMenuClose(event);
-    };
-    archiveSelectedUsers = event => {
-        let parentState = this.state.userChecks;
-
-        Object.keys(this.state.userChecks).filter(userName => this.state.userChecks[userName].checked).forEach(userName => {
-            parentState = update(parentState, {
-                [userName]: {status: {$set: "ARCHIVED"}, enabledYear: {$set: -1}}
-            });
-        });
-        this.setState({userChecks: parentState});
-        this.handleUserBulkMenuClose(event);
-    };
-    removeSelectedUsersFromYear = event => {
-        let parentState = this.state.userChecks;
-
-        Object.keys(this.state.userChecks).filter(userName => this.state.userChecks[userName].checked).forEach(userName => {
-            parentState = update(parentState, {
-                [userName]: {status: {$set: "DISABLED"}, enabledYear: {$set: -1}}
-
-            });
-        });
-        this.setState({userChecks: parentState});
-        this.handleUserBulkMenuClose(event);
-    };
-    renderEnabledUsers = () => {
-        const {classes, theme} = this.props;
-        let users = ['me', 'test1'];
-        let userPanels = [];
-        Object.keys(this.state.userChecks).forEach(user => {
-            if (this.state.userChecks[user].enabledYear === this.state.year) {
-                let userName = user;
-                let id = this.state.userChecks[user].id;
-                let fullName = this.state.userChecks[user].fullName;
-
-                userPanels.push(<UserPanel id={id} key={userName} userName={userName} fullName={fullName}
-                                           userChecks={this.state.userChecks}
-                                           handleManageCheckBoxChange={this.handleManageCheckBoxChange}
-                                           handleCheckBoxChange={this.handleCheckBoxChange}
-                                           checked={this.state.userChecks[userName].checked}
-                                           handleGroupChange={this.handleGroupChange}
-                                           group={this.state.userChecks[userName].group}
-                                           groups={this.state.groups}
-                                           onEdit={this.editUserClick}/>
-                )
-            }
-        });
-        return (
-            <ExpansionPanel className={classes.topLevelExpansionPanel}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                    <div className={classes.flex}>
-
-                        <Typography className={classes.heading}>Enabled Users</Typography>
-                    </div>
-
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.topLevelExpansionPanel}>
-                    {
-                        userPanels
-                    }
-
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
-        )
-    };
-    renderDisabledUsers = () => {
-        const {classes, theme} = this.props;
-        let users = ['me', 'test1'];
-        let userPanels = [];
-
-
-        Object.keys(this.state.userChecks).forEach(user => {
-/*            console.log(user);
-            console.log(this.state.userChecks[user].status);
-
-            console.log(this.state.userChecks[user].status !== "ENABLED");
-            console.log(this.state.userChecks[user].status !== "ARCHIVED");*/
-            if (this.state.userChecks[user].enabledYear !== this.state.year && this.state.userChecks[user].status !== "ENABLED" && this.state.userChecks[user].status !== "ARCHIVED") {
-
-                let userName = user;
-                let id = this.state.userChecks[user].id;
-                let fullName = this.state.userChecks[user].fullName;
-
-                userPanels.push(<UserPanel id={id} key={userName} userName={userName} fullName={fullName}
-                                           userChecks={this.state.userChecks}
-                                           handleManageCheckBoxChange={this.handleManageCheckBoxChange}
-                                           handleCheckBoxChange={this.handleCheckBoxChange}
-                                           checked={this.state.userChecks[userName].checked}
-                                           handleGroupChange={this.handleGroupChange}
-                                           group={this.state.userChecks[userName].group}
-                                           groups={this.state.groups}
-                                           onEdit={this.editUserClick}/>
-                )
-            }
-        });
-        return (
-            <ExpansionPanel className={classes.topLevelExpansionPanel}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                    <div className={classes.flex}>
-
-                        <Typography className={classes.heading}>Disabled Users</Typography>
-                    </div>
-
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.topLevelExpansionPanel}>
-                    {
-                        userPanels
-                    }
-
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
-        )
-    };
-    renderArchivedUsers = () => {
-        const {classes, theme} = this.props;
-        let users = ['me', 'test1'];
-        let userPanels = [];
-        Object.keys(this.state.userChecks).forEach(user => {
-            if (this.state.userChecks[user].enabledYear !== this.state.year && this.state.userChecks[user].status === "ARCHIVED") {
-
-                let userName = user;
-                let id = this.state.userChecks[user].id;
-                let fullName = this.state.userChecks[user].fullName;
-
-                userPanels.push(<UserPanel id={id} key={userName} userName={userName} fullName={fullName}
-                                           userChecks={this.state.userChecks}
-                                           handleManageCheckBoxChange={this.handleManageCheckBoxChange}
-                                           handleCheckBoxChange={this.handleCheckBoxChange}
-                                           checked={this.state.userChecks[userName].checked}
-                                           handleGroupChange={this.handleGroupChange}
-                                           group={this.state.userChecks[userName].group}
-                                           groups={this.state.groups}
-                                           onEdit={this.editUserClick}/>)
-            }
-        });
-        return (
-            <ExpansionPanel className={classes.topLevelExpansionPanel}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                    <div className={classes.flex}>
-
-                        <Typography className={classes.heading}>Archived Users</Typography>
-                    </div>
-
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.topLevelExpansionPanel}>
-                    {
-                        userPanels
-                    }
-
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
-        )
-    };
 
     getGroups(yearId) {
         dataProvider(GET_LIST, 'Group', {
@@ -863,57 +410,40 @@ class UGYEditor extends React.PureComponent {
     handleUpdateUserChecks = (userChecks) => {
         this.setState({userChecks: userChecks});
     };
+    closeDialog = (dialog) => () => {
+        this.modifyDialog(dialog, {}, false);
 
-    showDialog = (dialog, options) => {
+    };
+    modifyDialog = (dialog, options, value) => {
         let obj = {};
         switch (dialog){
             case "addUsersToGroup":
-                obj.addUsersToGroupOpen = true;
+                obj.addUsersToGroupOpen = value;
                 break;
             case "addUsersToUser":
-                obj.addUsersToUserOpen = true;
+                obj.addUsersToUserOpen = value;
                 break;
             case "addUser":
-                obj.addUserOpen = true;
+                obj.addUserOpen = value;
                 break;
             case "editUser":
-                obj.editUserOpen = true;
-                obj.editUser = options.editUser;
+                obj.editUserOpen = value;
+                if (options.editUser) {
+                    obj.editUser = options.editUser;
+
+                } else {
+                    obj.editUser = {       id: -1, userName: '', password: '', fullName: ""};
+
+                }
                 break;
         }
         this.setState(obj);
     };
-
-    renderGroupItems = () => {
-        let groupList = [];
-        this.state.groups.forEach(group => {
-            groupList.push(<MenuItem key={"AddGroupToUser-group-" + group.id}
-                                     value={group.id}>{group.groupName}</MenuItem>);
-
-        });
-        return groupList;
+    showDialog = (dialog, options) => {
+        this.modifyDialog(dialog, options, true);
     };
 
-    renderUserItems = () => {
-        let userList = [];
-        Object.keys(this.state.userChecks).forEach(userName => {
-            userList.push(<MenuItem key={"AddUserToUser-user-" + userName} value={userName}>{userName}</MenuItem>);
 
-        });
-        return userList;
-    };
-    updateAddUserState = (field, value) => {
-        let parentState = update(this.state.addUser, {
-            [field]: {$set: value}
-        });
-        this.setState({addUser: parentState})
-    };
-    updateEditUserState = (field, value) => {
-        let parentState = update(this.state.editUser, {
-            [field]: {$set: value}
-        });
-        this.setState({editUser: parentState})
-    };
 
     handleAddProduct = (newProd) => {
         let parentState = update(this.state.newProducts, {
@@ -978,24 +508,7 @@ class UGYEditor extends React.PureComponent {
     };
 
     getUsers(yearId) {
-        /*     dataProvider(GET_LIST, 'User', {
-                 filter: {},
-                 sort: {field: 'id', order: 'DESC'},
-                 pagination: {page: 1, perPage: 1000},
-             }).then(response => {
-                 let users = response.data;
-                 let userChecks = {};
-                 users.forEach(user => {
-                     let userName = user.userName;
-                     let userState = {};
-                     users.forEach(subUser => {
-                         userState[subUser.userName] = false;
-                     });
 
-                     userChecks[userName] = {checked: false, groups: -1, subUsers: userState};
-                 });
-                 this.setState({'users': users, 'update': true, 'userChecks': userChecks})
-             });*/
         dataProvider(GET_LIST, 'UserHierarchy', {filter: {year: yearId || this.state.year}}).then(response => {
             let users = response.data[0];
             let userChecks = {};
@@ -1030,270 +543,35 @@ class UGYEditor extends React.PureComponent {
         const {classes, theme} = this.props;
         if (this.state.ready) {
 
-            const {tab, anchor, yearNavOpen, userBulkMenuAnchor, userAddMenuAnchor} = this.state;
-            const userBulkMenuOpen = Boolean(userBulkMenuAnchor);
-            const userAddMenuOpen = Boolean(userAddMenuAnchor);
+            const {tab, anchor, yearNavOpen} = this.state;
+
+
             const dialogs = [
-                <Dialog
-                    key={"addUsersToGroupDialog"}
-                    open={this.state.addUsersToGroupOpen}
-                    onClose={event => this.setState({addUsersToGroupOpen: false})}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Add Selected Users to Group</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please select the group to add the users to
-                        </DialogContentText>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="addUsersToGroup-GroupSelection">Group</InputLabel>
-                            <Select
-                                value={this.state.selectedGroup}
-                                onChange={event => {
-                                    this.setState({selectedGroup: event.target.value})
-                                }}
-                                inputProps={{
-                                    name: 'GroupSelection',
-                                    id: 'addUsersToGroup-GroupSelection',
-                                }}
-                            >
-                                {this.renderGroupItems()
+                <AddUsersToGroupDialog key={"addUsersToGroupDialog"}
+                                       closeDialog={this.closeDialog('addUsersToGroup')}
+                                       userChecks={this.state.userChecks}
+                                       updateUserChecks={this.handleUpdateUserChecks}
+                                       open={this.state.addUsersToGroupOpen}
+                                       groups={this.state.groups} />,
+                <AddUsersToUserDialog key={"addUsersToUserDialog"}
+                                      closeDialog={this.closeDialog('addUsersToUser')}
+                                      userChecks={this.state.userChecks}
+                                      updateUserChecks={this.handleUpdateUserChecks}
+                                      open={this.state.addUsersToUserOpen}/>,
 
-                                }
-                            </Select>
-                        </FormControl>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={event => this.setState({addUsersToGroupOpen: false})} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.addSelectedUsersToGroup} color="primary">
-                            Apply
-                        </Button>
-                    </DialogActions>
-                </Dialog>,
-                <Dialog
-                    key={"addUsersToUserDialog"}
-
-                    open={this.state.addUsersToUserOpen}
-                    onClose={event => this.setState({addUsersToUserOpen: false})}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Add Selected Users to User</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please select the user to add the users to
-                        </DialogContentText>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="addUsersToGroup-GroupSelection">User</InputLabel>
-                            <Select
-                                value={this.state.selectedUser}
-                                onChange={event => {
-                                    this.setState({selectedUser: event.target.value})
-                                }}
-                                inputProps={{
-                                    name: 'UserSelection',
-                                    id: 'addUsersToUser-UserSelection',
-                                }}
-                            >
-                                {this.renderUserItems()
-
-                                }
-                            </Select>
-                        </FormControl>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={event => this.setState({addUsersToUserOpen: false})} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.addSelectedUsersToUser} color="primary">
-                            Apply
-                        </Button>
-                    </DialogActions>
-                </Dialog>,
-                <Dialog
-                    key={"addUserDialog"}
-
-                    open={this.state.addUserOpen}
-                    onClose={event => this.setState({addUserOpen: false})}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Add User</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please enter the information about the user
-                        </DialogContentText>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="AddUser-Username">Username</InputLabel>
-                            <TextField
-                                value={this.state.addUser.userName}
-                                onChange={event => {
-                                    this.updateAddUserState("userName", event.target.value)
-                                }}
-                                inputProps={{
-                                    name: 'UserName',
-                                    id: 'AddUser-Username',
-                                }}
-                            >
-
-                            </TextField>
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="AddUser-Password">Password</InputLabel>
-                            <TextField
-                                value={this.state.addUser.password}
-                                type="password"
-                                onChange={event => {
-                                    this.updateAddUserState("password", event.target.value)
-                                }}
-
-                                inputProps={{
-                                    name: 'Password',
-                                    id: 'AddUser-Password',
-                                }}
-                            >
-
-                            </TextField>
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="AddUser-FullName">FullName</InputLabel>
-                            <TextField
-                                value={this.state.addUser.fullName}
-                                onChange={event => {
-                                    this.updateAddUserState("fullName", event.target.value)
-                                }}
-
-                                inputProps={{
-                                    name: 'FullName',
-                                    id: 'AddUser-FullName',
-                                }}
-                            >
-
-                            </TextField>
-                        </FormControl>
-
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={event => this.setState({addUserOpen: false})} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.addSingleUser} color="primary">
-                            Apply
-                        </Button>
-                    </DialogActions>
-                </Dialog>, <Dialog
-                    key={"editUserDialog"}
-
-                    open={this.state.editUserOpen}
-                    onClose={event => this.setState({editUserOpen: false})}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Edit User</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please enter the information about the user
-                        </DialogContentText>
-                        <TextField
-                            value={this.state.editUser.userName}
-                            label={"Username"}
-                            onChange={event => {
-                                this.updateEditUserState("userName", event.target.value)
-                            }}
-                            inputProps={{
-                                name: 'UserName',
-                                id: 'AddUser-Username',
-                            }}
-                            disabled
-                        >
-
-                        </TextField>
-                        <TextField
-                            label={"Password"}
-
-                            value={this.state.editUser.password}
-                            type="password"
-                            onChange={event => {
-                                this.updateEditUserState("password", event.target.value)
-                            }}
-
-                            inputProps={{
-                                name: 'Password',
-                                id: 'AddUser-Password',
-                            }}
-                        >
-
-                        </TextField>
-                        <TextField
-                            label={"FullName"}
-
-                            value={this.state.editUser.fullName}
-                            onChange={event => {
-                                this.updateEditUserState("fullName", event.target.value)
-                            }}
-
-                            inputProps={{
-                                name: 'FullName',
-                                id: 'AddUser-FullName',
-                            }}
-                        >
-
-                        </TextField>
-
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={event => this.setState({editUserOpen: false})} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.editUser} color="primary">
-                            Apply
-                        </Button>
-                    </DialogActions>
-                </Dialog>,
-                <Dialog
-                    key={"confirmDeletionDialog"}
-                    open={this.state.confirmDeletionDialogOpen}
-                    onClose={event => this.setState({confirmDeletionDialogOpen: false})}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Are you sure you would like to delete any rows</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            You have deleted some of the products. This will lead to DATA LOSS of customer orders. If
-                            you would like to continue, please re-enter your password and the security code. If not,
-                            clicking cancel will still update the other changes, but it will not delete any products.
-                        </DialogContentText>
-                        {this.state.passwordError &&
-                        <Typography color={'error'}>Invalid Password!</Typography>
-
-                        }
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="confirmDeletion-Password">Password</InputLabel>
-                            <TextField
-                                value={this.state.confirmDeletionPassword}
-                                type="password"
-                                onChange={event => {
-                                    this.setState({confirmDeletionPassword: event.target.value});
-                                }}
-
-                                inputProps={{
-                                    name: 'Password',
-                                    id: 'confirmDeletion-Password',
-                                }}
-                            >
-
-                            </TextField>
-                        </FormControl>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button value={1} onClick={this.confirmPassword} color="primary" variant={"contained"}>
-                            Don't Delete
-                        </Button>
-                        <Button value={2} onClick={this.confirmPassword} variant={"contained"}
-                                className={classes.deleteButton} autoFocus>
-                            Delete
-                        </Button>
-                    </DialogActions>
-                </Dialog>,
+                <AddUserDialog key={"addUserDialog"}
+                               closeDialog={this.closeDialog('addUser')}
+                               open={this.state.addUserOpen}/>,
+                <EditUserDialog key={"editUserDialog-" + this.state.editUser.id}
+                                closeDialog={this.closeDialog('editUser')}
+                                open={this.state.editUserOpen}
+                                userName={this.state.editUser.userName}
+                                id={this.state.editUser.id}
+                                fullName={this.state.editUser.fullName}/>,
+                <ConfirmDeletionDialog key={"confirmDeletionDialog"}
+                                       closeDialog={this.closeDialog('confirmDeletion')}
+                                       open={this.state.confirmDeletionDialogOpen}
+                                       confirmPassword={this.confirmPassword} />,
 
             ];
             const drawer = (
@@ -1307,80 +585,13 @@ class UGYEditor extends React.PureComponent {
 
                 </div>
             );
-            /*const usersTab = (
-                <div>
 
-                    <Toolbar>
-                        <Typography variant="title" color="inherit" className={classes.flex}>
-
-                        </Typography>
-                        <div>
-                            <IconButton
-                                aria-owns={userAddMenuOpen ? 'user-add-menu' : null}
-                                aria-haspopup="true"
-                                onClick={this.handleUserAddMenu}
-                                color="inherit"
-                            >
-                                <AddIcon/>
-                            </IconButton>
-                            <Menu
-                                id="user-add-menu"
-                                anchorEl={userAddMenuAnchor}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={userAddMenuOpen}
-                                onClose={this.handleUserAddMenuClose}
-                            >
-                                <MenuItem onClick={this.addSingleUserClick}>Add Single User</MenuItem>
-                                <MenuItem onClick={this.addBulkUserClick}>Add Bulk Users</MenuItem>
-                            </Menu>
-                            <IconButton
-                                aria-owns={userBulkMenuOpen ? 'user-Bulk-Menu' : null}
-                                aria-haspopup="true"
-                                onClick={this.handleUserBulkMenu}
-                                color="inherit"
-                            >
-                                <MoreVert/>
-                            </IconButton>
-                            <Menu
-                                id="user-Bulk-Menu"
-                                anchorEl={userBulkMenuAnchor}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={userBulkMenuOpen}
-                                onClose={this.handleUserBulkMenuClose}
-                            >
-                                <MenuItem onClick={this.addSelectedUsersToGroupClicked}>Add Selected to Group</MenuItem>
-                                <MenuItem onClick={this.removeSelectedUsersFromYear}>Disable Selected</MenuItem>
-                                <MenuItem onClick={this.enableSelectedUsers}>Enable Selected</MenuItem>
-                                <MenuItem onClick={this.addSelectedUsersToUserClicked}>Add selected to User</MenuItem>
-                                <MenuItem onClick={this.archiveSelectedUsers}>Archive selected users</MenuItem>
-                            </Menu>
-
-                        </div>
-
-                    </Toolbar>
-                    <div>
-                        {this.renderEnabledUsers()}
-                        {this.renderArchivedUsers()}
-                        {this.renderDisabledUsers()}
-                    </div>
-                </div>
-            );*/
             const usersTab = (
-              <UsersTab groups={this.state.groups} showDialog={this.showDialog} userChecks={this.state.userChecks} updateUserChecks={this.handleUpdateUserChecks} year={this.state.year}/>
+              <UsersTab groups={this.state.groups}
+                        showDialog={this.showDialog}
+                        userChecks={this.state.userChecks}
+                        updateUserChecks={this.handleUpdateUserChecks}
+                        year={this.state.year}/>
             );
 
             const prodsTab = (
@@ -1525,17 +736,7 @@ class UGYEditor extends React.PureComponent {
         this.setState({ready: true})
     }
 
-/*    shouldComponentUpdate(nextProps, nextState, ctx) {
 
-        if (nextState.groups.length > 0 && Object.keys(nextState.userChecks).length > 0) {
-            return true
-        }
-        /!*        if (this.state.update === true) {
-                    this.setState({'update': false});
-                    return true
-                }*!/
-        return false
-    }*/
 }
 
 UGYEditor.propTypes = {
