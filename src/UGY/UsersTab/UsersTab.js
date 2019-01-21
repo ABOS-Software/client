@@ -16,12 +16,138 @@ import {showNotification} from 'react-admin';
 
 
 import UserPanel from './UserPanel';
-import {rowStatus} from './ProductsGrid';
-import {authClientConfig} from '../security/authProvider';
-import userGroupPanel from './userGroupPanel';
+import UserGroupPanel from './userGroupPanel';
 
+const drawerWidth = 240;
 
-const styles = theme => ({});
+const styles = theme => ({
+  root: {
+    flexGrow: 0,
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+    width: '100%',
+    height: '100%'
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+  },
+  userPanel: {
+    width: '100%',
+  },
+  modal: {
+    top: '10%',
+    left: '10%',
+    width: '80%',
+    height: '80%',
+    position: 'absolute',
+  },
+  appBar: {
+    position: 'absolute',
+
+    zIndex: theme.zIndex.drawer + 1,
+
+  },
+  navIconHide: {
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
+    [theme.breakpoints.up('md')]: {
+      position: 'relative',
+    },
+  },
+  content: {
+    display: 'flex',
+    width: '100%',
+
+    flexDirection: 'column',
+    flexGrow: 0,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  'content-left': {
+    marginLeft: -drawerWidth,
+  },
+  'content-right': {
+    marginRight: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  'contentShift-left': {
+    marginLeft: 0,
+  },
+  'contentShift-right': {
+    marginRight: 0,
+  },
+  flex: {
+    flexGrow: 1,
+  },
+  topLevelExpansionPanel: {
+    display: 'block',
+  },
+  'tabScroll': {
+    height: '85%',
+    overflow: 'scroll',
+  },
+  'tabNoScroll': {
+    height: '85%',
+    width: '100%',
+
+  },
+  fullHeight: {
+    height: '100%',
+  },
+  fullHeightWidth: {
+    height: '100%',
+    width: '100%',
+    flexGrow: 0,
+    display: 'flex',
+    flexDirection: 'column'
+
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  iconSmall: {
+    fontSize: 20,
+  },
+  button: {
+    margin: theme.spacing.unit,
+  },
+  bottomBar: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10
+  },
+  productsGrid: {
+    height: '100% !important',
+    width: '100% !important',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  deleteButton: {
+    margin: theme.spacing.unit,
+    color: 'white',
+    backgroundColor: 'red',
+
+  },
+});
 
 class UsersTab extends React.PureComponent {
   state = {
@@ -31,7 +157,6 @@ class UsersTab extends React.PureComponent {
 
 
   componentWillMount() {
-    this.stepsContent();
   }
 
 
@@ -135,6 +260,33 @@ class UsersTab extends React.PureComponent {
     this.handleUserBulkMenuClose(event);
   };
 
+  archiveSelectedUsers = event => {
+    let {userChecks} = this.props;
+
+    let parentState = userChecks;
+    Object.keys(userChecks).filter(userName => userChecks[userName].checked).forEach(userName => {
+      parentState = update(parentState, {
+        [userName]: {status: {$set: "ARCHIVED"}, enabledYear: {$set: -1}}
+      });
+    });
+    this.props.updateUserChecks(parentState);
+    this.handleUserBulkMenuClose(event);
+  };
+  removeSelectedUsersFromYear = event => {
+    let {userChecks} = this.props;
+
+    let parentState = userChecks;
+    Object.keys(userChecks).filter(userName => userChecks[userName].checked).forEach(userName => {
+      parentState = update(parentState, {
+        [userName]: {status: {$set: "DISABLED"}, enabledYear: {$set: -1}}
+
+      });
+    });
+    this.props.updateUserChecks(parentState);
+    this.handleUserBulkMenuClose(event);
+  };
+
+
   renderEnabledUsers = () => {
     let {userChecks} = this.props;
 
@@ -146,7 +298,7 @@ class UsersTab extends React.PureComponent {
 
       }
     });
-    return (<userGroupPanel title="Enabled Users" userPanels={userPanels}/>)
+    return (<UserGroupPanel title="Enabled Users" userPanels={userPanels}/>)
 
   };
   renderDisabledUsers = () => {
@@ -167,7 +319,7 @@ class UsersTab extends React.PureComponent {
 
       }
     });
-    return (<userGroupPanel title="Disabled Users" userPanels={userPanels}/>)
+    return (<UserGroupPanel title="Disabled Users" userPanels={userPanels}/>)
 
   };
   renderArchivedUsers = () => {
@@ -180,7 +332,7 @@ class UsersTab extends React.PureComponent {
         userPanels.push(this.renderUserPanel(user))
       }
     });
-    return (<userGroupPanel title="Archived Users" userPanels={userPanels}/>)
+    return (<UserGroupPanel title="Archived Users" userPanels={userPanels}/>)
   };
 
   renderUserPanel = (user) => {
@@ -284,7 +436,7 @@ class UsersTab extends React.PureComponent {
 
 UsersTab.propTypes = {
   groups: PropTypes.array.isRequired,
-  classes: PropTypes.any.isRequired,
+  classes: PropTypes.any,
   showDialog: PropTypes.func.isRequired,
   userChecks: PropTypes.any.isRequired,
   updateUserChecks: PropTypes.func.isRequired,

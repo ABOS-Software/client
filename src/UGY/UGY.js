@@ -11,15 +11,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
-import AddIcon from '@material-ui/icons/Add';
-import MoreVert from '@material-ui/icons/MoreVert';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Modal from '@material-ui/core/Modal';
 import classNames from 'classnames';
-import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -45,12 +42,13 @@ import {CREATE, fetchUtils, GET_LIST, showNotification, UPDATE} from 'react-admi
 import Paper from '@material-ui/core/Paper';
 
 import restClient from '../grailsRestClient';
-import UserPanel from './UserPanel';
+import UserPanel from './UsersTab/UserPanel';
 import {rowStatus} from './ProductsGrid';
 import hostURL from '../host';
 
 import feathersClient from '../feathersClient';
 import {authClientConfig} from '../security/authProvider';
+import UsersTab from './UsersTab/UsersTab';
 
 
 const drawerWidth = 240;
@@ -863,11 +861,27 @@ class UGYEditor extends React.PureComponent {
     }
 
     handleUpdateUserChecks = (userChecks) => {
-
+        this.setState({userChecks: userChecks});
     };
 
-    showDialog = (dialog) => {
-
+    showDialog = (dialog, options) => {
+        let obj = {};
+        switch (dialog){
+            case "addUsersToGroup":
+                obj.addUsersToGroupOpen = true;
+                break;
+            case "addUsersToUser":
+                obj.addUsersToUserOpen = true;
+                break;
+            case "addUser":
+                obj.addUserOpen = true;
+                break;
+            case "editUser":
+                obj.editUserOpen = true;
+                obj.editUser = options.editUser;
+                break;
+        }
+        this.setState(obj);
     };
 
     renderGroupItems = () => {
@@ -1293,7 +1307,7 @@ class UGYEditor extends React.PureComponent {
 
                 </div>
             );
-            const usersTab = (
+            /*const usersTab = (
                 <div>
 
                     <Toolbar>
@@ -1364,6 +1378,9 @@ class UGYEditor extends React.PureComponent {
                         {this.renderDisabledUsers()}
                     </div>
                 </div>
+            );*/
+            const usersTab = (
+              <UsersTab groups={this.state.groups} showDialog={this.showDialog} userChecks={this.state.userChecks} updateUserChecks={this.handleUpdateUserChecks} year={this.state.year}/>
             );
 
             const prodsTab = (

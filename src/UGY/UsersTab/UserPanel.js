@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
@@ -19,22 +19,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
-import {
-    BooleanInput,
-    fetchUtils,
-    FormDataConsumer,
-    GET_LIST,
-    ImageField,
-    ImageInput,
-    ReferenceArrayInput,
-    ReferenceInput,
-    required,
-    SelectArrayInput,
-    SelectInput,
-    SimpleForm,
-    TextInput
-} from 'react-admin';
-import update from "immutability-helper";
+import update from 'immutability-helper';
 
 const drawerWidth = 240;
 
