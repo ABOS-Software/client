@@ -8,8 +8,8 @@ import PropTypes from 'prop-types';
 import {changeListParams, crudGetList as crudGetListAction, crudUpdate, startUndoable} from 'ra-core';
 import {addField, fetchUtils, GET_LIST, GET_ONE} from 'react-admin';
 import restClient from '../grailsRestClient';
-import CurrencyFormatter from "./Formatters/CurrencyFormatter";
-import MUINumberEditor from "./Editors/MUINumberEditor";
+import CurrencyFormatter from './Formatters/CurrencyFormatter';
+import MUINumberEditor from './Editors/MUINumberEditor';
 
 const {Editors, Formatters} = require('react-data-grid-addons');
 

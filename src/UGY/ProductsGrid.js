@@ -5,20 +5,20 @@ import compose from 'recompose/compose';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
-import encoding from 'encoding-japanese'
+import encoding from 'encoding-japanese';
 import {changeListParams, crudGetList as crudGetListAction, crudUpdate, startUndoable} from 'ra-core';
 import {fetchUtils, GET_LIST} from 'react-admin';
 import restClient from '../grailsRestClient';
-import CurrencyFormatter from "../resources/Formatters/CurrencyFormatter";
-import ProductsToolbar from "./ProductsToolBar";
-import MUITextEditor from "../resources/Editors/MUITextEditor";
-import MUICurrencyEditor from "../resources/Editors/MUICurrencyEditor";
-import MUISelectEditor from "../resources/Editors/MUISelectEditor";
-import ProductsContextMenu from "./ProductsContextMenu";
+import CurrencyFormatter from '../resources/Formatters/CurrencyFormatter';
+import ProductsToolbar from './ProductsToolBar';
+import MUITextEditor from '../resources/Editors/MUITextEditor';
+import MUICurrencyEditor from '../resources/Editors/MUICurrencyEditor';
+import ProductsContextMenu from './ProductsContextMenu';
 import DropDownFormatter from '../resources/Formatters/DropDownFormatter';
-import ImportDialog from "./ImportDialog";
+import ImportDialog from './ImportDialog';
 import convert from 'xml-js';
-import download from "downloadjs";
+import download from 'downloadjs';
+import Editor from '../resources/Editors/Editor';
 
 //const {Editors, Formatters} = require('react-data-grid-addons');
 
@@ -277,7 +277,7 @@ class ProductsGrid extends Component {
                 editable: true,
                 resizable: true,
                 filterable: true,
-                editor: <MUISelectEditor options={categories}/>,
+                editor: <Editor type='Select' options={categories}/>,
                 formatter: <DropDownFormatter options={categories} value={"-1"}/>
 
             }
