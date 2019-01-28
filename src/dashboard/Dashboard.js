@@ -35,15 +35,20 @@ class Dashboard extends Component {
         const aMonthAgo = new Date();
         aMonthAgo.setDate(aMonthAgo.getDate() - 30);
         let year = -1;
+      let filter = {};
         if (!this.props.year) {
-            year = localStorage.getItem("enabledYear");
+          filter.year = localStorage.getItem('enabledYear');
         } else {
-            year = this.props.year;
+          filter.year = this.props.year;
         }
+      year = filter.year;
+      if (this.props.userId) {
+        filter.user_id = this.props.userId;
+      }
 
         {
             dataProvider(GET_LIST, 'Orders', {
-                filter: {year: year},
+              filter: filter,
                 sort: {field: 'id', order: 'DESC'},
                 pagination: {page: 1, perPage: 1000},
             })
@@ -99,7 +104,7 @@ class Dashboard extends Component {
 
         }
         dataProvider(GET_LIST, 'orderedProducts', {
-            filter: {year: year},
+          filter: filter,
             sort: {},
             pagination: {page: 1, perPage: 1000},
         })
