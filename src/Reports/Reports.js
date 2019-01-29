@@ -23,6 +23,8 @@ import FormLabel from "@material-ui/core/FormLabel/FormLabel";
 import Divider from "@material-ui/core/Divider/Divider";
 import Typography from "@material-ui/core/Typography/Typography";
 import hostURL from "../host";
+import {CustomSelectInput} from "./CustomSelect";
+import {ReportType} from "./ReportTypeField";
 
 const httpClient = (url, options = {}) => {
     if (!options.headers) {
@@ -34,13 +36,6 @@ const httpClient = (url, options = {}) => {
 };
 const dataProvider = restClient;
 
-const CustomSelectInput = ({onChangeCustomHandler, ...rest}) => (
-    <SelectInput onChange={(event, key, payload) => {
-        onChangeCustomHandler(key)
-    }}
-                 {...rest}
-    />
-);
 const AddrInput = addField(({input, meta: {touched, error}, updateAddress, ...props}) => (
     <AddressInput updateAddress={address => {
         console.log(address);
@@ -101,6 +96,7 @@ const styles = {
         marginRight: '1rem'
     }
 };
+
 class reportsWizard extends React.Component {
     //users: {}, years: {}, customers: {}
     state = {update: false, address: '', zipCode: '', city: '', state: '', updateAddress: 0};
@@ -394,17 +390,11 @@ class reportsWizard extends React.Component {
 
         }
     }
+
     stepsContent() {
         const {classes} = this.props;
         this.setState({
-            stepsContent: [<CustomSelectInput
-                source="template" choices={[{id: 'customers_split', name: 'Year; Split by Customer'}, {
-                    id: 'Year Totals',
-                    name: 'Year Totals'
-                }, {id: 'Customer Year Totals', name: 'Customer Year Totals'}, {
-                    id: 'Customer All-Time Totals',
-                    name: 'Customer All-Time Totals'
-            }]} validate={requiredValidate} onChangeCustomHandler={(key) => this.updateReportType(key)}/>,
+            stepsContent: [<ReportType onChangeCustomHandler={(key) => this.updateReportType(key)}/>,
                     [
                         <TextInput
                             source="Scout_name" validate={requiredValidate}/>,
@@ -418,38 +408,7 @@ class reportsWizard extends React.Component {
                             <Divider className={classes.halfDivider}/>
 
                         </div>,
-                        <FormDataConsumer className={classes.addressComponent}>
-                            {({formData, ...rest}) => {
-
-                                if (this.state.updateAddress === 1) {
-                                    this.setState({updateAddress: 0});
-                                    rest.dispatch(change('record-form', "Scout_address", this.state.address));
-                                    rest.dispatch(change('record-form', "Scout_Town", this.state.city));
-                                    rest.dispatch(change('record-form', "Scout_State", this.state.state));
-                                    rest.dispatch(change('record-form', "Scout_Zip", this.state.zipCode));
-                                }
-                                return (
-
-
-                                    <div className={classes.addressContainerLabeled}>
-                                        <FormLabel variant={"headline"}>Enter an Address manually</FormLabel>
-                                        <div className={classes.addressContainer}>
-
-                                            <TextInput source="Scout_address" className={classes.addressComponent}
-                                                       value={this.state.address} validate={requiredValidate}/>
-
-
-                                            <TextInput source="Scout_Town" className={classes.addressComponent}
-                                                       validate={requiredValidate}/>
-                                            <TextInput source="Scout_State" className={classes.addressComponent}
-                                                       validate={requiredValidate}/>
-                                            <TextInput source="Scout_Zip" className={classes.addressComponent}
-                                                       validate={requiredValidate}/>
-                                        </div>
-                                    </div>
-                                )
-                            }}
-                        </FormDataConsumer>,
+                        this.renderAddressFields(),
 
                         <TextInput
                             source="Scout_Phone" validate={requiredValidate}/>,
@@ -460,80 +419,136 @@ class reportsWizard extends React.Component {
                             <ImageField source="src" title="title"/>
                         </ImageInput>,
 
-                        <FormDataConsumer>
-                            {({formData, ...rest}) => {
-                                if (this.state.yearReq) {
-                                    return (
-                                        <CustomSelectInput source={"Year"} label="Year" optionText="year"
-                                                           optionValue="id" choices={this.state.years}
-                                                           onChangeCustomHandler={(key) => this.updateYear(key)}
-                                                           validate={requiredValidate}  {...rest}/>
-                                    )
-                                }
-                            }}
-                        </FormDataConsumer>,
-                        <FormDataConsumer>
-                            {({formData, ...rest}) => {
-                                if (this.state.userReq) {
-
-                                    return [<CustomSelectInput label="User" source="User" key="UserComboBox"
-                                                               optionText={"fullName"}
-                                                               optionValue={"id"}
-                                                               choices={this.state.users}  {...rest}
-                                                               onChangeCustomHandler={(key) => this.updateUser(key)}
-                                                               validate={requiredValidate}/>,
-                                        <BooleanInput key="Include_Sub_Users"
-                                                      source="Include_Sub_Users" onChange={this.updateIncludeSub}/>]
-                                }
-                            }
-                            }
-                        </FormDataConsumer>,
+                        this.renderYearFields(),
+                        this.renderUserFields(),
 
 
+                        this.renderCategoryFields(),
 
-                        <FormDataConsumer>
-                            {({formData, ...rest}) => {
-                                if (this.state.year && this.state.catReq) {
-                                    //console.log(this.state.year);
+                        this.renderCustomerNameFields(),
 
-                                    return <SelectInput source="Category" optionText={"categoryName"}
-                                                        optionValue={"categoryName"}
-                                                        choices={this.state.categories} {...rest}
-                                                        validate={requiredValidate}/>
-
-
-                                }
-
-                            }
-                            }
-                        </FormDataConsumer>,
-
-                        <FormDataConsumer>
-                            {({formData, ...rest}) => {
-
-                                if ((this.state.year && this.state.user && this.state.custReq) || (this.state.reportType === 'Customer All-Time Totals' && this.state.user && this.state.custReq)) {
-                                    return <SelectArrayInput source="Customer" optionText={"customerName"}
-                                                             optionValue={"id"} choices={
-                                        this.state.customers} {...rest} validate={requiredValidate}/>
-
-
-                                }
-                            }
-                            }
-                        </FormDataConsumer>,
-
-                        <FormDataConsumer>
-                            {({formData, ...rest}) => {
-                                if (this.state.dueReq) {
-                                    return <BooleanInput
-                                        source="Print_Due_Header"/>
-                                }
-                            }}
-                        </FormDataConsumer>
+                        this.renderPrintHeaderField()
 
                     ]]
             }
         )
+    }
+
+    renderPrintHeaderField() {
+        return <FormDataConsumer>
+            {({formData, ...rest}) => {
+                if (this.state.dueReq) {
+                    return <BooleanInput
+                        source="Print_Due_Header"/>
+                }
+            }}
+        </FormDataConsumer>;
+    }
+
+    renderCustomerNameFields() {
+        return <FormDataConsumer>
+            {({formData, ...rest}) => {
+
+                if ((this.state.year && this.state.user && this.state.custReq) || (this.state.reportType === 'Customer All-Time Totals' && this.state.user && this.state.custReq)) {
+                    return <SelectArrayInput source="Customer" optionText={"customerName"}
+                                             optionValue={"id"} choices={
+                        this.state.customers} {...rest} validate={requiredValidate}/>
+
+
+                }
+            }
+            }
+        </FormDataConsumer>;
+    }
+
+    renderCategoryFields() {
+        return <FormDataConsumer>
+            {({formData, ...rest}) => {
+                if (this.state.year && this.state.catReq) {
+                    //console.log(this.state.year);
+
+                    return <SelectInput source="Category" optionText={"categoryName"}
+                                        optionValue={"categoryName"}
+                                        choices={this.state.categories} {...rest}
+                                        validate={requiredValidate}/>
+
+
+                }
+
+            }
+            }
+        </FormDataConsumer>;
+    }
+
+    renderUserFields() {
+        return <FormDataConsumer>
+            {({formData, ...rest}) => {
+                if (this.state.userReq) {
+
+                    return [<CustomSelectInput label="User" source="User" key="UserComboBox"
+                                               optionText={"fullName"}
+                                               optionValue={"id"}
+                                               choices={this.state.users}  {...rest}
+                                               onChangeCustomHandler={(key) => this.updateUser(key)}
+                                               validate={requiredValidate}/>,
+                        <BooleanInput key="Include_Sub_Users"
+                                      source="Include_Sub_Users" onChange={this.updateIncludeSub}/>]
+                }
+            }
+            }
+        </FormDataConsumer>;
+    }
+
+    renderYearFields() {
+        return <FormDataConsumer>
+            {({formData, ...rest}) => {
+                if (this.state.yearReq) {
+                    return (
+                        <CustomSelectInput source={"Year"} label="Year" optionText="year"
+                                           optionValue="id" choices={this.state.years}
+                                           onChangeCustomHandler={(key) => this.updateYear(key)}
+                                           validate={requiredValidate}  {...rest}/>
+                    )
+                }
+            }}
+        </FormDataConsumer>;
+    }
+
+    renderAddressFields() {
+        const {classes} = this.props;
+
+        return <FormDataConsumer className={classes.addressComponent}>
+            {({formData, ...rest}) => {
+
+                if (this.state.updateAddress === 1) {
+                    this.setState({updateAddress: 0});
+                    rest.dispatch(change('record-form', "Scout_address", this.state.address));
+                    rest.dispatch(change('record-form', "Scout_Town", this.state.city));
+                    rest.dispatch(change('record-form', "Scout_State", this.state.state));
+                    rest.dispatch(change('record-form', "Scout_Zip", this.state.zipCode));
+                }
+                return (
+
+
+                    <div className={classes.addressContainerLabeled}>
+                        <FormLabel variant={"headline"}>Enter an Address manually</FormLabel>
+                        <div className={classes.addressContainer}>
+
+                            <TextInput source="Scout_address" className={classes.addressComponent}
+                                       value={this.state.address} validate={requiredValidate}/>
+
+
+                            <TextInput source="Scout_Town" className={classes.addressComponent}
+                                       validate={requiredValidate}/>
+                            <TextInput source="Scout_State" className={classes.addressComponent}
+                                       validate={requiredValidate}/>
+                            <TextInput source="Scout_Zip" className={classes.addressComponent}
+                                       validate={requiredValidate}/>
+                        </div>
+                    </div>
+                )
+            }}
+        </FormDataConsumer>;
     }
 
     componentWillReceiveProps() {
