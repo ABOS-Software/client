@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-    addField,
-    BooleanInput,
-    fetchUtils,
-    FormDataConsumer,
-    GET_LIST,
-    ImageField,
-    ImageInput,
-    required,
-    SelectArrayInput,
-    SelectInput,
-    TextInput
+  addField,
+  BooleanInput,
+  fetchUtils,
+  FormDataConsumer,
+  GET_LIST,
+  ImageField,
+  ImageInput,
+  required,
+  SelectArrayInput,
+  SelectInput,
+  TextInput
 } from 'react-admin';
 import {withStyles} from "@material-ui/core";
 import {change} from 'redux-form';
@@ -271,53 +271,69 @@ class reportsWizard extends React.Component {
     updateReportType(ReportType) {
         switch (ReportType) {
             case 'customers_split':
-                this.setState({
-                    reportType: ReportType,
-                    yearReq: true,
-                    userReq: true,
-                    custReq: false,
-                    catReq: true,
-                    dueReq: true
-                });
+              this.updateReportSplit(ReportType);
 
                 break;
             case 'Year Totals':
-                this.setState({
-                    reportType: ReportType,
-                    yearReq: true,
-                    userReq: true,
-                    custReq: false,
-                    catReq: true,
-                    dueReq: true
-                });
+              this.updateReportYear(ReportType);
 
                 break;
             case 'Customer Year Totals':
-                this.setState({
-                    reportType: ReportType,
-                    yearReq: true,
-                    userReq: true,
-                    custReq: true,
-                    catReq: true,
-                    dueReq: true
-                });
+              this.updateReportCustomerYear(ReportType);
 
                 break;
             case 'Customer All-Time Totals':
-                this.setState({
-                    reportType: ReportType,
-                    yearReq: false,
-                    userReq: true,
-                    custReq: true,
-                    catReq: false,
-                    dueReq: false
-                });
+              this.updateReportCustomerHistorical(ReportType);
 
                 break;
         }
 
         // this.updateChoices();
     }
+
+  updateReportCustomerHistorical(ReportType) {
+    this.setState({
+      reportType: ReportType,
+      yearReq: false,
+      userReq: true,
+      custReq: true,
+      catReq: false,
+      dueReq: false
+    });
+  }
+
+  updateReportCustomerYear(ReportType) {
+    this.setState({
+      reportType: ReportType,
+      yearReq: true,
+      userReq: true,
+      custReq: true,
+      catReq: true,
+      dueReq: true
+    });
+  }
+
+  updateReportYear(ReportType) {
+    this.setState({
+      reportType: ReportType,
+      yearReq: true,
+      userReq: true,
+      custReq: false,
+      catReq: true,
+      dueReq: true
+    });
+  }
+
+  updateReportSplit(ReportType) {
+    this.setState({
+      reportType: ReportType,
+      yearReq: true,
+      userReq: true,
+      custReq: false,
+      catReq: true,
+      dueReq: true
+    });
+  }
 
     updateAddress = (address) => {
         let addressObj = {address: '', zipCode: '', city: '', state: '', bldgNum: '', street: ''};
@@ -374,22 +390,34 @@ class reportsWizard extends React.Component {
             const year = this.state.year;
             const user = this.state.user;
             const includeSub = this.state.includeSubUser;
-            if ((year && user) > -1) {
-                this.getCustomersWithYearAndUser(year, user, includeSub);
-
-            }
-            if (year) {
-                this.getCategoriesForYear(year);
-
-            }
-            if (user && this.state.reportType === 'Customer All-Time Totals') {
-                this.getCustomersWithUser(user, includeSub);
-
-            }
+          this.updateCustomers(year, user, includeSub);
+          this.updateCategories(year);
+          this.updateAllTimeCustomers(user, includeSub);
             this.setState({update: false})
 
         }
     }
+
+  updateAllTimeCustomers(user, includeSub) {
+    if (user && this.state.reportType === 'Customer All-Time Totals') {
+      this.getCustomersWithUser(user, includeSub);
+
+    }
+  }
+
+  updateCategories(year) {
+    if (year) {
+      this.getCategoriesForYear(year);
+
+    }
+  }
+
+  updateCustomers(year, user, includeSub) {
+    if ((year && user) > -1) {
+      this.getCustomersWithYearAndUser(year, user, includeSub);
+
+    }
+  }
 
     stepsContent() {
         const {classes} = this.props;
@@ -445,11 +473,23 @@ class reportsWizard extends React.Component {
         </FormDataConsumer>;
     }
 
+  checkCustomerConditionsYear() {
+    return (this.state.year && this.state.user && this.state.custReq);
+  }
+
+  checkCustomerConditionsHistorical() {
+    return (this.state.reportType === 'Customer All-Time Totals' && this.state.user && this.state.custReq);
+  }
+
+  checkCustomerConditions() {
+    return (this.checkCustomerConditionsYear() || this.checkCustomerConditionsHistorical());
+  }
+
     renderCustomerNameFields() {
         return <FormDataConsumer>
             {({formData, ...rest}) => {
 
-                if ((this.state.year && this.state.user && this.state.custReq) || (this.state.reportType === 'Customer All-Time Totals' && this.state.user && this.state.custReq)) {
+              if (this.checkCustomerConditions()) {
                     return <SelectArrayInput source="Customer" optionText={"customerName"}
                                              optionValue={"id"} choices={
                         this.state.customers} {...rest} validate={requiredValidate}/>
