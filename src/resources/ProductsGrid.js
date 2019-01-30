@@ -241,6 +241,95 @@ class ProductsGrid extends Component {
         this.loadProducts();
     }
 
+    getProducts(order) {
+        let orderResponse;
+        let orderUse = true;
+        if (order.data) {
+            orderResponse = order.data
+        } else if (order.orderedProducts) {
+            orderResponse = order;
+        } else {
+            order = {
+                orderedProducts: [],
+                cost: 0.0,
+                quantity: 0,
+                amountPaid: 0.0,
+                delivered: false,
+                year: {},
+                userName: ''
+            };
+            orderResponse = order;
+            orderUse = false;
+        }
+        dataProvider(GET_LIST, 'Products', {
+            filter: filter,
+            pagination: {page: 1, perPage: 1000},
+            sort: {field: 'id', order: 'ASC'}
+        })
+          .then(response =>
+            response.data.reduce((stats, product) => {
+                  let match = orderResponse.orderedProducts.filter(orderObj => {
+                      return orderObj.products.id == product.id;
+                  });
+                  if (match.length > 0) {
+                      stats.products.push({
+                          humanProductId: product.humanProductId,
+                          id: product.id,
+                          year: {id: product.year.id},
+                          productName: product.productName,
+                          unitSize: product.unitSize,
+                          unitCost: product.unitCost,
+                          quantity: match[0].quantity,
+                          extended_cost: match[0].extendedCost
+                      });
+                  } else {
+                      stats.products.push({
+                          humanProductId: product.humanProductId,
+                          id: product.id,
+                          year: {id: product.year.id},
+                          productName: product.productName,
+                          unitSize: product.unitSize,
+                          unitCost: product.unitCost,
+                          quantity: 0,
+                          extended_cost: 0.0
+                      });
+                  }
+
+                  return stats;
+              },
+              {
+                  products: []
+
+              }
+            )
+          ).then(({products}) => {
+              if (orderUse) {
+                  this.setState({
+                      rows: products,
+                      order: order.data,
+                      year: order.year,
+                      userName: order.userName
+                  });
+              } else {
+                  this.setState({
+                      rows: products,
+                      order: {
+                          orderedProducts: [],
+                          cost: 0.0,
+                          quantity: 0,
+                          amountPaid: 0.0,
+                          delivered: false,
+                          year: {},
+                          userName: ''
+                      }
+                  });
+              }
+
+              window.dispatchEvent(new Event('resize'));
+          }
+        );
+    }
+
     loadProducts(year) {
         let {record} = this.props;
         if (record.json) {
@@ -268,7 +357,8 @@ class ProductsGrid extends Component {
                     id: record.order.id
                 })
                   .then(orderResponse => {
-                      dataProvider(GET_LIST, 'Products', {
+                      this.getProducts(orderResponse);
+                      /*dataProvider(GET_LIST, 'Products', {
                           filter: filter,
                           pagination: {page: 1, perPage: 1000},
                           sort: {field: 'id', order: 'ASC'}
@@ -306,7 +396,7 @@ class ProductsGrid extends Component {
                             },
                             {
                                 products: []
-                                /*
+                                /!*
                                                                                 humanProductId: '0',
                                                                                 id: 0,
                                                                                 year: {id: 0},
@@ -315,7 +405,7 @@ class ProductsGrid extends Component {
                                                                                 unitCost: 0.0,
                                                                                 quantity: 0,
                                                                                 extended_cost: 0.0,
-                                                     */
+                                                     *!/
                             }
                           )
                         ).then(({products}) => {
@@ -327,10 +417,11 @@ class ProductsGrid extends Component {
                             });
                             window.dispatchEvent(new Event('resize'));
                         }
-                      );
+                      );*/
                   });
             } else {
-                dataProvider(GET_LIST, 'Products', {
+                this.getProducts(record.order);
+                /*dataProvider(GET_LIST, 'Products', {
                     filter: filter,
                     pagination: {page: 1, perPage: 1000},
                     sort: {field: 'id', order: 'ASC'}
@@ -368,7 +459,7 @@ class ProductsGrid extends Component {
                       },
                       {
                           products: []
-                          /*
+                          /!*
                                                                       humanProductId: '0',
                                                                       id: 0,
                                                                       year: {id: 0},
@@ -377,7 +468,7 @@ class ProductsGrid extends Component {
                                                                       unitCost: 0.0,
                                                                       quantity: 0,
                                                                       extended_cost: 0.0,
-                                           */
+                                           *!/
                       }
                     )
                   ).then(({products}) => {
@@ -389,58 +480,10 @@ class ProductsGrid extends Component {
                       });
                       window.dispatchEvent(new Event('resize'));
                   }
-                );
+                );*/
             }
         } else {
-            dataProvider(GET_LIST, 'Products', {
-                filter: filter,
-                pagination: {page: 1, perPage: 1000},
-                sort: {field: 'id', order: 'ASC'}
-            })
-              .then(response =>
-                response.data.reduce((stats, product) => {
-                      stats.products.push({
-                          humanProductId: product.humanProductId,
-                          id: product.id,
-                          year: {id: product.year.id},
-                          productName: product.productName,
-                          unitSize: product.unitSize,
-                          unitCost: product.unitCost,
-                          quantity: 0,
-                          extended_cost: 0.0
-                      });
-                      return stats;
-                  },
-                  {
-                      products: []
-                      /*
-                                                                humanProductId: '0',
-                                                                id: 0,
-                                                                year: {id: 0},
-                                                                productName: '',
-                                                                unitSize: '',
-                                                                unitCost: 0.0,
-                                                                quantity: 0,
-                                                                extended_cost: 0.0,
-                                     */
-                  }
-                )
-              ).then(({products}) => {
-                  this.setState({
-                      rows: products,
-                      order: {
-                          orderedProducts: [],
-                          cost: 0.0,
-                          quantity: 0,
-                          amountPaid: 0.0,
-                          delivered: false,
-                          year: {},
-                          userName: ''
-                      }
-                  });
-                  window.dispatchEvent(new Event('resize'));
-              }
-            );
+            this.getProducts({});
         }
     }
 

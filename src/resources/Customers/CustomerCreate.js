@@ -17,40 +17,7 @@ const FullForm = addField(({input, meta: {touched, error}, ...props}) => (
   <CustomerForm {...props} />
 ));
 const dataProvider = restClient;
-const styles = {
-
-  inlineBlock: {display: 'inline-flex', marginRight: '1rem'},
-  halfDivider: {
-    flexGrow: 1,
-    height: '2px',
-    backgroundColor: 'rgba(0,0,0,0.25)'
-  },
-  dividerContainer: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    verticalAlign: 'middle',
-    alignItems: 'center'
-  },
-  orText: {
-    margin: '10px'
-  },
-  addressContainer: {
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'row'
-  },
-  addressContainerLabeled: {
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'column'
-  },
-  addressComponent: {
-    flexGrow: '1',
-    marginRight: '1rem'
-  }
-
-};
+const styles = {};
 const reverseGeocode = (address) => {
   return {lat: 0, long: 0};
 };
