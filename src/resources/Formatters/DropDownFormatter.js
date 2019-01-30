@@ -7,15 +7,15 @@ const React = require('react');
 class DropDownFormatter extends React.Component {
     static propTypes = {
         options: PropTypes.arrayOf(
-            PropTypes.oneOfType([
-                PropTypes.string,
-                PropTypes.shape({
-                    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-                    title: PropTypes.string,
-                    value: PropTypes.string,
-                    text: PropTypes.string
-                })
-            ])).isRequired,
+          PropTypes.oneOfType([
+              PropTypes.string,
+              PropTypes.shape({
+                  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+                  title: PropTypes.string,
+                  value: PropTypes.string,
+                  text: PropTypes.string
+              })
+          ])).isRequired,
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
     };
 

@@ -6,7 +6,6 @@ import MUINumberEditorRaw from './MUINumberEditorRaw';
 import MUICurrencyEditorRaw from './MUICurrencyEditorRaw';
 import MUISelectEditorRaw from './MUISelectEditorUnWrapped';
 
-
 let optionPropType = PropTypes.shape({
   id: PropTypes.required,
   title: PropTypes.string
@@ -14,12 +13,11 @@ let optionPropType = PropTypes.shape({
 
 const styles = theme => ({
   textField: {
-    border: '0 !important',
+    border: '0 !important'
   }
 });
 
 class EditorBase extends React.Component {
-
   static propTypes = {
     onCommit: PropTypes.func,
     options: PropTypes.arrayOf(optionPropType),
@@ -37,7 +35,7 @@ class EditorBase extends React.Component {
     onKeyDown: PropTypes.func,
     onFocus: PropTypes.func,
     editorDisplayValue: PropTypes.func,
-    type: PropTypes.string,
+    type: PropTypes.string
   };
 
   static defaultProps = {
@@ -45,7 +43,7 @@ class EditorBase extends React.Component {
   };
   handleChange = (event) => {
     this.setState({value: event.target.value});
-    //this.props.onCommit();
+    // this.props.onCommit();
   };
   getValue = () => {
     let updated = {};
@@ -57,17 +55,15 @@ class EditorBase extends React.Component {
   getInputNode = () => {
     if (this.props.type === 'Select') {
       return ReactDOM.findDOMNode(this).getElementsByTagName('select')[0];
-
     } else {
       return ReactDOM.findDOMNode(this).getElementsByTagName('input')[0];
-
     }
   };
 
   componentWillMount() {
-    this.setState({value: this.props.value})
-
+    this.setState({value: this.props.value});
   }
+
   onClick() {
     this.getInputNode().focus();
   }
@@ -104,38 +100,36 @@ class EditorBase extends React.Component {
               ret.push(obj[props[i]]);
           }
           return ret.join('|');
-      };*/
-
+      }; */
 
   render() {
     let props = {
       height: this.props.height,
-      onKeyDown:this.props.onKeyDown,
-      value:this.state.value,
-      onChange:this.handleChange,
+      onKeyDown: this.props.onKeyDown,
+      value: this.state.value,
+      onChange: this.handleChange
 
     };
 
-    let editor = <MUITextEditorUnWrapped  {...props}/>;
+    let editor = <MUITextEditorUnWrapped {...props} />;
     switch (this.props.type) {
-      case "Number":
-        editor = <MUINumberEditorRaw {...props}/>;
+      case 'Number':
+        editor = <MUINumberEditorRaw {...props} />;
         break;
-      case "Currency":
-        editor = <MUICurrencyEditorRaw {...props}/>;
+      case 'Currency':
+        editor = <MUICurrencyEditorRaw {...props} />;
         break;
-      case "Select":
+      case 'Select':
         editor = <MUISelectEditorRaw {...props} options={this.props.options}/>;
         break;
     }
     return editor;
-/*      <MUITextEditorUnWrapped height={this.props.height} onKeyDown={this.props.onKeyDown} value={this.state.value}
+    /*      <MUITextEditorUnWrapped height={this.props.height} onKeyDown={this.props.onKeyDown} value={this.state.value}
                               onChange={this.handleChange}>
 
-      </MUITextEditorUnWrapped>);*/
+      </MUITextEditorUnWrapped>); */
   }
-
 }
 
 export default (EditorBase);
-//export default (MUITextEditor);
+// export default (MUITextEditor);

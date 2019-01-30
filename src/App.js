@@ -37,11 +37,12 @@ const MyUserMenu = props => (
   </UserMenu>
 );
 Sentry.init({
-  dsn: 'https://4bd4e85079aa4ba59ddb160b8bfd1484@sentry.io/1365370' });
+  dsn: 'https://4bd4e85079aa4ba59ddb160b8bfd1484@sentry.io/1365370'
+});
 Sentry.configureScope(scope => {
   scope.addEventProcessor(async (event, hint) => {
     if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
-      event = null
+      event = null;
     }
     return event;
   });
@@ -62,7 +63,7 @@ const layout = (props) => {
       </ErrorBoundry>
     </Layout>
 
-  )
+  );
 };
 const App = () => (
   <ErrorBoundry>
@@ -94,9 +95,9 @@ const App = () => (
           // UGY
             : <Resource name='Group' />,
           permissions === 'ROLE_ADMIN'
-            ? <Resource name='UsersProducts' options={{ label: 'Users and Products' }} list={UGY} />
+            ? <Resource name='UsersProducts' options={{label: 'Users and Products'}} list={UGY}/>
           // UGY
-            : <Resource name='UsersProducts' options={{ label: 'Users and Products' }} list={UGY} />
+            : <Resource name='UsersProducts' options={{label: 'Users and Products'}} list={UGY}/>
         ]}
       </Admin>
     </JssProvider>

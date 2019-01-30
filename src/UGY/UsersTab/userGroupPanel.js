@@ -22,35 +22,35 @@ const styles = theme => ({
     height: '100%'
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(15)
   },
   userPanel: {
-    width: '100%',
+    width: '100%'
   },
   modal: {
     top: '10%',
     left: '10%',
     width: '80%',
     height: '80%',
-    position: 'absolute',
+    position: 'absolute'
   },
   appBar: {
     position: 'absolute',
 
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.drawer + 1
 
   },
   navIconHide: {
     [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
+      display: 'none'
+    }
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
     [theme.breakpoints.up('md')]: {
-      position: 'relative',
-    },
+      position: 'relative'
+    }
   },
   content: {
     display: 'flex',
@@ -62,44 +62,44 @@ const styles = theme => ({
     padding: theme.spacing.unit,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
+      duration: theme.transitions.duration.leavingScreen
+    })
   },
   'content-left': {
-    marginLeft: -drawerWidth,
+    marginLeft: -drawerWidth
   },
   'content-right': {
-    marginRight: -drawerWidth,
+    marginRight: -drawerWidth
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+      duration: theme.transitions.duration.enteringScreen
+    })
   },
   'contentShift-left': {
-    marginLeft: 0,
+    marginLeft: 0
   },
   'contentShift-right': {
-    marginRight: 0,
+    marginRight: 0
   },
   flex: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   topLevelExpansionPanel: {
-    display: 'block',
+    display: 'block'
   },
   'tabScroll': {
     height: '85%',
-    overflow: 'scroll',
+    overflow: 'scroll'
   },
   'tabNoScroll': {
     height: '85%',
-    width: '100%',
+    width: '100%'
 
   },
   fullHeight: {
-    height: '100%',
+    height: '100%'
   },
   fullHeightWidth: {
     height: '100%',
@@ -110,16 +110,16 @@ const styles = theme => ({
 
   },
   leftIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing.unit
   },
   iconSmall: {
-    fontSize: 20,
+    fontSize: 20
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit
   },
   bottomBar: {
     position: 'absolute',
@@ -135,14 +135,14 @@ const styles = theme => ({
   deleteButton: {
     margin: theme.spacing.unit,
     color: 'white',
-    backgroundColor: 'red',
+    backgroundColor: 'red'
 
-  },
+  }
 });
 
 class userGroupPanel extends React.PureComponent {
   render () {
-    const { title, userPanels, classes } = this.props;
+    const {title, userPanels, classes} = this.props;
     return (
       <ExpansionPanel className={classes.topLevelExpansionPanel}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -169,4 +169,4 @@ userGroupPanel.propTypes = {
 
 };
 
-export default(withStyles(styles, {withTheme: true})(userGroupPanel));
+export default (withStyles(styles, {withTheme: true})(userGroupPanel));

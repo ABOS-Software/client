@@ -4,56 +4,55 @@ import {withStyles} from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 
 let optionPropType = PropTypes.shape({
-    id: PropTypes.required,
-    title: PropTypes.string
+  id: PropTypes.required,
+  title: PropTypes.string
 });
 
 const styles = theme => ({
-    select: {
-        border: '0 !important',
-        flexGrow: 1
+  select: {
+    border: '0 !important',
+    flexGrow: 1
 
-    },
-    wrapper: {
-        display: 'flex',
-        flexGrow: 1
-    },
-    formControl: {
-        margin: theme.spacing.unit,
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing.unit * 2,
-    },
-    menuItem: {}
+  },
+  wrapper: {
+    display: 'flex',
+    flexGrow: 1
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2
+  },
+  menuItem: {}
 });
 
 class MUISelectEditorRaw extends React.Component {
-
     static propTypes = {
-        onChange: PropTypes.func,
+      onChange: PropTypes.func,
 
-        value: PropTypes.any,
-        height: PropTypes.number,
+      value: PropTypes.any,
+      height: PropTypes.number,
 
-        onKeyDown: PropTypes.func,
+      onKeyDown: PropTypes.func
 
     };
 
     static defaultProps = {
-        resultIdentifier: 'id'
+      resultIdentifier: 'id'
     };
 
     state = {
-        open: true,
+      open: true
 
     };
     handleClose = () => {
-        this.setState({open: false});
+      this.setState({open: false});
     };
 
     handleOpen = () => {
-        this.setState({open: true});
+      this.setState({open: true});
     };
 
     /*
@@ -85,49 +84,47 @@ class MUISelectEditorRaw extends React.Component {
                 ret.push(obj[props[i]]);
             }
             return ret.join('|');
-        };*/
-    renderOptions(): Array<ReactElement> {
-        let options = [];
-        //options.push(<MenuItem value={-1}/>);
+        }; */
+  renderOptions(): Array<ReactElement> {
+    let options = [];
+    // options.push(<MenuItem value={-1}/>);
 
-        this.props.options.forEach(function (name) {
-            if (typeof(name) === 'string') {
-                options.push(<option key={"category-dropDown-" + name} value={name}>{name}</option>);
-            } else {
-                options.push(<option key={"category-dropDown-" + name.id}
-                                     value={name.id}>{name.text || name.value || name.name}</option>);
-            }
-        }, this);
-        return options;
+    this.props.options.forEach(function (name) {
+      if (typeof (name) === 'string') {
+        options.push(<option key={'category-dropDown-' + name} value={name}>{name}</option>);
+      } else {
+        options.push(<option key={'category-dropDown-' + name.id}
+                             value={name.id}>{name.text || name.value || name.name}</option>);
+      }
+    }, this);
+    return options;
     }
 
+  render(): ?ReactElement {
+    const {classes} = this.props;
+    return (<div onKeyDown={this.props.onKeyDown} className={classes.wrapper}>
+      <Select
+        // open={true}
+        // defaultValue={this.props.value}
+        open
+        native
+        value={this.props.value}
+        onChange={this.props.onChange}
+        inputProps={{
+          name: 'category',
+          id: 'category-simple'
+        }}
 
-    render(): ?ReactElement {
-        const {classes} = this.props;
-        return (<div onKeyDown={this.props.onKeyDown} className={classes.wrapper}>
-            <Select
-                //open={true}
-                //defaultValue={this.props.value}
-                open
-                native
-                value={this.props.value}
-                onChange={this.props.onChange}
-                inputProps={{
-                    name: 'category',
-                    id: 'category-simple',
-                }}
+        /*               name= 'category'
+                             id ='category-simple' */
 
-                /*               name= 'category'
-                               id ='category-simple'*/
+        className={classes.select}
+      >
+        {this.renderOptions()}
+      </Select>
 
-                className={classes.select}
-            >
-                {this.renderOptions()}
-            </Select>
-
-        </div>);
+    </div>);
     }
-
 }
 
 export default (withStyles(styles, {withTheme: true})(MUISelectEditorRaw));

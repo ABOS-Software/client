@@ -21,20 +21,18 @@ const styles = theme => ({
 });
 class addUsersToUser extends React.Component {
   state = {
-    selectedUser: "",
+    selectedUser: ''
 
   };
   renderUserItems = () => {
     let userList = [];
     Object.keys(this.props.userChecks).forEach(userName => {
-      userList.push(<MenuItem key={"AddUserToUser-user-" + userName} value={userName}>{userName}</MenuItem>);
-
+      userList.push(<MenuItem key={'AddUserToUser-user-' + userName} value={userName}>{userName}</MenuItem>);
     });
     return userList;
   };
   addSelectedUsersToUser = event => {
     let parentState = this.props.userChecks;
-
 
     Object.keys(this.props.userChecks[this.state.selectedUser].subUsers).filter(userName => this.props.userChecks[userName].checked).forEach(userName => {
       parentState = update(parentState, {
@@ -51,26 +49,25 @@ class addUsersToUser extends React.Component {
     return (
       <Dialog
 
-
         open={this.props.open}
         onClose={() => this.props.closeDialog()}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">Add Selected Users to User</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Add Selected Users to User</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please select the user to add the users to
           </DialogContentText>
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="addUsersToGroup-GroupSelection">User</InputLabel>
+            <InputLabel htmlFor='addUsersToGroup-GroupSelection'>User</InputLabel>
             <Select
               value={this.state.selectedUser}
               onChange={event => {
-                this.setState({selectedUser: event.target.value})
+                this.setState({selectedUser: event.target.value});
               }}
               inputProps={{
                 name: 'UserSelection',
-                id: 'addUsersToUser-UserSelection',
+                id: 'addUsersToUser-UserSelection'
               }}
             >
               {this.renderUserItems()
@@ -80,18 +77,16 @@ class addUsersToUser extends React.Component {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.props.closeDialog()} color="primary">
+          <Button onClick={() => this.props.closeDialog()} color='primary'>
             Cancel
           </Button>
-          <Button onClick={this.addSelectedUsersToUser} color="primary">
+          <Button onClick={this.addSelectedUsersToUser} color='primary'>
             Apply
           </Button>
         </DialogActions>
       </Dialog>
-    )
+    );
   }
-
-
 }
 
 addUsersToUser.PropTypes = {
@@ -102,4 +97,3 @@ addUsersToUser.PropTypes = {
 };
 
 export default (withStyles(styles, {withTheme: true})(addUsersToUser));
-

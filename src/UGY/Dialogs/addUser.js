@@ -13,7 +13,6 @@ import {CREATE} from 'react-admin';
 
 import restClient from '../../grailsRestClient';
 
-
 import PropTypes from 'prop-types';
 
 const drawerWidth = 240;
@@ -24,13 +23,12 @@ const styles = theme => ({
 });
 class addUser extends React.Component {
   state = {
-      userName: "",
-      password: "",
-      fullName: "",
+    userName: '',
+    password: '',
+    fullName: ''
   };
   updateAddUserState = (field, value) => {
-
-    this.setState({[field]: value})
+    this.setState({[field]: value});
   };
   addSingleUser = event => {
     dataProvider(CREATE, 'User', {
@@ -49,87 +47,78 @@ class addUser extends React.Component {
 
     return (
       <Dialog
-        key={"addUserDialog"}
+        key={'addUserDialog'}
 
         open={this.props.open}
         onClose={() => this.props.closeDialog()}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">Add User</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Add User</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please enter the information about the user
           </DialogContentText>
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="AddUser-Username">Username</InputLabel>
+            <InputLabel htmlFor='AddUser-Username'>Username</InputLabel>
             <TextField
               value={this.state.userName}
               onChange={event => {
-                this.updateAddUserState("userName", event.target.value)
+                this.updateAddUserState('userName', event.target.value);
               }}
               inputProps={{
                 name: 'UserName',
-                id: 'AddUser-Username',
+                id: 'AddUser-Username'
               }}
-            >
-
-            </TextField>
+            />
           </FormControl>
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="AddUser-Password">Password</InputLabel>
+            <InputLabel htmlFor='AddUser-Password'>Password</InputLabel>
             <TextField
               value={this.state.password}
-              type="password"
+              type='password'
               onChange={event => {
-                this.updateAddUserState("password", event.target.value)
+                this.updateAddUserState('password', event.target.value);
               }}
 
               inputProps={{
                 name: 'Password',
-                id: 'AddUser-Password',
+                id: 'AddUser-Password'
               }}
-            >
-
-            </TextField>
+            />
           </FormControl>
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="AddUser-FullName">FullName</InputLabel>
+            <InputLabel htmlFor='AddUser-FullName'>FullName</InputLabel>
             <TextField
               value={this.state.fullName}
               onChange={event => {
-                this.updateAddUserState("fullName", event.target.value)
+                this.updateAddUserState('fullName', event.target.value);
               }}
 
               inputProps={{
                 name: 'FullName',
-                id: 'AddUser-FullName',
+                id: 'AddUser-FullName'
               }}
-            >
-
-            </TextField>
+            />
           </FormControl>
 
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.props.closeDialog()} color="primary">
+          <Button onClick={() => this.props.closeDialog()} color='primary'>
             Cancel
           </Button>
-          <Button onClick={this.addSingleUser} color="primary">
+          <Button onClick={this.addSingleUser} color='primary'>
             Apply
           </Button>
         </DialogActions>
       </Dialog>
-    )
+    );
   }
-
-
 }
 
 addUser.PropTypes = {
   closeDialog: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
+  open: PropTypes.bool.isRequired
 
 };
 
 export default (withStyles(styles, {withTheme: true})(addUser));
-

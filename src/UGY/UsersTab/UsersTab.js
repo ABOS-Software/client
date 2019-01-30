@@ -14,7 +14,6 @@ import {push} from 'react-router-redux';
 import {connect} from 'react-redux';
 import {showNotification} from 'react-admin';
 
-
 import UserPanel from './UserPanel';
 import UserGroupPanel from './userGroupPanel';
 
@@ -23,8 +22,8 @@ const drawerWidth = 240;
 const styles = theme => ({
 
   flex: {
-    flexGrow: 1,
-  },
+    flexGrow: 1
+  }
 
 });
 
@@ -34,41 +33,32 @@ class UsersTab extends React.PureComponent {
     userAddMenuAnchor: null
   };
 
-
   componentWillMount() {
   }
 
-
-
   addSelectedUsersToGroupClicked = event => {
-    this.props.showDialog("addUsersToGroup");
+    this.props.showDialog('addUsersToGroup');
     this.handleUserBulkMenuClose(event);
   };
-
-
 
   addSelectedUsersToUserClicked = event => {
-    this.props.showDialog("addUsersToUser");
+    this.props.showDialog('addUsersToUser');
     this.handleUserBulkMenuClose(event);
   };
 
-
   addSingleUserClick = event => {
-    this.props.showDialog("addUser");
+    this.props.showDialog('addUser');
 
     this.handleUserAddMenuClose(event);
   };
 
-
   editUserClick = (uName, id, fName) => () => {
-    this.props.showDialog("editUser", {editUser: {id: id, userName: uName, password: '', fullName: fName}});
+    this.props.showDialog('editUser', {editUser: {id: id, userName: uName, password: '', fullName: fName}});
 
-   // this.setState({editUserOpen: true, editUser: {id: id, userName: uName, password: '', fullName: fName}});
+    // this.setState({editUserOpen: true, editUser: {id: id, userName: uName, password: '', fullName: fName}});
 
-    //this.handleUserAddMenuClose(event);
+    // this.handleUserAddMenuClose(event);
   };
-
-
 
   handleCheckBoxChange = name => event => {
     let {userChecks} = this.props;
@@ -77,8 +67,8 @@ class UsersTab extends React.PureComponent {
       [name]: {checked: {$set: event.target.checked}}
     });
     this.props.updateUserChecks(parentState);
-    //this.setState({userChecks: parentState, update: true});
-    //this.setState({[name]: event.target.checked});
+    // this.setState({userChecks: parentState, update: true});
+    // this.setState({[name]: event.target.checked});
   };
 
   handleGroupChange = name => event => {
@@ -89,8 +79,8 @@ class UsersTab extends React.PureComponent {
     });
     this.props.updateUserChecks(parentState);
 
-    //this.setState({userChecks: parentState, update: true});
-    //this.setState({[name]: event.target.checked});
+    // this.setState({userChecks: parentState, update: true});
+    // this.setState({[name]: event.target.checked});
   };
 
   handleManageCheckBoxChange = (parent, name) => event => {
@@ -101,12 +91,8 @@ class UsersTab extends React.PureComponent {
     });
     this.props.updateUserChecks(parentState);
 
-    //this.setState({userChecks: parentState, update: true});
-
-
+    // this.setState({userChecks: parentState, update: true});
   };
-
-
 
   handleUserBulkMenu = event => {
     this.setState({userBulkMenuAnchor: event.currentTarget});
@@ -130,7 +116,7 @@ class UsersTab extends React.PureComponent {
     let curYear = this.props.year;
     Object.keys(userChecks).filter(userName => userChecks[userName].checked).forEach(userName => {
       parentState = update(parentState, {
-        [userName]: {enabledYear: {$set: curYear}, status: {$set: "ENABLED"}}
+        [userName]: {enabledYear: {$set: curYear}, status: {$set: 'ENABLED'}}
 
       });
     });
@@ -145,7 +131,7 @@ class UsersTab extends React.PureComponent {
     let parentState = userChecks;
     Object.keys(userChecks).filter(userName => userChecks[userName].checked).forEach(userName => {
       parentState = update(parentState, {
-        [userName]: {status: {$set: "ARCHIVED"}, enabledYear: {$set: -1}}
+        [userName]: {status: {$set: 'ARCHIVED'}, enabledYear: {$set: -1}}
       });
     });
     this.props.updateUserChecks(parentState);
@@ -157,7 +143,7 @@ class UsersTab extends React.PureComponent {
     let parentState = userChecks;
     Object.keys(userChecks).filter(userName => userChecks[userName].checked).forEach(userName => {
       parentState = update(parentState, {
-        [userName]: {status: {$set: "DISABLED"}, enabledYear: {$set: -1}}
+        [userName]: {status: {$set: 'DISABLED'}, enabledYear: {$set: -1}}
 
       });
     });
@@ -165,53 +151,43 @@ class UsersTab extends React.PureComponent {
     this.handleUserBulkMenuClose(event);
   };
 
-
   renderEnabledUsers = () => {
     let {userChecks} = this.props;
 
     let userPanels = [];
     Object.keys(userChecks).forEach(user => {
       if (userChecks[user].enabledYear === this.props.year) {
-
-        userPanels.push(this.renderUserPanel(user))
-
+        userPanels.push(this.renderUserPanel(user));
       }
     });
-    return (<UserGroupPanel title="Enabled Users" userPanels={userPanels}/>)
-
+    return (<UserGroupPanel title='Enabled Users' userPanels={userPanels}/>);
   };
   renderDisabledUsers = () => {
     let userPanels = [];
     let {userChecks} = this.props;
-
 
     Object.keys(userChecks).forEach(user => {
       /*            console.log(user);
                   console.log(userChecks[user].status);
 
                   console.log(userChecks[user].status !== "ENABLED");
-                  console.log(userChecks[user].status !== "ARCHIVED");*/
-      if (userChecks[user].enabledYear !== this.props.year && userChecks[user].status !== "ENABLED" && userChecks[user].status !== "ARCHIVED") {
-
-
-        userPanels.push(this.renderUserPanel(user))
-
+                  console.log(userChecks[user].status !== "ARCHIVED"); */
+      if (userChecks[user].enabledYear !== this.props.year && userChecks[user].status !== 'ENABLED' && userChecks[user].status !== 'ARCHIVED') {
+        userPanels.push(this.renderUserPanel(user));
       }
     });
-    return (<UserGroupPanel title="Disabled Users" userPanels={userPanels}/>)
-
+    return (<UserGroupPanel title='Disabled Users' userPanels={userPanels}/>);
   };
   renderArchivedUsers = () => {
     let {userChecks} = this.props;
 
     let userPanels = [];
     Object.keys(userChecks).forEach(user => {
-      if (userChecks[user].enabledYear !== this.props.year && userChecks[user].status === "ARCHIVED") {
-
-        userPanels.push(this.renderUserPanel(user))
+      if (userChecks[user].enabledYear !== this.props.year && userChecks[user].status === 'ARCHIVED') {
+        userPanels.push(this.renderUserPanel(user));
       }
     });
-    return (<UserGroupPanel title="Archived Users" userPanels={userPanels}/>)
+    return (<UserGroupPanel title='Archived Users' userPanels={userPanels}/>);
   };
 
   renderUserPanel = (user) => {
@@ -242,28 +218,26 @@ class UsersTab extends React.PureComponent {
       <div>
 
         <Toolbar>
-          <Typography variant="title" color="inherit" className={classes.flex}>
-
-          </Typography>
+          <Typography variant='title' color='inherit' className={classes.flex}/>
           <div>
             <IconButton
               aria-owns={userAddMenuOpen ? 'user-add-menu' : null}
-              aria-haspopup="true"
+              aria-haspopup='true'
               onClick={this.handleUserAddMenu}
-              color="inherit"
+              color='inherit'
             >
               <AddIcon/>
             </IconButton>
             <Menu
-              id="user-add-menu"
+              id='user-add-menu'
               anchorEl={userAddMenuAnchor}
               anchorOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'right'
               }}
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'right'
               }}
               open={userAddMenuOpen}
               onClose={this.handleUserAddMenuClose}
@@ -273,22 +247,22 @@ class UsersTab extends React.PureComponent {
             </Menu>
             <IconButton
               aria-owns={userBulkMenuOpen ? 'user-Bulk-Menu' : null}
-              aria-haspopup="true"
+              aria-haspopup='true'
               onClick={this.handleUserBulkMenu}
-              color="inherit"
+              color='inherit'
             >
               <MoreVert/>
             </IconButton>
             <Menu
-              id="user-Bulk-Menu"
+              id='user-Bulk-Menu'
               anchorEl={userBulkMenuAnchor}
               anchorOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'right'
               }}
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'right'
               }}
               open={userBulkMenuOpen}
               onClose={this.handleUserBulkMenuClose}
@@ -309,7 +283,7 @@ class UsersTab extends React.PureComponent {
           {this.renderDisabledUsers()}
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -319,11 +293,11 @@ UsersTab.propTypes = {
   showDialog: PropTypes.func.isRequired,
   userChecks: PropTypes.any.isRequired,
   updateUserChecks: PropTypes.func.isRequired,
-  year: PropTypes.any.isRequired,
+  year: PropTypes.any.isRequired
 };
 
 export default connect(null, {
   push,
-  showNotification,
+  showNotification
 
 })(withStyles(styles, {withTheme: true})(UsersTab));

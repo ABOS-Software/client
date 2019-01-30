@@ -29,18 +29,17 @@ const storeUser = ({...params}) => {
           localStorage.setItem('userName', userName);
           localStorage.setItem('fullName', fullName);
           localStorage.setItem('enabledYear', enabledYear);
-      });*/
+      }); */
   console.log(params);
-
 };
 app.on('authenticated', storeUser);
 
-/*() => {
+/* () => {
    const dataProvider = restClientDp(app, {});
 
     /!*
         *!/
-});*/
+}); */
 
 // Connect to the same as the browser URL (only in the browser)
 

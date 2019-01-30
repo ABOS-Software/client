@@ -24,15 +24,13 @@ class AddUsersToGroupDialog extends React.Component {
   renderGroupItems = () => {
     let groupList = [];
     this.props.groups.forEach(group => {
-      groupList.push(<MenuItem key={"AddGroupToUser-group-" + group.id}
+      groupList.push(<MenuItem key={'AddGroupToUser-group-' + group.id}
                                value={group.id}>{group.groupName}</MenuItem>);
-
     });
     return groupList;
   };
   addSelectedUsersToGroup = event => {
     let parentState = this.props.userChecks;
-
 
     Object.keys(this.props.userChecks).filter(userName => this.props.userChecks[userName].checked).forEach(userName => {
       parentState = update(parentState, {
@@ -41,31 +39,31 @@ class AddUsersToGroupDialog extends React.Component {
     });
     this.props.updateUserChecks(parentState);
     this.props.closeDialog();
-    //this.setState({userChecks: parentState, addUsersToGroupOpen: false});
-
+    // this.setState({userChecks: parentState, addUsersToGroupOpen: false});
   };
+
   render() {
     const {classes} = this.props;
-    return(<Dialog
+    return (<Dialog
       open={this.props.open}
       onClose={() => this.props.closeDialog()}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby='form-dialog-title'
     >
-      <DialogTitle id="form-dialog-title">Add Selected Users to Group</DialogTitle>
+      <DialogTitle id='form-dialog-title'>Add Selected Users to Group</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Please select the group to add the users to
         </DialogContentText>
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="addUsersToGroup-GroupSelection">Group</InputLabel>
+          <InputLabel htmlFor='addUsersToGroup-GroupSelection'>Group</InputLabel>
           <Select
             value={this.state.selectedGroup}
             onChange={event => {
-              this.setState({selectedGroup: event.target.value})
+              this.setState({selectedGroup: event.target.value});
             }}
             inputProps={{
               name: 'GroupSelection',
-              id: 'addUsersToGroup-GroupSelection',
+              id: 'addUsersToGroup-GroupSelection'
             }}
           >
             {this.renderGroupItems()
@@ -75,17 +73,15 @@ class AddUsersToGroupDialog extends React.Component {
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => this.props.closeDialog()} color="primary">
+        <Button onClick={() => this.props.closeDialog()} color='primary'>
           Cancel
         </Button>
-        <Button onClick={this.addSelectedUsersToGroup} color="primary">
+        <Button onClick={this.addSelectedUsersToGroup} color='primary'>
           Apply
         </Button>
       </DialogActions>
-    </Dialog>)
+    </Dialog>);
   }
-
-
 }
 
 AddUsersToGroupDialog.PropTypes = {

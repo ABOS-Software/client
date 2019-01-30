@@ -17,16 +17,16 @@ const styles = theme => ({
   deleteButton: {
     margin: theme.spacing.unit,
     color: 'white',
-    backgroundColor: 'red',
+    backgroundColor: 'red'
 
-  },
+  }
 });
 class confirmDeletion extends React.Component {
-  state = {        passwordError: false,
-    confirmDeletionPassword: '',
+  state = {
+    passwordError: false,
+    confirmDeletionPassword: ''
 
   };
-
 
   render() {
     const {classes} = this.props;
@@ -35,9 +35,9 @@ class confirmDeletion extends React.Component {
       <Dialog
         open={this.props.open}
         onClose={() => this.props.closeDialog()}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">Are you sure you would like to delete any rows</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Are you sure you would like to delete any rows</DialogTitle>
         <DialogContent>
           <DialogContentText>
             You have deleted some of the products. This will lead to DATA LOSS of customer orders. If
@@ -49,44 +49,39 @@ class confirmDeletion extends React.Component {
 
           }
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="confirmDeletion-Password">Password</InputLabel>
+            <InputLabel htmlFor='confirmDeletion-Password'>Password</InputLabel>
             <TextField
               value={this.state.confirmDeletionPassword}
-              type="password"
+              type='password'
               onChange={event => {
                 this.setState({confirmDeletionPassword: event.target.value});
               }}
 
               inputProps={{
                 name: 'Password',
-                id: 'confirmDeletion-Password',
+                id: 'confirmDeletion-Password'
               }}
-            >
-
-            </TextField>
+            />
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button value={1} onClick={this.props.confirmPassword} color="primary" variant={"contained"}>
+          <Button value={1} onClick={this.props.confirmPassword} color='primary' variant={'contained'}>
             Don't Delete
           </Button>
-          <Button value={2} onClick={this.props.confirmPassword} variant={"contained"}
+          <Button value={2} onClick={this.props.confirmPassword} variant={'contained'}
                   className={classes.deleteButton} autoFocus>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
-    )
+    );
   }
-
-
 }
 
 confirmDeletion.PropTypes = {
   closeDialog: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  confirmPassword: PropTypes.func.isRequired,
+  confirmPassword: PropTypes.func.isRequired
 };
 
 export default (withStyles(styles, {withTheme: true})(confirmDeletion));
-

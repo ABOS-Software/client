@@ -14,7 +14,6 @@ import restClient from '../../grailsRestClient';
 
 const dataProvider = restClient;
 
-
 const styles = theme => ({
 
 });
@@ -26,11 +25,8 @@ class EditUser extends React.Component {
     fullName: this.props.fullName
   };
 
-
-
   updateEditUserState = (field, value) => {
-    this.setState({[field]: value})
-
+    this.setState({[field]: value});
   };
   editUser = event => {
     dataProvider(UPDATE, 'User', {
@@ -43,84 +39,74 @@ class EditUser extends React.Component {
       }
     }).then(response => {
       this.props.closeDialog();
-
     });
   };
 
   render() {
-
     return (
       <Dialog
 
         open={this.props.open}
         onClose={() => this.props.closeDialog()}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id="form-dialog-title">Edit User</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Edit User</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please enter the information about the user
           </DialogContentText>
           <TextField
             value={this.state.userName}
-            label={"Username"}
+            label={'Username'}
             onChange={event => {
-              this.updateEditUserState("userName", event.target.value)
+              this.updateEditUserState('userName', event.target.value);
             }}
             inputProps={{
               name: 'UserName',
-              id: 'AddUser-Username',
+              id: 'AddUser-Username'
             }}
             disabled
-          >
-
-          </TextField>
+          />
           <TextField
-            label={"Password"}
+            label={'Password'}
 
             value={this.state.password}
-            type="password"
+            type='password'
             onChange={event => {
-              this.updateEditUserState("password", event.target.value)
+              this.updateEditUserState('password', event.target.value);
             }}
 
             inputProps={{
               name: 'Password',
-              id: 'AddUser-Password',
+              id: 'AddUser-Password'
             }}
-          >
-
-          </TextField>
+          />
           <TextField
-            label={"FullName"}
+            label={'FullName'}
 
             value={this.state.fullName}
             onChange={event => {
-              this.updateEditUserState("fullName", event.target.value)
+              this.updateEditUserState('fullName', event.target.value);
             }}
 
             inputProps={{
               name: 'FullName',
-              id: 'AddUser-FullName',
+              id: 'AddUser-FullName'
             }}
-          >
-
-          </TextField>
+          />
 
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.props.closeDialog()} color="primary">
+          <Button onClick={() => this.props.closeDialog()} color='primary'>
             Cancel
           </Button>
-          <Button onClick={this.editUser} color="primary">
+          <Button onClick={this.editUser} color='primary'>
             Apply
           </Button>
         </DialogActions>
       </Dialog>
-    )
+    );
   }
-
-
 }
 
 EditUser.PropTypes = {
@@ -128,8 +114,7 @@ EditUser.PropTypes = {
   open: PropTypes.bool.isRequired,
   id: PropTypes.number.isRequired,
   userName: PropTypes.string.isRequired,
-  fullName: PropTypes.string.isRequired,
+  fullName: PropTypes.string.isRequired
 };
 
 export default (withStyles(styles, {withTheme: true})(EditUser));
-
