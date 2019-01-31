@@ -30,188 +30,188 @@ const styles = {
 class Dashboard extends Component {
     state = {};
 
-  componentDidMount() {
-    const aMonthAgo = new Date();
-    aMonthAgo.setDate(aMonthAgo.getDate() - 30);
-    let year = -1;
+    componentDidMount () {
+      const aMonthAgo = new Date();
+      aMonthAgo.setDate(aMonthAgo.getDate() - 30);
+      let year = -1;
       let filter = {};
-    if (!this.props.year) {
-      filter.year = localStorage.getItem('enabledYear');
-    } else {
-      filter.year = this.props.year;
-    }
+      if (!this.props.year) {
+        filter.year = localStorage.getItem('enabledYear');
+      } else {
+        filter.year = this.props.year;
+      }
       year = filter.year;
       if (this.props.userId) {
         filter.user_id = this.props.userId;
       }
 
-    {
-      dataProvider(GET_LIST, 'Orders', {
+      {
+        dataProvider(GET_LIST, 'Orders', {
+          filter: filter,
+          sort: {field: 'id', order: 'DESC'},
+          pagination: {page: 1, perPage: 1000}
+        })
+          .then(response =>
+            response.data
+              .reduce(
+                (stats, order) => {
+                  stats.total += order.cost;
+                  stats.nbCustomers++;
+                  stats.donation += order.customer.donation;
+                  stats.grandTotal += order.cost + order.customer.donation;
+                  stats.pendingOrders.push(order);
+
+                  return stats;
+                },
+                {
+
+                  total: 0,
+                  donation: 0,
+                  grandTotal: 0,
+                  nbCustomers: 0,
+                  pendingOrders: []
+                }
+              )
+          )
+          .then(({total, donation, grandTotal, nbCustomers, pendingOrders}) => {
+            this.setState({
+              totalVal: total.toLocaleString(undefined, {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+              }),
+              DonationsVal: donation.toLocaleString(undefined, {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+              }),
+              GrandTotalsVal: grandTotal.toLocaleString(undefined, {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+              }),
+              nbCustomersVal: nbCustomers,
+              pendingOrdersVal: pendingOrders
+            });
+            return pendingOrders;
+          });
+      }
+      dataProvider(GET_LIST, 'orderedProducts', {
         filter: filter,
-        sort: {field: 'id', order: 'DESC'},
+        sort: {},
         pagination: {page: 1, perPage: 1000}
       })
         .then(response =>
           response.data
+            .filter(order => order.products.year.id === (1 * year))
             .reduce(
               (stats, order) => {
-                stats.total += order.cost;
-                stats.nbCustomers++;
-                stats.donation += order.customer.donation;
-                stats.grandTotal += order.cost + order.customer.donation;
-                stats.pendingOrders.push(order);
+                let op = {};
+                let match = stats.orderedProducts.filter(op => {
+                  return op.ID === order.products.id;
+                });
+                if (match.length > 0) {
+                  op = {
+                    pID: order.products.humanProductId,
+                    ID: order.products.id,
+                    productName: order.products.productName,
+                    unitSize: order.products.unitSize,
+                    unitCost: order.products.unitCost,
+                    quantity: order.quantity + match[0].quantity,
+                    extendedCost: order.extendedCost + match[0].extendedCost,
+                    year: order.year.id
+                  };
+                  let index = stats.orderedProducts.findIndex(op => {
+                    return op.ID === order.products.id;
+                  });
+
+                  stats.orderedProducts[index] = op;
+                } else {
+                  op = {
+                    pID: order.products.humanProductId,
+                    ID: order.products.id,
+
+                    productName: order.products.productName,
+                    unitSize: order.products.unitSize,
+                    unitCost: order.products.unitCost,
+                    quantity: order.quantity,
+                    extendedCost: order.extendedCost,
+                    year: order.year.id
+                  };
+                  stats.orderedProducts.push(op);
+                }
 
                 return stats;
               },
               {
 
-                total: 0,
-                donation: 0,
-                grandTotal: 0,
-                nbCustomers: 0,
-                pendingOrders: []
+                orderedProducts: []
               }
             )
         )
-        .then(({total, donation, grandTotal, nbCustomers, pendingOrders}) => {
-          this.setState({
-            totalVal: total.toLocaleString(undefined, {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0
-            }),
-            DonationsVal: donation.toLocaleString(undefined, {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0
-            }),
-            GrandTotalsVal: grandTotal.toLocaleString(undefined, {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0
-            }),
-            nbCustomersVal: nbCustomers,
-            pendingOrdersVal: pendingOrders
-          });
-          return pendingOrders;
-        });
-    }
-    dataProvider(GET_LIST, 'orderedProducts', {
-      filter: filter,
-      sort: {},
-      pagination: {page: 1, perPage: 1000}
-    })
-      .then(response =>
-        response.data
-          .filter(order => order.products.year.id === (1 * year))
-          .reduce(
-            (stats, order) => {
-              let op = {};
-              let match = stats.orderedProducts.filter(op => {
-                return op.ID === order.products.id;
-              });
-              if (match.length > 0) {
-                op = {
-                  pID: order.products.humanProductId,
-                  ID: order.products.id,
-                  productName: order.products.productName,
-                  unitSize: order.products.unitSize,
-                  unitCost: order.products.unitCost,
-                  quantity: order.quantity + match[0].quantity,
-                  extendedCost: order.extendedCost + match[0].extendedCost,
-                  year: order.year.id
-                };
-                let index = stats.orderedProducts.findIndex(op => {
-                  return op.ID === order.products.id;
-                });
-
-                stats.orderedProducts[index] = op;
-              } else {
-                op = {
-                  pID: order.products.humanProductId,
-                  ID: order.products.id,
-
-                  productName: order.products.productName,
-                  unitSize: order.products.unitSize,
-                  unitCost: order.products.unitCost,
-                  quantity: order.quantity,
-                  extendedCost: order.extendedCost,
-                  year: order.year.id
-                };
-                stats.orderedProducts.push(op);
-              }
-
-              return stats;
-            },
-            {
-
-              orderedProducts: []
+        .then(({orderedProducts}) => {
+          orderedProducts.sort((a, b) => {
+            if (a.pID > b.pID) {
+              return 1;
+            } else {
+              return -1;
             }
-          )
-      )
-      .then(({orderedProducts}) => {
-        orderedProducts.sort((a, b) => {
-          if (a.pID > b.pID) {
-            return 1;
-          } else {
-            return -1;
-          }
-        });
-        this.setState({
+          });
+          this.setState({
 
-          orderedProductsVal: orderedProducts
+            orderedProductsVal: orderedProducts
+          });
         });
-      });
     }
 
-  render() {
-    const {
-      nbCustomersVal,
-      totalVal,
-      DonationsVal,
-      GrandTotalsVal,
-      Commissions,
-      pendingOrders,
-      orderedProductsVal
-    } = this.state;
-    return (
+    render () {
+      const {
+        nbCustomersVal,
+        totalVal,
+        DonationsVal,
+        GrandTotalsVal,
+        Commissions,
+        pendingOrders,
+        orderedProductsVal
+      } = this.state;
+      return (
 
-      <div style={styles.flex}>
-        <div style={styles.leftCol}>
-          <div style={styles.singleCol}>
+        <div style={styles.flex}>
+          <div style={styles.leftCol}>
+            <div style={styles.singleCol}>
 
-            <TotalSales value={totalVal}/>
+              <TotalSales value={totalVal}/>
+            </div>
+            <div style={styles.singleCol}>
+
+              <Donations value={DonationsVal}/>
+            </div>
+
+            <div style={styles.singleCol}>
+
+              <GrandTotals value={GrandTotalsVal}/>
+            </div>
+
+            <div style={styles.singleCol}>
+
+              <NbCustomers value={nbCustomersVal}/>
+            </div>
+
           </div>
-          <div style={styles.singleCol}>
+          <div style={styles.rightCol}>
+            <div style={styles.flex}>
+              <OrderedProducts
+                OrderedProducts={orderedProductsVal}
+              />
 
-            <Donations value={DonationsVal}/>
+            </div>
           </div>
-
-          <div style={styles.singleCol}>
-
-            <GrandTotals value={GrandTotalsVal}/>
-          </div>
-
-          <div style={styles.singleCol}>
-
-            <NbCustomers value={nbCustomersVal}/>
-          </div>
-
         </div>
-        <div style={styles.rightCol}>
-          <div style={styles.flex}>
-            <OrderedProducts
-              OrderedProducts={orderedProductsVal}
-            />
 
-          </div>
-        </div>
-      </div>
-
-    );
+      );
     }
 }
 

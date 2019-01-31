@@ -32,7 +32,7 @@ const styles = theme => ({
 });
 
 class simpleMarker extends React.Component {
-  render() {
+  render () {
     const {
       classes,
       defaultMotionStyle, motionStyle, text, onClick

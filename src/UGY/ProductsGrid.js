@@ -83,14 +83,14 @@ class ProductsGrid extends Component {
       importNumber: 0
     };
 
-  constructor(props) {
-    super(props);
-    this.perPageInitial = this.props.perPage;
-    this.loading = false;
-    this.loadProducts(this.props.year);
+    constructor (props) {
+      super(props);
+      this.perPageInitial = this.props.perPage;
+      this.loading = false;
+      this.loadProducts(this.props.year);
 
     // this.createColumns();
-  }
+    }
 
     rowGetter = (i) => {
       return this.state.rows[i];
@@ -214,8 +214,8 @@ class ProductsGrid extends Component {
       this.setState({importDialogOpen: true});
     };
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateDimensions);
+    componentWillUnmount () {
+      window.removeEventListener('resize', this.updateDimensions);
     }
 
     handleImportClose = event => {
@@ -249,84 +249,84 @@ class ProductsGrid extends Component {
       download(encoding.convert(result, 'UTF8'), this.props.yearText + '-export.xml', 'application/xml');
     };
 
-  createColumns(categories) {
-    return [
-      {
-        key: 'humanProductId',
-        name: 'ID',
-        editable: true,
-        resizable: true,
-        filterable: true,
-        editor: MUITextEditor
+    createColumns (categories) {
+      return [
+        {
+          key: 'humanProductId',
+          name: 'ID',
+          editable: true,
+          resizable: true,
+          filterable: true,
+          editor: MUITextEditor
 
-      },
-      {
-        key: 'productName',
-        name: 'Name',
-        editable: true,
-        resizable: true,
-        filterable: true,
-        editor: MUITextEditor
+        },
+        {
+          key: 'productName',
+          name: 'Name',
+          editable: true,
+          resizable: true,
+          filterable: true,
+          editor: MUITextEditor
 
-      },
-      {
-        key: 'unitSize',
-        name: 'Size',
-        editable: true,
-        resizable: true,
-        filterable: true,
-        editor: MUITextEditor
+        },
+        {
+          key: 'unitSize',
+          name: 'Size',
+          editable: true,
+          resizable: true,
+          filterable: true,
+          editor: MUITextEditor
 
-      },
-      {
-        key: 'unitCost',
-        name: 'Unit Cost',
-        editable: true,
-        formatter: CurrencyFormatter,
-        resizable: true,
-        filterable: true,
-        editor: MUICurrencyEditor
+        },
+        {
+          key: 'unitCost',
+          name: 'Unit Cost',
+          editable: true,
+          formatter: CurrencyFormatter,
+          resizable: true,
+          filterable: true,
+          editor: MUICurrencyEditor
 
-      },
-      {
-        key: 'category',
-        name: 'Category',
-        editable: true,
-        resizable: true,
-        filterable: true,
-        editor: <Editor type='Select' options={categories}/>,
-        formatter: <DropDownFormatter options={categories} value={'-1'}/>
+        },
+        {
+          key: 'category',
+          name: 'Category',
+          editable: true,
+          resizable: true,
+          filterable: true,
+          editor: <Editor type='Select' options={categories}/>,
+          formatter: <DropDownFormatter options={categories} value={'-1'}/>
 
+        }
+      ];
+    }
+
+    componentDidMount () {
+      const aMonthAgo = new Date();
+      aMonthAgo.setDate(aMonthAgo.getDate() - 30);
+      window.addEventListener('resize', this.updateDimensions);
+      this.setState({year: this.props.year});
+    }
+
+    componentWillReceiveProps (nextProps) {
+      if (nextProps.year !== this.props.year) {
+        this.loadProducts(nextProps.year);
+        this.setState({year: nextProps.year});
       }
-    ];
     }
 
-  componentDidMount() {
-    const aMonthAgo = new Date();
-    aMonthAgo.setDate(aMonthAgo.getDate() - 30);
-    window.addEventListener('resize', this.updateDimensions);
-    this.setState({year: this.props.year});
-    }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.year !== this.props.year) {
-      this.loadProducts(nextProps.year);
-      this.setState({year: nextProps.year});
-    }
-    }
-
-  loadProducts(year) {
-    let filter = {};
-    if (year) {
-      filter = {year: year};
-    }
-    dataProvider(GET_LIST, 'Products', {
-      filter: filter,
-      pagination: {page: 1, perPage: 1000},
-      sort: {field: 'id', order: 'ASC'}
-    })
-      .then(response =>
-        response.data.reduce((stats, product) => {
+    loadProducts (year) {
+      let filter = {};
+      if (year) {
+        filter = {year: year};
+      }
+      dataProvider(GET_LIST, 'Products', {
+        filter: filter,
+        pagination: {page: 1, perPage: 1000},
+        sort: {field: 'id', order: 'ASC'}
+      })
+        .then(response =>
+          response.data.reduce((stats, product) => {
             let cat = -1;
             if (product.category) {
               cat = product.category.id;
@@ -358,61 +358,61 @@ class ProductsGrid extends Component {
                                                     extended_cost: 0.0,
                          */
           }
-        )
-      ).then(({products}) => {
-        this.setState({
-          rows: products
-        });
-        window.dispatchEvent(new Event('resize'));
-      }
+          )
+        ).then(({products}) => {
+          this.setState({
+            rows: products
+          });
+          window.dispatchEvent(new Event('resize'));
+        }
         );
     }
 
-  render() {
-    const {classes} = this.props;
+    render () {
+      const {classes} = this.props;
 
-    return (/* <div className="list-page List-root-156">
+      return (/* <div className="list-page List-root-156">
             <div className="MuiPaper-root-34 MuiPaper-elevation2-38 MuiPaper-rounded-35 MuiCard-root-160"> */
-      <div className={classes.main}>
-        {/*                <div id="dataGridWrapper" style={{position: "relative", height: "100%"}}>
+        <div className={classes.main}>
+          {/*                <div id="dataGridWrapper" style={{position: "relative", height: "100%"}}>
                     <div style={{position: "absolute", width: "98%", height: "100%", margin: "1%"}}> */}
-        <ReactDataGrid
-          className={classes.dataGrid}
-          enableCellSelect
-          columns={this.createColumns(this.props.categories)}
-          rowGetter={this.rowGetter}
-          rowsCount={this.state.rows.length}
-          onGridRowsUpdated={this.handleGridRowsUpdated}
-          minColumnWidth='30'
-          // midWidth={"100px"}
-          toolbar={<ProductsToolbar onAddRow={this.handleAddRow} enableFilter
-                                    numberOfRows={this.getSize()}
-                                    onImport={this.handleImportClick}
-                                    categories={this.props.categories} onExport={this.handleExportClick}
-                                    newRowIndex={this.state.newRowIndex}/>}
-          onAddFilter={this.handleFilterChange}
-          onClearFilters={this.onClearFilters}
-          contextMenu={<ProductsContextMenu className={classes.contextMenu} id='customizedContextMenu'
-                                            onRowDelete={this.deleteRow}
-                                            onRowInsertAbove={this.insertRowAbove}
-                                            onRowInsertBelow={this.insertRowBelow}/>}
-          columnEquality={() => false}
+          <ReactDataGrid
+            className={classes.dataGrid}
+            enableCellSelect
+            columns={this.createColumns(this.props.categories)}
+            rowGetter={this.rowGetter}
+            rowsCount={this.state.rows.length}
+            onGridRowsUpdated={this.handleGridRowsUpdated}
+            minColumnWidth='30'
+            // midWidth={"100px"}
+            toolbar={<ProductsToolbar onAddRow={this.handleAddRow} enableFilter
+              numberOfRows={this.getSize()}
+              onImport={this.handleImportClick}
+              categories={this.props.categories} onExport={this.handleExportClick}
+              newRowIndex={this.state.newRowIndex}/>}
+            onAddFilter={this.handleFilterChange}
+            onClearFilters={this.onClearFilters}
+            contextMenu={<ProductsContextMenu className={classes.contextMenu} id='customizedContextMenu'
+              onRowDelete={this.deleteRow}
+              onRowInsertAbove={this.insertRowAbove}
+              onRowInsertBelow={this.insertRowBelow}/>}
+            columnEquality={() => false}
 
-        />
-        <ImportDialog closeImportDialog={this.handleImportClose}
-                      importDialogOpen={this.state.importDialogOpen} importNumber={this.state.importNumber}
-                      categories={this.props.categories} year={this.state.year} addProducts={this.addProducts}/>
-        {/*                    </div>
+          />
+          <ImportDialog closeImportDialog={this.handleImportClose}
+            importDialogOpen={this.state.importDialogOpen} importNumber={this.state.importNumber}
+            categories={this.props.categories} year={this.state.year} addProducts={this.addProducts}/>
+          {/*                    </div>
                 </div> */}
 
-      </div>
+        </div>
 
       /* </div>
         </div>
             </div>
             </div> */
 
-    );
+      );
     }
 }
 

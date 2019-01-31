@@ -54,7 +54,7 @@ const styles = theme => ({
 });
 
 const PostCreateToolbar = props => (
-  <Toolbar {...props} />
+  <Toolbar {...props}/>
 );
 
 class HorizontalLinearStepper extends React.Component {
@@ -111,102 +111,102 @@ class HorizontalLinearStepper extends React.Component {
       });
     };
 
-  getSteps() {
-    return this.props.steps;
+    getSteps () {
+      return this.props.steps;
     }
 
-  getStepContent(step) {
-    return (this.props.stepContents[step]);
+    getStepContent (step) {
+      return (this.props.stepContents[step]);
     }
 
-  isStepSkipped(step) {
-    return this.state.skipped.has(step);
+    isStepSkipped (step) {
+      return this.state.skipped.has(step);
     }
 
-  render() {
-    const {classes, handleSubmit, save, formName} = this.props;
-    const steps = this.getSteps();
-    const {activeStep} = this.state;
+    render () {
+      const {classes, handleSubmit, save, formName} = this.props;
+      const steps = this.getSteps();
+      const {activeStep} = this.state;
 
-    return (
-      <div className={classes.root}>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const props = {};
-            const labelProps = {};
-            if (this.isStepOptional(index)) {
-              labelProps.optional = <Typography variant='caption'>Optional</Typography>;
-            }
-            if (this.isStepSkipped(index)) {
-              props.completed = false;
-            }
-            return (
-              <Step key={label} {...props}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
+      return (
+        <div className={classes.root}>
+          <Stepper activeStep={activeStep}>
+            {steps.map((label, index) => {
+              const props = {};
+              const labelProps = {};
+              if (this.isStepOptional(index)) {
+                labelProps.optional = <Typography variant='caption'>Optional</Typography>;
+              }
+              if (this.isStepSkipped(index)) {
+                props.completed = false;
+              }
+              return (
+                <Step key={label} {...props}>
+                  <StepLabel {...labelProps}>{label}</StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+          <div>
+            {activeStep === steps.length ? (
+              <div>
+                <Typography className={classes.instructions}>
                                 All steps completed - you&quot;re finished
-              </Typography>
-              <Button onClick={this.handleReset} className={classes.button}>
+                </Typography>
+                <Button onClick={this.handleReset} className={classes.button}>
                                 Reset
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <Typography component='div'
-                          className={classes.instructions}>
-                <SimpleForm record={{}} save={save} saving={'false'} form={formName} redirect={''}
-                            toolbar={<PostCreateToolbar>
-                              <Button
-                                disabled={activeStep === 0}
-                                onClick={this.handleBack}
-                                className={this.props.classes.button}
-                              >
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <Typography component='div'
+                  className={classes.instructions}>
+                  <SimpleForm record={{}} save={save} saving={'false'} form={formName} redirect={''}
+                    toolbar={<PostCreateToolbar>
+                      <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={this.props.classes.button}
+                      >
                                                     Back
-                              </Button>
-                              {this.isStepOptional(activeStep) && (
-                                <Button
-                                  color='primary'
-                                  onClick={this.handleSkip}
-                                  className={this.props.classes.button}
-                                >
+                      </Button>
+                      {this.isStepOptional(activeStep) && (
+                        <Button
+                          color='primary'
+                          onClick={this.handleSkip}
+                          className={this.props.classes.button}
+                        >
                                                         Skip
-                                </Button>
-                              )}
-                              {activeStep === this.props.steps.length - 1
-                                ? <SaveButton
-                                  label='Finish'
-                                  redirect={false}
-                                  submitOnEnter={false}
-                                  variant='raised'
-                                  color={'primary'}
-                                />
-                                : <Button
-                                  variant={'raised'}
-                                  color='primary'
-                                  onClick={this.handleNext}
-                                  className={this.props.classes.button}
-                                > Next
+                        </Button>
+                      )}
+                      {activeStep === this.props.steps.length - 1
+                        ? <SaveButton
+                          label='Finish'
+                          redirect={false}
+                          submitOnEnter={false}
+                          variant='raised'
+                          color={'primary'}
+                        />
+                        : <Button
+                          variant={'raised'}
+                          color='primary'
+                          onClick={this.handleNext}
+                          className={this.props.classes.button}
+                        > Next
 
-                                </Button>
-                              }
-                            </PostCreateToolbar>}
-                >
-                  {this.getStepContent(activeStep)}
-                </SimpleForm>
-              </Typography>
+                        </Button>
+                      }
+                    </PostCreateToolbar>}
+                  >
+                    {this.getStepContent(activeStep)}
+                  </SimpleForm>
+                </Typography>
 
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    );
+      );
     }
 }
 
@@ -218,7 +218,7 @@ HorizontalLinearStepper.propTypes = {
 };
 
 class Wizard extends Component {
-  render() {
+  render () {
     const {classes} = this.props;
     // Tab Pane
     // Next Button/Prev Button
@@ -226,7 +226,7 @@ class Wizard extends Component {
     return (
       <Card>
         <div className={classes.main}>
-          <HorizontalLinearStepper {...this.props} />
+          <HorizontalLinearStepper {...this.props}/>
 
         </div>
 

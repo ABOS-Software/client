@@ -85,45 +85,45 @@ class MUISelectEditorRaw extends React.Component {
             }
             return ret.join('|');
         }; */
-  renderOptions(): Array<ReactElement> {
-    let options = [];
-    // options.push(<MenuItem value={-1}/>);
+    renderOptions (): Array<ReactElement> {
+      let options = [];
+      // options.push(<MenuItem value={-1}/>);
 
-    this.props.options.forEach(function (name) {
-      if (typeof (name) === 'string') {
-        options.push(<option key={'category-dropDown-' + name} value={name}>{name}</option>);
-      } else {
-        options.push(<option key={'category-dropDown-' + name.id}
-                             value={name.id}>{name.text || name.value || name.name}</option>);
-      }
-    }, this);
-    return options;
+      this.props.options.forEach(function (name) {
+        if (typeof (name) === 'string') {
+          options.push(<option key={'category-dropDown-' + name} value={name}>{name}</option>);
+        } else {
+          options.push(<option key={'category-dropDown-' + name.id}
+            value={name.id}>{name.text || name.value || name.name}</option>);
+        }
+      }, this);
+      return options;
     }
 
-  render(): ?ReactElement {
-    const {classes} = this.props;
-    return (<div onKeyDown={this.props.onKeyDown} className={classes.wrapper}>
-      <Select
+    render (): ?ReactElement {
+      const {classes} = this.props;
+      return (<div onKeyDown={this.props.onKeyDown} className={classes.wrapper}>
+        <Select
         // open={true}
         // defaultValue={this.props.value}
-        open
-        native
-        value={this.props.value}
-        onChange={this.props.onChange}
-        inputProps={{
-          name: 'category',
-          id: 'category-simple'
-        }}
+          open
+          native
+          value={this.props.value}
+          onChange={this.props.onChange}
+          inputProps={{
+            name: 'category',
+            id: 'category-simple'
+          }}
 
-        /*               name= 'category'
+          /*               name= 'category'
                        id ='category-simple' */
 
-        className={classes.select}
-      >
-        {this.renderOptions()}
-      </Select>
+          className={classes.select}
+        >
+          {this.renderOptions()}
+        </Select>
 
-    </div>);
+      </div>);
     }
 }
 

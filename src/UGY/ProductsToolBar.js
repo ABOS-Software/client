@@ -70,7 +70,7 @@ const styles = theme => ({
 
 });
 
-function NumberFormatCustom(props) {
+function NumberFormatCustom (props) {
   const {inputRef, onChange, ...other} = props;
 
   return (
@@ -161,7 +161,7 @@ class ProductsToolbar extends React.Component {
     renderToggleFilterButton = () => {
       if (this.props.enableFilter) {
         return (<IconButton className={this.props.classes.button} aria-label='Filter'
-                            onClick={this.props.onToggleFilter}>
+          onClick={this.props.onToggleFilter}>
           <FilterListIcon/>
         </IconButton>);
       }
@@ -169,7 +169,7 @@ class ProductsToolbar extends React.Component {
     renderImport = () => {
       if (this.props.onImport) {
         return (<Button variant={'contained'} className={this.props.classes.button} aria-label='Filter'
-                        onClick={this.props.onImport}>
+          onClick={this.props.onImport}>
                 Import
           <ImportExportIcon/>
         </Button>);
@@ -178,7 +178,7 @@ class ProductsToolbar extends React.Component {
     renderExport = () => {
       if (this.props.onExport) {
         return (<Button variant={'contained'} className={this.props.classes.button} aria-label='Filter'
-                        onClick={this.props.onExport}>
+          onClick={this.props.onExport}>
                 Export
           <ImportExportIcon/>
         </Button>);
@@ -190,90 +190,90 @@ class ProductsToolbar extends React.Component {
       });
     };
 
-  renderOptions(): Array<ReactElement> {
-    let options = [];
-    // options.push(<MenuItem value={-1}/>);
+    renderOptions (): Array<ReactElement> {
+      let options = [];
+      // options.push(<MenuItem value={-1}/>);
 
-    this.props.categories.forEach(function (name) {
-      if (typeof (name) === 'string') {
-        options.push(<MenuItem key={'category-dropDown-' + name} value={name}>{name}</MenuItem>);
-      } else {
-        options.push(<MenuItem key={'category-dropDown-' + name.id}
-                               value={name.id}>{name.text || name.value || name.name}</MenuItem>);
-      }
-    }, this);
-    return options;
+      this.props.categories.forEach(function (name) {
+        if (typeof (name) === 'string') {
+          options.push(<MenuItem key={'category-dropDown-' + name} value={name}>{name}</MenuItem>);
+        } else {
+          options.push(<MenuItem key={'category-dropDown-' + name.id}
+            value={name.id}>{name.text || name.value || name.name}</MenuItem>);
+        }
+      }, this);
+      return options;
     }
 
-  render() {
-    const {classes} = this.props;
-    return (
-      <div>
+    render () {
+      const {classes} = this.props;
+      return (
+        <div>
 
-        <div className={classes.toolBar}>
-          <div className={classes.additionFields}>
+          <div className={classes.toolBar}>
+            <div className={classes.additionFields}>
 
-            <TextField
-              id='HID'
-              label='Product ID'
-              className={classes.textField}
-              value={this.state.HID}
-              onChange={this.handleChange('HID')}
-              margin='normal'
-            />
-            <TextField
-              id='name'
-              label='Product Name'
-              className={classes.textField}
-              value={this.state.name}
-              onChange={this.handleChange('name')}
-              margin='normal'
-            />
-            <TextField
-              id='size'
-              label='Product size'
-              className={classes.textField}
-              value={this.state.size}
-              onChange={this.handleChange('size')}
-              margin='normal'
-            />
-            <TextField
-              id='cost'
-              label='Product cost'
+              <TextField
+                id='HID'
+                label='Product ID'
+                className={classes.textField}
+                value={this.state.HID}
+                onChange={this.handleChange('HID')}
+                margin='normal'
+              />
+              <TextField
+                id='name'
+                label='Product Name'
+                className={classes.textField}
+                value={this.state.name}
+                onChange={this.handleChange('name')}
+                margin='normal'
+              />
+              <TextField
+                id='size'
+                label='Product size'
+                className={classes.textField}
+                value={this.state.size}
+                onChange={this.handleChange('size')}
+                margin='normal'
+              />
+              <TextField
+                id='cost'
+                label='Product cost'
 
-              className={classes.textField}
-              value={this.state.cost}
-              onChange={this.handleChange('cost')}
-              margin='normal'
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor='category-helper'>Category</InputLabel>
-              <Select
-                value={this.state.category}
-                onChange={this.handleChange('category')}
-                inputProps={{
-                  name: 'category',
-                  id: 'category-simple'
+                className={classes.textField}
+                value={this.state.cost}
+                onChange={this.handleChange('cost')}
+                margin='normal'
+                InputProps={{
+                  inputComponent: NumberFormatCustom
                 }}
-              >
-                {this.renderOptions()}
-              </Select>
-            </FormControl>
-          </div>
-          <div className={classes.tools}>
-            {this.renderAddRowButton()}
-            {this.renderToggleFilterButton()}
-            {this.renderImport()}
-            {this.renderExport()}
+              />
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor='category-helper'>Category</InputLabel>
+                <Select
+                  value={this.state.category}
+                  onChange={this.handleChange('category')}
+                  inputProps={{
+                    name: 'category',
+                    id: 'category-simple'
+                  }}
+                >
+                  {this.renderOptions()}
+                </Select>
+              </FormControl>
+            </div>
+            <div className={classes.tools}>
+              {this.renderAddRowButton()}
+              {this.renderToggleFilterButton()}
+              {this.renderImport()}
+              {this.renderExport()}
 
-            {this.props.children}
+              {this.props.children}
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
     }
 }
 

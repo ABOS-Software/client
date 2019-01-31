@@ -24,7 +24,7 @@ const styles = {
 };
 
 class AddressInput extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {address: ''};
   }
@@ -54,75 +54,75 @@ class AddressInput extends React.Component {
       this.setState({sessionToken: sessionToken});
     };
 
-  componentWillMount() {
-    this.updateSessionToken();
+    componentWillMount () {
+      this.updateSessionToken();
     }
 
-  render() {
-    const {classes} = this.props;
-    return (
-      <PlacesAutocomplete
-        value={this.state.address}
-        onChange={this.handleChange}
-        onSelect={this.handleSelect}
-        searchOptions={{sessionToken: this.state.sessionToken}}
-      >
-        {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
-          <div>
-            <TextField
-              InputProps={{
-                ...getInputProps({
-                  placeholder: 'Search Places ...',
-                  className: classes.locationInput
-                })
-              }}
-              fullWidth
+    render () {
+      const {classes} = this.props;
+      return (
+        <PlacesAutocomplete
+          value={this.state.address}
+          onChange={this.handleChange}
+          onSelect={this.handleSelect}
+          searchOptions={{sessionToken: this.state.sessionToken}}
+        >
+          {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
+            <div>
+              <TextField
+                InputProps={{
+                  ...getInputProps({
+                    placeholder: 'Search Places ...',
+                    className: classes.locationInput
+                  })
+                }}
+                fullWidth
 
-            />
-            {suggestions.length > 0 && (
-              <Paper className={classes.autoCompleteDropdown}>
-                {loading && <div>Loading...</div>}
-                {suggestions.map(suggestion => {
-                  const className = suggestion.active
-                    ? classes.activeSuggesionItem
-                    : classes.suggesionItem;
-                  // inline style for demonstration purpose
-                  const style = suggestion.active
-                    ? {backgroundColor: '#fafafa', cursor: 'pointer'}
-                    : {backgroundColor: '#ffffff', cursor: 'pointer'};
-                  return (
-                    <div
-                      {...getSuggestionItemProps(suggestion, {
-                        className,
-                        style
-                      })}
-                    >
-                      <MenuItem>
-                        <strong>
-                          {suggestion.formattedSuggestion.mainText + ' '}
-                        </strong>
-                        <strong/>
-                        <small>
-                          {suggestion.formattedSuggestion.secondaryText}
-                        </small>
-                      </MenuItem>
+              />
+              {suggestions.length > 0 && (
+                <Paper className={classes.autoCompleteDropdown}>
+                  {loading && <div>Loading...</div>}
+                  {suggestions.map(suggestion => {
+                    const className = suggestion.active
+                      ? classes.activeSuggesionItem
+                      : classes.suggesionItem;
+                    // inline style for demonstration purpose
+                    const style = suggestion.active
+                      ? {backgroundColor: '#fafafa', cursor: 'pointer'}
+                      : {backgroundColor: '#ffffff', cursor: 'pointer'};
+                    return (
+                      <div
+                        {...getSuggestionItemProps(suggestion, {
+                          className,
+                          style
+                        })}
+                      >
+                        <MenuItem>
+                          <strong>
+                            {suggestion.formattedSuggestion.mainText + ' '}
+                          </strong>
+                          <strong/>
+                          <small>
+                            {suggestion.formattedSuggestion.secondaryText}
+                          </small>
+                        </MenuItem>
+                      </div>
+                    );
+                  })}
+                  <div className={classes.dropDownFooter}>
+                    <div>
+                      <img
+                        src={process.env.PUBLIC_URL + '/powered_by_google_on_white_hdpi.png'}
+                        className={classes.dropDownFooterImage}
+                      />
                     </div>
-                  );
-                })}
-                <div className={classes.dropDownFooter}>
-                  <div>
-                    <img
-                      src={process.env.PUBLIC_URL + '/powered_by_google_on_white_hdpi.png'}
-                      className={classes.dropDownFooterImage}
-                    />
                   </div>
-                </div>
-              </Paper>
-            )}
-          </div>
-        )}
-      </PlacesAutocomplete>
-    );
+                </Paper>
+              )}
+            </div>
+          )}
+        </PlacesAutocomplete>
+      );
     }
 }
 

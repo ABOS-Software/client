@@ -148,29 +148,29 @@ class UserListItem extends React.PureComponent {
             handleManageCheckBoxChange(userName, user)(event);
         }; */
 
-  constructor(props) {
-    super(props);
+    constructor (props) {
+      super(props);
     }
 
-  componentDidMount() {
-    this.setState({checked: this.props.checked});
+    componentDidMount () {
+      this.setState({checked: this.props.checked});
     }
 
-  render() {
-    const {user, children, onClick, checked, handleManageCheckBoxChange, userName} = this.props;
-    return (
-      <ListItem button onClick={onClick}>
-        <InputWrapper>
-          <Checkbox
-            checked={checked}
-            onChange={handleManageCheckBoxChange(userName, user)}
-            value={user}
-          />
-        </InputWrapper>
-        <ListItemText primary={user}/>
-        {children}
-      </ListItem>
-    );
+    render () {
+      const {user, children, onClick, checked, handleManageCheckBoxChange, userName} = this.props;
+      return (
+        <ListItem button onClick={onClick}>
+          <InputWrapper>
+            <Checkbox
+              checked={checked}
+              onChange={handleManageCheckBoxChange(userName, user)}
+              value={user}
+            />
+          </InputWrapper>
+          <ListItemText primary={user}/>
+          {children}
+        </ListItem>
+      );
     }
 }
 
@@ -198,9 +198,9 @@ class UserPanel extends React.Component {
       userChecks: []
     };
 
-  constructor(props) {
-    super(props);
-  }
+    constructor (props) {
+      super(props);
+    }
 
     handleClick = group => event => {
       let parentState = update(this.state.groups, {
@@ -264,22 +264,22 @@ class UserPanel extends React.Component {
             // let userName = user;
             // let checked = userChecks[userName].subUsers[user].checked;
             listItems.push(<UserListItem key={currentUser + '-sub-' + user} userName={currentUser}
-                                         handleManageCheckBoxChange={this.handleUserCheckbox} user={user}
-                                         checked={this.props.userChecks[currentUser].subUsers[user].checked}/>);
+              handleManageCheckBoxChange={this.handleUserCheckbox} user={user}
+              checked={this.props.userChecks[currentUser].subUsers[user].checked}/>);
           });
 
           groupItems.push(
             <UserListItem key={currentUser + '-sub-' + group.groupName + '-' + group.year.id}
-                          userName={currentUser}
-                          handleManageCheckBoxChange={this.handleGroupCheckbox(group.id)} user={group.groupName}
-                          checked={this.state.groups[group.groupName].checked}
-                          onClick={this.handleClick(group.groupName)}>
+              userName={currentUser}
+              handleManageCheckBoxChange={this.handleGroupCheckbox(group.id)} user={group.groupName}
+              checked={this.state.groups[group.groupName].checked}
+              onClick={this.handleClick(group.groupName)}>
               {this.state.groups[group.groupName].open ? <ExpandLess/> : <ExpandMore/>}
 
             </UserListItem>,
             <Collapse key={currentUser + '-sub-' + group.groupName + '-collapse' + '-' + group.year.id}
-                      in={this.state.groups[group.groupName].open} timeout='auto' unmountOnExit
-                      className={classes.nested}>
+              in={this.state.groups[group.groupName].open} timeout='auto' unmountOnExit
+              className={classes.nested}>
               <List component='div' disablePadding>
                 {listItems}
               </List>
@@ -309,17 +309,17 @@ class UserPanel extends React.Component {
       // }
     };
 
-  componentDidMount() {
-    let groupsList = [];
-    const {userName, userChecks} = this.props;
-    let userCheckList = [];
-    Object.keys(userChecks[userName].subUsers).forEach(subUser => {
-      userCheckList[subUser] = userChecks[userName].subUsers[subUser].checked;
-    });
-    this.props.groups.forEach(group => {
-      groupsList[group.groupName] = {open: false, checked: false};
-    });
-    this.setState({checked: this.props.checked, groups: groupsList, userChecks: userCheckList});
+    componentDidMount () {
+      let groupsList = [];
+      const {userName, userChecks} = this.props;
+      let userCheckList = [];
+      Object.keys(userChecks[userName].subUsers).forEach(subUser => {
+        userCheckList[subUser] = userChecks[userName].subUsers[subUser].checked;
+      });
+      this.props.groups.forEach(group => {
+        groupsList[group.groupName] = {open: false, checked: false};
+      });
+      this.setState({checked: this.props.checked, groups: groupsList, userChecks: userCheckList});
     }
 
     handleGroupChange = event => {
@@ -330,16 +330,16 @@ class UserPanel extends React.Component {
       let groupList = [];
       this.props.groups.forEach(group => {
         groupList.push(<MenuItem key={'AddGroupToUser-group-' + group.id}
-                                 value={group.id}>{group.groupName}</MenuItem>);
+          value={group.id}>{group.groupName}</MenuItem>);
       });
       return groupList;
     };
     // usage:
 
-  render() {
-    const {id, userName, fullName, classes} = this.props;
-    return (<ExpansionPanel className={classes.userPanel} expanded={this.state.expanded}
-                            onChange={this.handleUserPanelExpanded}>
+    render () {
+      const {id, userName, fullName, classes} = this.props;
+      return (<ExpansionPanel className={classes.userPanel} expanded={this.state.expanded}
+        onChange={this.handleUserPanelExpanded}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
           <InputWrapper>
             <Checkbox
@@ -357,7 +357,7 @@ class UserPanel extends React.Component {
             <InputWrapper>
 
               <Button variant='contained' color={'primary'} className={classes.button}
-                      onClick={this.props.onEdit(userName, id, fullName)}>
+                onClick={this.props.onEdit(userName, id, fullName)}>
                                 Edit
               </Button>
             </InputWrapper>
@@ -392,7 +392,7 @@ class UserPanel extends React.Component {
           </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-    );
+      );
     }
 }
 

@@ -1,4 +1,4 @@
 import React from 'react';
 import Editor from './Editor';
 
-export default <Editor type='Select' />;
+export default <Editor type='Select'/>;

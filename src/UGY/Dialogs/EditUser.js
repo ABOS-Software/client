@@ -42,7 +42,7 @@ class EditUser extends React.Component {
     });
   };
 
-  render() {
+  render () {
     return (
       <Dialog
 

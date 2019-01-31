@@ -32,18 +32,18 @@ class ProductsContextMenu extends React.Component {
       }
     };
 
-  render() {
-    const {idx, id, rowIdx} = this.props;
+    render () {
+      const {idx, id, rowIdx} = this.props;
 
-    return (
-      <ContextMenu id={id}>
-        <MenuItem data={{rowIdx, idx}} onClick={this.onRowDelete}>Delete Row</MenuItem>
-        {/* <SubMenu title="Insert Row">
+      return (
+        <ContextMenu id={id}>
+          <MenuItem data={{rowIdx, idx}} onClick={this.onRowDelete}>Delete Row</MenuItem>
+          {/* <SubMenu title="Insert Row">
                     <MenuItem data={{rowIdx, idx}} onClick={this.onRowInsertAbove}>Above</MenuItem>
                     <MenuItem data={{rowIdx, idx}} onClick={this.onRowInsertBelow}>Below</MenuItem>
                 </SubMenu> */}
-      </ContextMenu>
-    );
+        </ContextMenu>
+      );
     }
 }
 

@@ -14,7 +14,7 @@ const AddrInput = addField(({input, meta: {touched, error}, updateAddress, ...pr
 ));
 
 class CustomerEdit extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {address: '', zipCode: '', city: '', state: '', update: 0};
   }
@@ -26,40 +26,40 @@ class CustomerEdit extends React.Component {
         let val = address.address_components[i]['short_name'];
 
         switch (addressType) {
-          case 'street_address':
-            addressObj.address = val;
-            break;
-          case 'street_number':
-            addressObj.bldgNum = val;
+        case 'street_address':
+          addressObj.address = val;
+          break;
+        case 'street_number':
+          addressObj.bldgNum = val;
 
-            break;
-          case 'route':
-            addressObj.street = val;
+          break;
+        case 'route':
+          addressObj.street = val;
 
-            break;
-          case 'locality':
-            addressObj.city = val;
+          break;
+        case 'locality':
+          addressObj.city = val;
 
-            break;
-          case 'administrative_area_level_1':
-            addressObj.state = val;
+          break;
+        case 'administrative_area_level_1':
+          addressObj.state = val;
 
-            break;
-          case 'country':
+          break;
+        case 'country':
 
-            break;
-          case 'postal_code':
-            addressObj.zipCode = val;
+          break;
+        case 'postal_code':
+          addressObj.zipCode = val;
 
-            break;
-          case 'postal_town':
-            addressObj.city = val;
+          break;
+        case 'postal_town':
+          addressObj.city = val;
 
-            break;
-          case 'sublocality_level_1':
-            addressObj.city = val;
+          break;
+        case 'sublocality_level_1':
+          addressObj.city = val;
 
-            break;
+          break;
         }
       }
       if (!addressObj.address) {
@@ -68,15 +68,15 @@ class CustomerEdit extends React.Component {
       this.setState({...addressObj, update: 1});
     };
 
-  render() {
-    const {classes, ...props} = this.props;
+    render () {
+      const {classes, ...props} = this.props;
 
-    return (
-      <Edit {...props}>
+      return (
+        <Edit {...props}>
 
-        <SimpleForm>
-          <CustomerForm edit/>
-          {/*
+          <SimpleForm>
+            <CustomerForm edit/>
+            {/*
               <TextInput label='Customer Name' source='customerName' formClassName={classes.inlineBlock} />
             <TextInput source='phone' formClassName={classes.inlineBlock} />
             <TextInput source='custEmail' formClassName={classes.inlineBlock} />
@@ -131,9 +131,9 @@ class CustomerEdit extends React.Component {
             </ReferenceInput>
 
             <ProductsGrid source='order' {...props} /> */}
-        </SimpleForm>
-      </Edit>
-    );
+          </SimpleForm>
+        </Edit>
+      );
     /* <Edit {...props} filters={<CustomerFilter/>}>
       <ProductsGrid>
           <TextField label="Customer Name" source="customerName"/>

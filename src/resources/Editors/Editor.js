@@ -60,15 +60,15 @@ class EditorBase extends React.Component {
     }
   };
 
-  componentWillMount() {
+  componentWillMount () {
     this.setState({value: this.props.value});
   }
 
-  onClick() {
+  onClick () {
     this.getInputNode().focus();
   }
 
-  onDoubleClick() {
+  onDoubleClick () {
     this.getInputNode().focus();
   }
   /*
@@ -102,7 +102,7 @@ class EditorBase extends React.Component {
           return ret.join('|');
       }; */
 
-  render() {
+  render () {
     let props = {
       height: this.props.height,
       onKeyDown: this.props.onKeyDown,
@@ -111,17 +111,17 @@ class EditorBase extends React.Component {
 
     };
 
-    let editor = <MUITextEditorUnWrapped {...props} />;
+    let editor = <MUITextEditorUnWrapped {...props}/>;
     switch (this.props.type) {
-      case 'Number':
-        editor = <MUINumberEditorRaw {...props} />;
-        break;
-      case 'Currency':
-        editor = <MUICurrencyEditorRaw {...props} />;
-        break;
-      case 'Select':
-        editor = <MUISelectEditorRaw {...props} options={this.props.options}/>;
-        break;
+    case 'Number':
+      editor = <MUINumberEditorRaw {...props}/>;
+      break;
+    case 'Currency':
+      editor = <MUICurrencyEditorRaw {...props}/>;
+      break;
+    case 'Select':
+      editor = <MUISelectEditorRaw {...props} options={this.props.options}/>;
+      break;
     }
     return editor;
     /*      <MUITextEditorUnWrapped height={this.props.height} onKeyDown={this.props.onKeyDown} value={this.state.value}

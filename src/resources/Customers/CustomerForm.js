@@ -52,7 +52,7 @@ const styles = {
 };
 
 class CustomerForm extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {address: '', zipCode: '', city: '', state: '', update: 0};
   }
@@ -64,40 +64,40 @@ class CustomerForm extends Component {
       let val = address.address_components[i]['short_name'];
 
       switch (addressType) {
-        case 'street_address':
-          addressObj.address = val;
-          break;
-        case 'street_number':
-          addressObj.bldgNum = val;
+      case 'street_address':
+        addressObj.address = val;
+        break;
+      case 'street_number':
+        addressObj.bldgNum = val;
 
-          break;
-        case 'route':
-          addressObj.street = val;
+        break;
+      case 'route':
+        addressObj.street = val;
 
-          break;
-        case 'locality':
-          addressObj.city = val;
+        break;
+      case 'locality':
+        addressObj.city = val;
 
-          break;
-        case 'administrative_area_level_1':
-          addressObj.state = val;
+        break;
+      case 'administrative_area_level_1':
+        addressObj.state = val;
 
-          break;
-        case 'country':
+        break;
+      case 'country':
 
-          break;
-        case 'postal_code':
-          addressObj.zipCode = val;
+        break;
+      case 'postal_code':
+        addressObj.zipCode = val;
 
-          break;
-        case 'postal_town':
-          addressObj.city = val;
+        break;
+      case 'postal_town':
+        addressObj.city = val;
 
-          break;
-        case 'sublocality_level_1':
-          addressObj.city = val;
+        break;
+      case 'sublocality_level_1':
+        addressObj.city = val;
 
-          break;
+        break;
       }
     }
     if (!addressObj.address) {
@@ -106,19 +106,19 @@ class CustomerForm extends Component {
     this.setState({...addressObj, update: 1});
   };
 
-  renderCreateOrEditFields() {
+  renderCreateOrEditFields () {
     const {classes, ...props} = this.props;
 
     if (!this.props.edit) {
       return (
         <div>
           <ReferenceInput label='Year to add to' source='year' reference='Years'
-                          formClassName={classes.inlineBlock} {...props}>
+            formClassName={classes.inlineBlock} {...props}>
             <SelectInput optionText='year'/>
           </ReferenceInput>
 
           <ReferenceInput label='User to add to' source='user' reference='User'
-                          formClassName={classes.inlineBlock} {...props}>
+            formClassName={classes.inlineBlock} {...props}>
             <SelectInput optionText='fullName' optionValue='id'/>
           </ReferenceInput>
 
@@ -127,7 +127,7 @@ class CustomerForm extends Component {
     }
   }
 
-  render() {
+  render () {
     const {classes, ...props} = this.props;
 
     return (<span>
@@ -150,7 +150,7 @@ class CustomerForm extends Component {
         <div className={classes.addressContainer}>
 
           <TextInput source='streetAddress' className={classes.addressComponent}
-                     value={this.state.address}/>
+            value={this.state.address}/>
           <FormDataConsumer className={classes.addressComponent} {...props}>
             {({formData, ...rest}) => {
               if (this.state.update === 1) {
@@ -172,9 +172,9 @@ class CustomerForm extends Component {
 
       <TextInput label='Donation' source='donation' formClassName={classes.inlineBlock}/>
       <TextInput label='Amount Paid' source='order.amountPaid' formClassName={classes.inlineBlock}
-                 defaultValue={'0.00'}/>
+        defaultValue={'0.00'}/>
       <BooleanInput label='Delivered?' source='order.delivered' formClassName={classes.inlineBlock}
-                    defaultValue={false}/>
+        defaultValue={false}/>
       <span/>
       {this.renderCreateOrEditFields()}
       <FormDataConsumer {...props}>
@@ -182,10 +182,10 @@ class CustomerForm extends Component {
           console.log(formData);
           if (this.props.edit) {
             return (<ProductsGrid source='order' {...props} {...rest} amountPaid={formData.order.amountPaid}
-                                  delivered={formData.order.delivered}/>);
+              delivered={formData.order.delivered}/>);
           } else if (formData.year) {
             return (<ProductsGrid source='order' {...props} year={formData.year} {...rest}
-                                  amountPaid={formData.order.amountPaid} delivered={formData.order.delivered}/>);
+              amountPaid={formData.order.amountPaid} delivered={formData.order.delivered}/>);
           }
         }
         }
@@ -203,5 +203,5 @@ CustomerForm.defaultProps = {
   edit: false
 };
 export default withStyles(styles)(addField(({input, meta: {touched, error}, ...props}) => (
-  <CustomerForm {...props} />
+  <CustomerForm {...props}/>
 )));

@@ -33,7 +33,7 @@ class UsersTab extends React.PureComponent {
     userAddMenuAnchor: null
   };
 
-  componentWillMount() {
+  componentWillMount () {
   }
 
   addSelectedUsersToGroupClicked = event => {
@@ -198,18 +198,18 @@ class UsersTab extends React.PureComponent {
     let fullName = userChecks[user].fullName;
     return (
       <UserPanel id={id} key={userName} userName={userName} fullName={fullName}
-                 userChecks={userChecks}
-                 handleManageCheckBoxChange={this.handleManageCheckBoxChange}
-                 handleCheckBoxChange={this.handleCheckBoxChange}
-                 checked={userChecks[userName].checked}
-                 handleGroupChange={this.handleGroupChange}
-                 group={userChecks[userName].group}
-                 groups={this.props.groups}
-                 onEdit={this.editUserClick}/>
+        userChecks={userChecks}
+        handleManageCheckBoxChange={this.handleManageCheckBoxChange}
+        handleCheckBoxChange={this.handleCheckBoxChange}
+        checked={userChecks[userName].checked}
+        handleGroupChange={this.handleGroupChange}
+        group={userChecks[userName].group}
+        groups={this.props.groups}
+        onEdit={this.editUserClick}/>
     );
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     const {userBulkMenuAnchor, userAddMenuAnchor} = this.state;
     const userBulkMenuOpen = Boolean(userBulkMenuAnchor);

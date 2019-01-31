@@ -28,7 +28,7 @@ class confirmDeletion extends React.Component {
 
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
 
     return (
@@ -69,7 +69,7 @@ class confirmDeletion extends React.Component {
             Don't Delete
           </Button>
           <Button value={2} onClick={this.props.confirmPassword} variant={'contained'}
-                  className={classes.deleteButton} autoFocus>
+            className={classes.deleteButton} autoFocus>
             Delete
           </Button>
         </DialogActions>

@@ -5,7 +5,7 @@ import FullNameField from './FullNameField';
 
 const CustomerLinkField = props => (
   <Link to={`/customers/${props.record.id}`}>
-    <FullNameField {...props} />
+    <FullNameField {...props}/>
   </Link>
 );
 

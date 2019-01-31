@@ -145,7 +145,7 @@ class userGroupPanel extends React.PureComponent {
     const {title, userPanels, classes} = this.props;
     return (
       <ExpansionPanel className={classes.topLevelExpansionPanel}>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
           <div className={classes.flex}>
 
             <Typography className={classes.heading}>{ title }</Typography>

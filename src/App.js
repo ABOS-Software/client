@@ -32,7 +32,7 @@ const MyUserMenu = props => (
     <MenuItemLink
       to='/about'
       primaryText='About'
-      leftIcon={<InfoIcon />}
+      leftIcon={<InfoIcon/>}
     />
   </UserMenu>
 );
@@ -47,9 +47,9 @@ Sentry.configureScope(scope => {
     return event;
   });
 });
-const MyAppBar = props => <AppBar {...props} userMenu={<MyUserMenu />} />;
+const MyAppBar = props => <AppBar {...props} userMenu={<MyUserMenu/>}/>;
 const routes = [
-  <Route exact path='/about' component={About} />
+  <Route exact path='/about' component={About}/>
 ];
 const layout = (props) => {
   const {
@@ -73,27 +73,27 @@ const App = () => (
         authProvider={authClient(feathersClient, authClientConfig)} appLayout={layout} customRoutes={routes}>
 
         {permissions => [
-          <Resource name='customers' list={CustomerList} edit={CustomerEdit} create={CustomerCreate} />,
-          <Resource name='Reports' list={Reports} />,
-          <Resource name='Maps' list={Maps} />,
+          <Resource name='customers' list={CustomerList} edit={CustomerEdit} create={CustomerCreate}/>,
+          <Resource name='Reports' list={Reports}/>,
+          <Resource name='Maps' list={Maps}/>,
           // Reports
           // <Resource name="customers"/>,
-          <Resource name='User' list={UserList} show={UserShow} />,
+          <Resource name='User' list={UserList} show={UserShow}/>,
           permissions === 'manager'
-            ? <Resource name='User' />
+            ? <Resource name='User'/>
             : null,
           permissions === 'ROLE_ADMIN'
-            ? <Resource name='Categories' list={CategoryList} edit={CategoryEdit} create={CategoryCreate} />
+            ? <Resource name='Categories' list={CategoryList} edit={CategoryEdit} create={CategoryCreate}/>
           // UGY
-            : <Resource name='Categories' />,
+            : <Resource name='Categories'/>,
           permissions === 'ROLE_ADMIN'
-            ? <Resource name='Years' show={YearShow} edit={YearEdit} list={YearList} create={YearCreate} />
+            ? <Resource name='Years' show={YearShow} edit={YearEdit} list={YearList} create={YearCreate}/>
           // UGY
-            : <Resource name='Years' show={YearShow} list={YearList} />,
+            : <Resource name='Years' show={YearShow} list={YearList}/>,
           permissions === 'ROLE_ADMIN'
-            ? <Resource name='Group' list={GroupList} edit={GroupEdit} create={GroupCreate} />
+            ? <Resource name='Group' list={GroupList} edit={GroupEdit} create={GroupCreate}/>
           // UGY
-            : <Resource name='Group' />,
+            : <Resource name='Group'/>,
           permissions === 'ROLE_ADMIN'
             ? <Resource name='UsersProducts' options={{label: 'Users and Products'}} list={UGY}/>
           // UGY

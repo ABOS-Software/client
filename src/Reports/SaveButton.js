@@ -20,20 +20,20 @@ const styles = {
 };
 
 const sanitizeRestProps = ({
-                             className,
-                             classes,
-                             saving,
-                             label,
-                             invalid,
-                             variant,
-                             translate,
-                             handleSubmitWithRedirect,
-                             submitOnEnter,
-                             redirect,
-                             locale,
-                             showNotification,
-                             ...rest
-                           }) => rest;
+  className,
+  classes,
+  saving,
+  label,
+  invalid,
+  variant,
+  translate,
+  handleSubmitWithRedirect,
+  submitOnEnter,
+  redirect,
+  locale,
+  showNotification,
+  ...rest
+}) => rest;
 
 export class SaveButton extends Component {
     handleClick = e => {
@@ -60,41 +60,41 @@ export class SaveButton extends Component {
       }
     };
 
-  render() {
-    const {
-      className,
-      classes = {},
-      invalid,
-      label = 'ra.action.save',
-      pristine,
-      redirect,
-      saving,
-      submitOnEnter,
-      translate,
-      variant = 'raised',
-      ...rest
-    } = this.props;
+    render () {
+      const {
+        className,
+        classes = {},
+        invalid,
+        label = 'ra.action.save',
+        pristine,
+        redirect,
+        saving,
+        submitOnEnter,
+        translate,
+        variant = 'raised',
+        ...rest
+      } = this.props;
 
-    const type = submitOnEnter ? 'submit' : 'button';
-    return (
-      <Button
-        className={classnames(classes.button, className)}
-        variant={variant}
-        type={type}
-        onClick={this.handleClick}
-        color={saving ? 'default' : 'primary'}
-        {...sanitizeRestProps(rest)}
-      >
-        {saving && saving.redirect === redirect && (
-          <CircularProgress
-            size={25}
-            thickness={2}
-            className={classes.iconPaddingStyle}
-          />
-        )}
-        {label && translate(label, {_: label})}
-      </Button>
-    );
+      const type = submitOnEnter ? 'submit' : 'button';
+      return (
+        <Button
+          className={classnames(classes.button, className)}
+          variant={variant}
+          type={type}
+          onClick={this.handleClick}
+          color={saving ? 'default' : 'primary'}
+          {...sanitizeRestProps(rest)}
+        >
+          {saving && saving.redirect === redirect && (
+            <CircularProgress
+              size={25}
+              thickness={2}
+              className={classes.iconPaddingStyle}
+            />
+          )}
+          {label && translate(label, {_: label})}
+        </Button>
+      );
     }
 }
 

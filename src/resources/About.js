@@ -11,9 +11,9 @@ const styles = {
 };
 
 const About = ({
-                 classes
+  classes
 
-               }) => (
+}) => (
   <Card>
     <Title title={'About'}/>
     <CardContent>

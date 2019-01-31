@@ -101,48 +101,48 @@ class SimpleMap extends Component {
         sort: {field: 'id', order: 'DESC'},
         pagination: {page: 1, perPage: 1000}
       }).then(response => response.data.reduce((custs, customer) => {
-          let address = customer.streetAddress + ' ' + customer.city + ' ' + customer.state + ' ' + customer.zipCode;
-          let latLon = customer.latitude + ', ' + customer.longitude;
-          let place = custs['places'].find(place => ((this.withinError(place.latitude, customer.latitude, 0.000001) && this.withinError(place.latitude, customer.latitude, 0.000001)) || place.address === address));
-          if (place) {
-            custs['custs'][place.id]['customers'][customer.year.id] = {
-              customerName: customer.customerName,
-              phone: customer.phone,
-              email: customer.custEmail,
-              id: customer.id,
-              year: customer.year.id,
-              address: address,
-              donation: customer.donation
-            };
-          } else {
-            let id = custs['places'].length;
-            custs['places'].push({
-              id: id,
-              latitude: customer.latitude,
-              longitude: customer.longitude,
-              address: address
-            });
-            custs['custs'][id] = {
-              latitude: customer.latitude,
-              longitude: customer.longitude,
-              id: custs['number'] + 1,
-              customers: {
-                [customer.year.id]: {
-                  customerName: customer.customerName,
-                  phone: customer.phone,
-                  email: customer.custEmail,
-                  id: customer.id,
-                  year: customer.year.id,
-                  address: address,
-                  donation: customer.donation
-                }
+        let address = customer.streetAddress + ' ' + customer.city + ' ' + customer.state + ' ' + customer.zipCode;
+        let latLon = customer.latitude + ', ' + customer.longitude;
+        let place = custs['places'].find(place => ((this.withinError(place.latitude, customer.latitude, 0.000001) && this.withinError(place.latitude, customer.latitude, 0.000001)) || place.address === address));
+        if (place) {
+          custs['custs'][place.id]['customers'][customer.year.id] = {
+            customerName: customer.customerName,
+            phone: customer.phone,
+            email: customer.custEmail,
+            id: customer.id,
+            year: customer.year.id,
+            address: address,
+            donation: customer.donation
+          };
+        } else {
+          let id = custs['places'].length;
+          custs['places'].push({
+            id: id,
+            latitude: customer.latitude,
+            longitude: customer.longitude,
+            address: address
+          });
+          custs['custs'][id] = {
+            latitude: customer.latitude,
+            longitude: customer.longitude,
+            id: custs['number'] + 1,
+            customers: {
+              [customer.year.id]: {
+                customerName: customer.customerName,
+                phone: customer.phone,
+                email: customer.custEmail,
+                id: customer.id,
+                year: customer.year.id,
+                address: address,
+                donation: customer.donation
               }
-            };
-            custs['number'] = custs['number'] + 1;
-          }
-          return custs;
-        },
-        {number: 0, custs: {}, places: []}
+            }
+          };
+          custs['number'] = custs['number'] + 1;
+        }
+        return custs;
+      },
+      {number: 0, custs: {}, places: []}
       )).then((customersArr) => {
         let customers = customersArr.custs;
         let nCustomers = 1;
@@ -216,7 +216,7 @@ class SimpleMap extends Component {
       this.setHoveredMarkerId(-1);
     };
 
-  componentDidMount() {
+    componentDidMount () {
 
     }
 
@@ -257,8 +257,8 @@ class SimpleMap extends Component {
         let buttons = [];
         customerGroup.years.forEach(year => {
           buttons.push(<Button key={'Cg-' + customerGroup.id + '-Button-' + year.yearID}
-                               className={classes.yearButton} variant={'outlined'} component={Link}
-                               to={'/customers/' + year.cID}>{year.yearText}</Button>);
+            className={classes.yearButton} variant={'outlined'} component={Link}
+            to={'/customers/' + year.cID}>{year.yearText}</Button>);
         });
         cards.push(<Card className={classes.nameCard} key={'Cg-' + customerGroup.id + '-Card'}>
           <div className={classes.dataRow}>
@@ -286,26 +286,26 @@ class SimpleMap extends Component {
       this.setState({sideBarContents: cards});
     };
 
-  getYears() {
-    dataProvider(GET_LIST, 'Years', {
-      filter: {},
-      sort: {field: 'id', order: 'DESC'},
-      pagination: {page: 1, perPage: 1000}
-    }).then(response => {
-      let yrs = {};
-      response.data.forEach(year => {
-        yrs['y-' + year.id] = year.year;
+    getYears () {
+      dataProvider(GET_LIST, 'Years', {
+        filter: {},
+        sort: {field: 'id', order: 'DESC'},
+        pagination: {page: 1, perPage: 1000}
+      }).then(response => {
+        let yrs = {};
+        response.data.forEach(year => {
+          yrs['y-' + year.id] = year.year;
+        });
+        this.setState({years: yrs});
       });
-      this.setState({years: yrs});
-    });
     }
 
-  componentWillMount() {
-    this.getYears();
-    this.getCustomers();
+    componentWillMount () {
+      this.getYears();
+      this.getCustomers();
     }
 
-  componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate (prevProps, prevState) {
     /* if (this. state.markers !== prevState.markers) {
            const { markers = [], clusterRadius, options: { minZoom, maxZoom } } = this.state;
            this.setState({getCluster: supercluster(
@@ -320,9 +320,9 @@ class SimpleMap extends Component {
            )
 
        } */
-    if (this.state.mapProps !== prevState.mapProps || this.state.markers !== prevState.markers) {
-      const {mapProps, getCluster} = this.state;
-      this.setState({
+      if (this.state.mapProps !== prevState.mapProps || this.state.markers !== prevState.markers) {
+        const {mapProps, getCluster} = this.state;
+        this.setState({
           clusters: mapProps.bounds
             ? supercluster(
               this.state.markers,
@@ -341,68 +341,68 @@ class SimpleMap extends Component {
               }))
             : []
         }
-      );
-    }
-    if (this.state.clusters !== prevState.clusters && this.state.hoveredMarkerId !== prevState.hoveredMarkerId) {
-      const {clusters, hoveredMarkerId} = this.state;
-      this.setState({
+        );
+      }
+      if (this.state.clusters !== prevState.clusters && this.state.hoveredMarkerId !== prevState.hoveredMarkerId) {
+        const {clusters, hoveredMarkerId} = this.state;
+        this.setState({
           clusters: clusters
             .map(({id, ...cluster}) => ({
               ...cluster,
               hovered: id === hoveredMarkerId
             }))
         }
-      );
+        );
+      }
     }
-    }
 
-  render() {
-    const {
-      style, hoverDistance, options,
-      mapProps: {center, zoom},
-      clusters
-    } = this.state;
-    const {classes} = this.props;
-    return (
-      <div>
-        <div style={{height: '100vh', width: '100%'}}>
+    render () {
+      const {
+        style, hoverDistance, options,
+        mapProps: {center, zoom},
+        clusters
+      } = this.state;
+      const {classes} = this.props;
+      return (
+        <div>
+          <div style={{height: '100vh', width: '100%'}}>
 
-          <GoogleMapReact
-            options={options}
-            hoverDistance={hoverDistance}
-            center={center}
-            zoom={zoom}
-            onChange={this.onChange}
-            // onChildMouseEnter={this.onChildMouseEnter}
-            // onChildMouseLeave={this.onChildMouseLeave}
-            bootstrapURLKeys={{key: mapKey}}
+            <GoogleMapReact
+              options={options}
+              hoverDistance={hoverDistance}
+              center={center}
+              zoom={zoom}
+              onChange={this.onChange}
+              // onChildMouseEnter={this.onChildMouseEnter}
+              // onChildMouseLeave={this.onChildMouseLeave}
+              bootstrapURLKeys={{key: mapKey}}
 
-          >
-            {
-              clusters
-                .map(({id, numPoints, ...markerProps}) => (
-                  numPoints === 1
-                    ? <SimpleMarker key={id} {...markerProps}
-                                    onClick={this.handleMarkerClick(id, {...markerProps})}/>
-                    : <ClusterMarker key={id} {...markerProps} numPoints={numPoints}/>
-                ))
-            }
-          </GoogleMapReact>
-        </div>
-        <Drawer anchor='right' open={this.state.right} onClose={this.toggleDrawer('right', false)}>
-          <div
-            tabIndex={0}
-            role='button'
-            onClick={this.toggleDrawer('right', false)}
-            onKeyDown={this.toggleDrawer('right', false)}
-          >
-            <div className={classes.sideBar}>
-              {this.state.sideBarContents}
-            </div>
+            >
+              {
+                clusters
+                  .map(({id, numPoints, ...markerProps}) => (
+                    numPoints === 1
+                      ? <SimpleMarker key={id} {...markerProps}
+                        onClick={this.handleMarkerClick(id, {...markerProps})}/>
+                      : <ClusterMarker key={id} {...markerProps} numPoints={numPoints}/>
+                  ))
+              }
+            </GoogleMapReact>
           </div>
-        </Drawer></div>
+          <Drawer anchor='right' open={this.state.right} onClose={this.toggleDrawer('right', false)}>
+            <div
+              tabIndex={0}
+              role='button'
+              onClick={this.toggleDrawer('right', false)}
+              onKeyDown={this.toggleDrawer('right', false)}
+            >
+              <div className={classes.sideBar}>
+                {this.state.sideBarContents}
+              </div>
+            </div>
+          </Drawer></div>
 
-    );
+      );
     /* return (
            // Important! Always set the container height explicitly
            <div style={{height: '500px', width: '100%'}}>

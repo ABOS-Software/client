@@ -92,8 +92,8 @@ class reportsWizard extends React.Component {
   // users: {}, years: {}, customers: {}
     state = {update: false, address: '', zipCode: '', city: '', state: '', updateAddress: 0};
 
-  constructor(props) {
-    super(props);
+    constructor (props) {
+      super(props);
     }
 
     save = (record, redirect) => {
@@ -107,9 +107,9 @@ class reportsWizard extends React.Component {
         options.headers.set('Authorization', `${token}`); */
       if (record.LogoLocation) {
         convertFileToBase64(record.LogoLocation).then(b64 => {
-            record.LogoLocation.base64 = b64;
-            this.downloadPdf(record);
-          }
+          record.LogoLocation.base64 = b64;
+          this.downloadPdf(record);
+        }
         );
       } else {
         this.downloadPdf(record);
@@ -118,113 +118,113 @@ class reportsWizard extends React.Component {
       // console.log(fetchUtils.fetchJson(url, options));
     };
 
-  downloadPdf(record) {
-    const token = localStorage.getItem('token');
-    let url = hostURL + '/reports';
-    fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin', // include, same-origin, *omit
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': `${token}`
+    downloadPdf (record) {
+      const token = localStorage.getItem('token');
+      let url = hostURL + '/reports';
+      fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin', // include, same-origin, *omit
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': `${token}`
         // "Content-Type": "application/x-www-form-urlencoded",
-      },
-      redirect: 'follow', // manual, *follow, error
-      referrer: 'no-referrer', // no-referrer, *client
-      body: JSON.stringify(record)
-    }).then(response => {
-      let filename = 'report.pdf';
-      const disposition = response.headers.get('content-disposition');
-      if (disposition && disposition.indexOf('attachment') !== -1) {
-        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-        let matches = filenameRegex.exec(disposition);
-        if (matches != null && matches[1]) {
-          filename = matches[1].replace(/['"]/g, '');
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrer: 'no-referrer', // no-referrer, *client
+        body: JSON.stringify(record)
+      }).then(response => {
+        let filename = 'report.pdf';
+        const disposition = response.headers.get('content-disposition');
+        if (disposition && disposition.indexOf('attachment') !== -1) {
+          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          let matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, '');
+          }
         }
-      }
-      response.blob().then(blob => {
-        download(blob, filename, 'application/pdf');
+        response.blob().then(blob => {
+          download(blob, filename, 'application/pdf');
+        });
       });
-    });
-  }
+    }
 
     updateIncludeSub = (event, key, payload) => {
       this.setState({includeSubUser: key, update: true});
     };
 
-  getCustomersWithYearAndUser(Year, User, includeSub) {
-    dataProvider(GET_LIST, 'customers', {
-      filter: {year: Year, user_id: User, includeSub: includeSub},
-      sort: {field: 'id', order: 'DESC'},
-      pagination: {page: 1, perPage: 1000}
-    }).then(response => {
-      this.setState({customers: response.data});
-    });
+    getCustomersWithYearAndUser (Year, User, includeSub) {
+      dataProvider(GET_LIST, 'customers', {
+        filter: {year: Year, user_id: User, includeSub: includeSub},
+        sort: {field: 'id', order: 'DESC'},
+        pagination: {page: 1, perPage: 1000}
+      }).then(response => {
+        this.setState({customers: response.data});
+      });
     }
 
-  getCategoriesForYear(Year) {
+    getCategoriesForYear (Year) {
     // this.setState({year: Year});
 
-    dataProvider(GET_LIST, 'Categories', {
-      filter: {year: Year},
-      sort: {field: 'id', order: 'DESC'},
-      pagination: {page: 1, perPage: 1000}
-    }).then(response => {
-      response.data.unshift({id: 'All', categoryName: 'All'});
-      this.setState({categories: response.data});
-    });
+      dataProvider(GET_LIST, 'Categories', {
+        filter: {year: Year},
+        sort: {field: 'id', order: 'DESC'},
+        pagination: {page: 1, perPage: 1000}
+      }).then(response => {
+        response.data.unshift({id: 'All', categoryName: 'All'});
+        this.setState({categories: response.data});
+      });
     }
 
-  getUsers() {
-    dataProvider(GET_LIST, 'User', {
-      filter: {},
-      sort: {field: 'id', order: 'DESC'},
-      pagination: {page: 1, perPage: 1000}
-    }).then(response => {
-      this.setState({users: response.data});
-    });
+    getUsers () {
+      dataProvider(GET_LIST, 'User', {
+        filter: {},
+        sort: {field: 'id', order: 'DESC'},
+        pagination: {page: 1, perPage: 1000}
+      }).then(response => {
+        this.setState({users: response.data});
+      });
     }
 
-  getYears() {
-    dataProvider(GET_LIST, 'Years', {
-      filter: {},
-      sort: {field: 'id', order: 'DESC'},
-      pagination: {page: 1, perPage: 1000}
-    }).then(response => {
-      this.setState({years: response.data});
-    });
+    getYears () {
+      dataProvider(GET_LIST, 'Years', {
+        filter: {},
+        sort: {field: 'id', order: 'DESC'},
+        pagination: {page: 1, perPage: 1000}
+      }).then(response => {
+        this.setState({years: response.data});
+      });
     }
 
-  updateYear(year) {
-    this.setState({year: year, update: true});
+    updateYear (year) {
+      this.setState({year: year, update: true});
     // this.updateChoices();
     }
 
-  updateUser(user) {
-    this.setState({user: user, update: true});
+    updateUser (user) {
+      this.setState({user: user, update: true});
     // this.updateChoices();
     }
 
-  getCustomersWithUser(User, includeSub) {
-    dataProvider(GET_LIST, 'customers', {
-      filter: {user_id: User, includeSub: includeSub},
-      sort: {field: 'id', order: 'DESC'},
-      pagination: {page: 1, perPage: 1000}
-    }).then(response => {
-      response.data.reduceRight((acc, obj, i) => {
-        acc[obj.customerName] ? response.data.splice(i, 1) : acc[obj.customerName] = true;
-        return acc;
-      }, Object.create(null));
+    getCustomersWithUser (User, includeSub) {
+      dataProvider(GET_LIST, 'customers', {
+        filter: {user_id: User, includeSub: includeSub},
+        sort: {field: 'id', order: 'DESC'},
+        pagination: {page: 1, perPage: 1000}
+      }).then(response => {
+        response.data.reduceRight((acc, obj, i) => {
+          acc[obj.customerName] ? response.data.splice(i, 1) : acc[obj.customerName] = true;
+          return acc;
+        }, Object.create(null));
 
-      // response.data.sort((a, b) => b.customerName - a.customerName);
-      this.setState({customers: response.data});
-    });
+        // response.data.sort((a, b) => b.customerName - a.customerName);
+        this.setState({customers: response.data});
+      });
     }
 
-  updateReportType(ReportType) {
-    switch (ReportType) {
+    updateReportType (ReportType) {
+      switch (ReportType) {
       case 'customers_split':
         this.updateReportSplit(ReportType);
 
@@ -241,54 +241,54 @@ class reportsWizard extends React.Component {
         this.updateReportCustomerHistorical(ReportType);
 
         break;
-    }
+      }
 
     // this.updateChoices();
     }
 
-  updateReportCustomerHistorical(ReportType) {
-    this.setState({
-      reportType: ReportType,
-      yearReq: false,
-      userReq: true,
-      custReq: true,
-      catReq: false,
-      dueReq: false
-    });
-  }
+    updateReportCustomerHistorical (ReportType) {
+      this.setState({
+        reportType: ReportType,
+        yearReq: false,
+        userReq: true,
+        custReq: true,
+        catReq: false,
+        dueReq: false
+      });
+    }
 
-  updateReportCustomerYear(ReportType) {
-    this.setState({
-      reportType: ReportType,
-      yearReq: true,
-      userReq: true,
-      custReq: true,
-      catReq: true,
-      dueReq: true
-    });
-  }
+    updateReportCustomerYear (ReportType) {
+      this.setState({
+        reportType: ReportType,
+        yearReq: true,
+        userReq: true,
+        custReq: true,
+        catReq: true,
+        dueReq: true
+      });
+    }
 
-  updateReportYear(ReportType) {
-    this.setState({
-      reportType: ReportType,
-      yearReq: true,
-      userReq: true,
-      custReq: false,
-      catReq: true,
-      dueReq: true
-    });
-  }
+    updateReportYear (ReportType) {
+      this.setState({
+        reportType: ReportType,
+        yearReq: true,
+        userReq: true,
+        custReq: false,
+        catReq: true,
+        dueReq: true
+      });
+    }
 
-  updateReportSplit(ReportType) {
-    this.setState({
-      reportType: ReportType,
-      yearReq: true,
-      userReq: true,
-      custReq: false,
-      catReq: true,
-      dueReq: true
-    });
-  }
+    updateReportSplit (ReportType) {
+      this.setState({
+        reportType: ReportType,
+        yearReq: true,
+        userReq: true,
+        custReq: false,
+        catReq: true,
+        dueReq: true
+      });
+    }
 
     updateAddress = (address) => {
       let addressObj = {address: '', zipCode: '', city: '', state: '', bldgNum: '', street: ''};
@@ -297,40 +297,40 @@ class reportsWizard extends React.Component {
         let val = address.address_components[i]['short_name'];
 
         switch (addressType) {
-          case 'street_address':
-            addressObj.address = val;
-            break;
-          case 'street_number':
-            addressObj.bldgNum = val;
+        case 'street_address':
+          addressObj.address = val;
+          break;
+        case 'street_number':
+          addressObj.bldgNum = val;
 
-            break;
-          case 'route':
-            addressObj.street = val;
+          break;
+        case 'route':
+          addressObj.street = val;
 
-            break;
-          case 'locality':
-            addressObj.city = val;
+          break;
+        case 'locality':
+          addressObj.city = val;
 
-            break;
-          case 'administrative_area_level_1':
-            addressObj.state = val;
+          break;
+        case 'administrative_area_level_1':
+          addressObj.state = val;
 
-            break;
-          case 'country':
+          break;
+        case 'country':
 
-            break;
-          case 'postal_code':
-            addressObj.zipCode = val;
+          break;
+        case 'postal_code':
+          addressObj.zipCode = val;
 
-            break;
-          case 'postal_town':
-            addressObj.city = val;
+          break;
+        case 'postal_town':
+          addressObj.city = val;
 
-            break;
-          case 'sublocality_level_1':
-            addressObj.city = val;
+          break;
+        case 'sublocality_level_1':
+          addressObj.city = val;
 
-            break;
+          break;
         }
       }
       if (!addressObj.address) {
@@ -339,40 +339,40 @@ class reportsWizard extends React.Component {
       this.setState({...addressObj, updateAddress: 1});
     };
 
-  updateChoices() {
-    if (this.state.update) {
-      const year = this.state.year;
-      const user = this.state.user;
-      const includeSub = this.state.includeSubUser;
-      this.updateCustomers(year, user, includeSub);
-      this.updateCategories(year);
-      this.updateAllTimeCustomers(user, includeSub);
-      this.setState({update: false});
-    }
+    updateChoices () {
+      if (this.state.update) {
+        const year = this.state.year;
+        const user = this.state.user;
+        const includeSub = this.state.includeSubUser;
+        this.updateCustomers(year, user, includeSub);
+        this.updateCategories(year);
+        this.updateAllTimeCustomers(user, includeSub);
+        this.setState({update: false});
+      }
     }
 
-  updateAllTimeCustomers(user, includeSub) {
-    if (user && this.state.reportType === 'Customer All-Time Totals') {
-      this.getCustomersWithUser(user, includeSub);
+    updateAllTimeCustomers (user, includeSub) {
+      if (user && this.state.reportType === 'Customer All-Time Totals') {
+        this.getCustomersWithUser(user, includeSub);
+      }
     }
-  }
 
-  updateCategories(year) {
-    if (year) {
-      this.getCategoriesForYear(year);
+    updateCategories (year) {
+      if (year) {
+        this.getCategoriesForYear(year);
+      }
     }
-  }
 
-  updateCustomers(year, user, includeSub) {
-    if ((year && user) > -1) {
-      this.getCustomersWithYearAndUser(year, user, includeSub);
+    updateCustomers (year, user, includeSub) {
+      if ((year && user) > -1) {
+        this.getCustomersWithYearAndUser(year, user, includeSub);
+      }
     }
-  }
 
-  stepsContent() {
-    const {classes} = this.props;
-    this.setState({
-      stepsContent: [<ReportType onChangeCustomHandler={(key) => this.updateReportType(key)}/>,
+    stepsContent () {
+      const {classes} = this.props;
+      this.setState({
+        stepsContent: [<ReportType onChangeCustomHandler={(key) => this.updateReportType(key)}/>,
           [
             <TextInput
               source='Scout_name' validate={requiredValidate}/>,
@@ -408,143 +408,143 @@ class reportsWizard extends React.Component {
 
           ]]
       }
-    );
+      );
     }
 
-  renderPrintHeaderField() {
-    return <FormDataConsumer>
-      {({formData, ...rest}) => {
-        if (this.state.dueReq) {
-          return <BooleanInput
-            source='Print_Due_Header'/>;
+    renderPrintHeaderField () {
+      return <FormDataConsumer>
+        {({formData, ...rest}) => {
+          if (this.state.dueReq) {
+            return <BooleanInput
+              source='Print_Due_Header'/>;
+          }
+        }}
+      </FormDataConsumer>;
+    }
+
+    checkCustomerConditionsYear () {
+      return (this.state.year && this.state.user && this.state.custReq);
+    }
+
+    checkCustomerConditionsHistorical () {
+      return (this.state.reportType === 'Customer All-Time Totals' && this.state.user && this.state.custReq);
+    }
+
+    checkCustomerConditions () {
+      return (this.checkCustomerConditionsYear() || this.checkCustomerConditionsHistorical());
+    }
+
+    renderCustomerNameFields () {
+      return <FormDataConsumer>
+        {({formData, ...rest}) => {
+          if (this.checkCustomerConditions()) {
+            return <SelectArrayInput source='Customer' optionText={'customerName'}
+              optionValue={'id'} choices={
+                this.state.customers} {...rest} validate={requiredValidate}/>;
+          }
         }
-      }}
-    </FormDataConsumer>;
-    }
-
-  checkCustomerConditionsYear() {
-    return (this.state.year && this.state.user && this.state.custReq);
-  }
-
-  checkCustomerConditionsHistorical() {
-    return (this.state.reportType === 'Customer All-Time Totals' && this.state.user && this.state.custReq);
-  }
-
-  checkCustomerConditions() {
-    return (this.checkCustomerConditionsYear() || this.checkCustomerConditionsHistorical());
-  }
-
-  renderCustomerNameFields() {
-    return <FormDataConsumer>
-      {({formData, ...rest}) => {
-        if (this.checkCustomerConditions()) {
-          return <SelectArrayInput source='Customer' optionText={'customerName'}
-                                   optionValue={'id'} choices={
-            this.state.customers} {...rest} validate={requiredValidate}/>;
         }
-      }
-      }
-    </FormDataConsumer>;
+      </FormDataConsumer>;
     }
 
-  renderCategoryFields() {
-    return <FormDataConsumer>
-      {({formData, ...rest}) => {
-        if (this.state.year && this.state.catReq) {
+    renderCategoryFields () {
+      return <FormDataConsumer>
+        {({formData, ...rest}) => {
+          if (this.state.year && this.state.catReq) {
           // console.log(this.state.year);
 
-          return <SelectInput source='Category' optionText={'categoryName'}
-                              optionValue={'categoryName'}
-                              choices={this.state.categories} {...rest}
-                              validate={requiredValidate}/>;
+            return <SelectInput source='Category' optionText={'categoryName'}
+              optionValue={'categoryName'}
+              choices={this.state.categories} {...rest}
+              validate={requiredValidate}/>;
+          }
         }
-      }
-      }
-    </FormDataConsumer>;
+        }
+      </FormDataConsumer>;
     }
 
-  renderUserFields() {
-    return <FormDataConsumer>
-      {({formData, ...rest}) => {
-        if (this.state.userReq) {
-          return [<CustomSelectInput label='User' source='User' key='UserComboBox'
-                                     optionText={'fullName'}
-                                     optionValue={'id'}
-                                     choices={this.state.users} {...rest}
-                                     onChangeCustomHandler={(key) => this.updateUser(key)}
-                                     validate={requiredValidate}/>,
-            <BooleanInput key='Include_Sub_Users'
-                          source='Include_Sub_Users' onChange={this.updateIncludeSub}/>];
+    renderUserFields () {
+      return <FormDataConsumer>
+        {({formData, ...rest}) => {
+          if (this.state.userReq) {
+            return [<CustomSelectInput label='User' source='User' key='UserComboBox'
+              optionText={'fullName'}
+              optionValue={'id'}
+              choices={this.state.users} {...rest}
+              onChangeCustomHandler={(key) => this.updateUser(key)}
+              validate={requiredValidate}/>,
+              <BooleanInput key='Include_Sub_Users'
+              source='Include_Sub_Users' onChange={this.updateIncludeSub}/>];
+          }
         }
-      }
-      }
-    </FormDataConsumer>;
+        }
+      </FormDataConsumer>;
     }
 
-  renderYearFields() {
-    return <FormDataConsumer>
-      {({formData, ...rest}) => {
-        if (this.state.yearReq) {
+    renderYearFields () {
+      return <FormDataConsumer>
+        {({formData, ...rest}) => {
+          if (this.state.yearReq) {
+            return (
+              <CustomSelectInput source={'Year'} label='Year' optionText='year'
+                optionValue='id' choices={this.state.years}
+                onChangeCustomHandler={(key) => this.updateYear(key)}
+                validate={requiredValidate} {...rest}/>
+            );
+          }
+        }}
+      </FormDataConsumer>;
+    }
+
+    renderAddressFields () {
+      const {classes} = this.props;
+
+      return <FormDataConsumer className={classes.addressComponent}>
+        {({formData, ...rest}) => {
+          if (this.state.updateAddress === 1) {
+            this.setState({updateAddress: 0});
+            rest.dispatch(change('record-form', 'Scout_address', this.state.address));
+            rest.dispatch(change('record-form', 'Scout_Town', this.state.city));
+            rest.dispatch(change('record-form', 'Scout_State', this.state.state));
+            rest.dispatch(change('record-form', 'Scout_Zip', this.state.zipCode));
+          }
           return (
-            <CustomSelectInput source={'Year'} label='Year' optionText='year'
-                               optionValue='id' choices={this.state.years}
-                               onChangeCustomHandler={(key) => this.updateYear(key)}
-                               validate={requiredValidate} {...rest} />
-          );
-        }
-      }}
-    </FormDataConsumer>;
-    }
 
-  renderAddressFields() {
-    const {classes} = this.props;
+            <div className={classes.addressContainerLabeled}>
+              <FormLabel variant={'headline'}>Enter an Address manually</FormLabel>
+              <div className={classes.addressContainer}>
 
-    return <FormDataConsumer className={classes.addressComponent}>
-      {({formData, ...rest}) => {
-        if (this.state.updateAddress === 1) {
-          this.setState({updateAddress: 0});
-          rest.dispatch(change('record-form', 'Scout_address', this.state.address));
-          rest.dispatch(change('record-form', 'Scout_Town', this.state.city));
-          rest.dispatch(change('record-form', 'Scout_State', this.state.state));
-          rest.dispatch(change('record-form', 'Scout_Zip', this.state.zipCode));
-        }
-        return (
+                <TextInput source='Scout_address' className={classes.addressComponent}
+                  value={this.state.address} validate={requiredValidate}/>
 
-          <div className={classes.addressContainerLabeled}>
-            <FormLabel variant={'headline'}>Enter an Address manually</FormLabel>
-            <div className={classes.addressContainer}>
-
-              <TextInput source='Scout_address' className={classes.addressComponent}
-                         value={this.state.address} validate={requiredValidate}/>
-
-              <TextInput source='Scout_Town' className={classes.addressComponent}
-                         validate={requiredValidate}/>
-              <TextInput source='Scout_State' className={classes.addressComponent}
-                         validate={requiredValidate}/>
-              <TextInput source='Scout_Zip' className={classes.addressComponent}
-                         validate={requiredValidate}/>
+                <TextInput source='Scout_Town' className={classes.addressComponent}
+                  validate={requiredValidate}/>
+                <TextInput source='Scout_State' className={classes.addressComponent}
+                  validate={requiredValidate}/>
+                <TextInput source='Scout_Zip' className={classes.addressComponent}
+                  validate={requiredValidate}/>
+              </div>
             </div>
-          </div>
-        );
-      }}
-    </FormDataConsumer>;
+          );
+        }}
+      </FormDataConsumer>;
     }
 
-  componentWillReceiveProps() {
-    this.getUsers();
-    this.getYears();
+    componentWillReceiveProps () {
+      this.getUsers();
+      this.getYears();
     }
 
-  componentWillMount() {
-    this.stepsContent();
+    componentWillMount () {
+      this.stepsContent();
     }
 
-  render() {
-    this.updateChoices();
-    return (
-      <Wizard {...this.props} steps={steps()} stepContents={this.state.stepsContent} save={this.save}
-              formName={'record-form'}/>
-    );
+    render () {
+      this.updateChoices();
+      return (
+        <Wizard {...this.props} steps={steps()} stepContents={this.state.stepsContent} save={this.save}
+          formName={'record-form'}/>
+      );
     }
 }
 

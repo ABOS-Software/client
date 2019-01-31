@@ -50,52 +50,52 @@ const emptyRow = {};
 class ProductsGrid extends Component {
     state = {rows: [], order: {orderedProducts: []}, year: 0, userName: '', customer: {}};
 
-  constructor(props) {
-    super(props);
-    this.perPageInitial = this.props.perPage;
-    this.loading = false;
-    this._columns = [
-      {
-        key: 'humanProductId',
-        name: 'ID',
-        resizable: true
+    constructor (props) {
+      super(props);
+      this.perPageInitial = this.props.perPage;
+      this.loading = false;
+      this._columns = [
+        {
+          key: 'humanProductId',
+          name: 'ID',
+          resizable: true
 
-      },
-      {
-        key: 'productName',
-        name: 'Name',
-        editable: false,
-        resizable: true
-      },
-      {
-        key: 'unitSize',
-        name: 'Size',
-        editable: false,
-        resizable: true
-      },
-      {
-        key: 'unitCost',
-        name: 'Unit Cost',
-        editable: false,
-        formatter: CurrencyFormatter,
-        resizable: true
-      },
-      {
-        key: 'quantity',
-        name: 'Quantity',
-        editable: false,
-        editor: MUINumberEditor,
-        resizable: true
-      },
-      {
-        key: 'extended_cost',
-        name: 'Extended Cost',
-        editable: false,
-        formatter: CurrencyFormatter,
-        resizable: true
+        },
+        {
+          key: 'productName',
+          name: 'Name',
+          editable: false,
+          resizable: true
+        },
+        {
+          key: 'unitSize',
+          name: 'Size',
+          editable: false,
+          resizable: true
+        },
+        {
+          key: 'unitCost',
+          name: 'Unit Cost',
+          editable: false,
+          formatter: CurrencyFormatter,
+          resizable: true
+        },
+        {
+          key: 'quantity',
+          name: 'Quantity',
+          editable: false,
+          editor: MUINumberEditor,
+          resizable: true
+        },
+        {
+          key: 'extended_cost',
+          name: 'Extended Cost',
+          editable: false,
+          formatter: CurrencyFormatter,
+          resizable: true
 
-      }
-    ];
+        }
+      ];
     }
 
     rowGetter = (i) => {
@@ -234,40 +234,40 @@ class ProductsGrid extends Component {
       wrapperDiv.height = height + 'px';
     };
 
-  componentDidMount() {
-    const aMonthAgo = new Date();
-    aMonthAgo.setDate(aMonthAgo.getDate() - 30);
-    window.addEventListener('resize', this.updateDimensions);
-    this.loadProducts();
+    componentDidMount () {
+      const aMonthAgo = new Date();
+      aMonthAgo.setDate(aMonthAgo.getDate() - 30);
+      window.addEventListener('resize', this.updateDimensions);
+      this.loadProducts();
     }
 
-  getProducts(order, filter) {
-    let orderResponse;
-    let orderUse = true;
-    if (order.data) {
-      orderResponse = order.data;
-    } else if (order.orderedProducts) {
-      orderResponse = order;
-    } else {
-      order = {
-        orderedProducts: [],
-        cost: 0.0,
-        quantity: 0,
-        amountPaid: 0.0,
-        delivered: false,
-        year: {},
-        userName: ''
-      };
-      orderResponse = order;
-      orderUse = false;
-    }
-    dataProvider(GET_LIST, 'Products', {
-      filter: filter,
-      pagination: {page: 1, perPage: 1000},
-      sort: {field: 'id', order: 'ASC'}
-    })
-      .then(response =>
-        response.data.reduce((stats, product) => {
+    getProducts (order, filter) {
+      let orderResponse;
+      let orderUse = true;
+      if (order.data) {
+        orderResponse = order.data;
+      } else if (order.orderedProducts) {
+        orderResponse = order;
+      } else {
+        order = {
+          orderedProducts: [],
+          cost: 0.0,
+          quantity: 0,
+          amountPaid: 0.0,
+          delivered: false,
+          year: {},
+          userName: ''
+        };
+        orderResponse = order;
+        orderUse = false;
+      }
+      dataProvider(GET_LIST, 'Products', {
+        filter: filter,
+        pagination: {page: 1, perPage: 1000},
+        sort: {field: 'id', order: 'ASC'}
+      })
+        .then(response =>
+          response.data.reduce((stats, product) => {
             let match = orderResponse.orderedProducts.filter(orderObj => {
               return orderObj.products.id == product.id;
             });
@@ -301,63 +301,63 @@ class ProductsGrid extends Component {
             products: []
 
           }
-        )
-      ).then(({products}) => {
-        if (orderUse) {
-          this.setState({
-            rows: products,
-            order: order.data,
-            year: order.year,
-            userName: order.userName
-          });
-        } else {
-          this.setState({
-            rows: products,
-            order: {
-              orderedProducts: [],
-              cost: 0.0,
-              quantity: 0,
-              amountPaid: 0.0,
-              delivered: false,
-              year: {},
-              userName: ''
-            }
-          });
-        }
+          )
+        ).then(({products}) => {
+          if (orderUse) {
+            this.setState({
+              rows: products,
+              order: order.data,
+              year: order.year,
+              userName: order.userName
+            });
+          } else {
+            this.setState({
+              rows: products,
+              order: {
+                orderedProducts: [],
+                cost: 0.0,
+                quantity: 0,
+                amountPaid: 0.0,
+                delivered: false,
+                year: {},
+                userName: ''
+              }
+            });
+          }
 
-        window.dispatchEvent(new Event('resize'));
-      }
+          window.dispatchEvent(new Event('resize'));
+        }
         );
     }
 
-  loadProducts(year) {
-    let {record} = this.props;
-    if (record.json) {
-      record = record.json;
-    }
-    this.props.crudGetList(
-      this.props.resource,
-      {page: 1, perPage: 100},
-      {field: 'id', order: 'DESC'},
-      {}
-    );
-    let filter = {};
-    if (year) {
-      filter = {year: year};
-    } else if (record.year) {
-      filter = {year: record.year.id};
-    } else if (this.props.year) {
-      filter = {year: this.props.year};
-    }
+    loadProducts (year) {
+      let {record} = this.props;
+      if (record.json) {
+        record = record.json;
+      }
+      this.props.crudGetList(
+        this.props.resource,
+        {page: 1, perPage: 100},
+        {field: 'id', order: 'DESC'},
+        {}
+      );
+      let filter = {};
+      if (year) {
+        filter = {year: year};
+      } else if (record.year) {
+        filter = {year: record.year.id};
+      } else if (this.props.year) {
+        filter = {year: this.props.year};
+      }
 
-    this.setState({customer: record});
-    if (record.order) {
-      if (!record.order.orderedProducts) {
-        dataProvider(GET_ONE, 'Orders', {
-          id: record.order.id
-        })
-          .then(orderResponse => {
-            this.getProducts(orderResponse, filter);
+      this.setState({customer: record});
+      if (record.order) {
+        if (!record.order.orderedProducts) {
+          dataProvider(GET_ONE, 'Orders', {
+            id: record.order.id
+          })
+            .then(orderResponse => {
+              this.getProducts(orderResponse, filter);
             /* dataProvider(GET_LIST, 'Products', {
                         filter: filter,
                         pagination: {page: 1, perPage: 1000},
@@ -418,9 +418,9 @@ class ProductsGrid extends Component {
                           window.dispatchEvent(new Event('resize'));
                       }
                     ); */
-          });
-      } else {
-        this.getProducts(record.order, filter);
+            });
+        } else {
+          this.getProducts(record.order, filter);
         /* dataProvider(GET_LIST, 'Products', {
                   filter: filter,
                   pagination: {page: 1, perPage: 1000},
@@ -481,22 +481,22 @@ class ProductsGrid extends Component {
                     window.dispatchEvent(new Event('resize'));
                 }
               ); */
+        }
+      } else {
+        this.getProducts({}, filter);
       }
-    } else {
-      this.getProducts({}, filter);
-    }
     }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.year !== this.props.year) {
-      this.loadProducts(nextProps.year);
-      const {input: {onChange}} = this.props;
-      let rows = this.state.rows.slice();
-      onChange(this.convertToOrder(rows));
-    }
-    if (nextProps.ids.length !== this.props.ids.length) {
-      this.loading = false;
-    }
+    componentWillReceiveProps (nextProps) {
+      if (nextProps.year !== this.props.year) {
+        this.loadProducts(nextProps.year);
+        const {input: {onChange}} = this.props;
+        let rows = this.state.rows.slice();
+        onChange(this.convertToOrder(rows));
+      }
+      if (nextProps.ids.length !== this.props.ids.length) {
+        this.loading = false;
+      }
     }
 
     /*    rowGetter = index => {
@@ -517,44 +517,44 @@ class ProductsGrid extends Component {
             return emptyRow;
         }; */
 
-  componentWillUnmount() {
-    this.props.changeListParams(this.props.resource, {
-      ...this.props.params,
-      perPage: this.perPageInitial
-    });
-    window.removeEventListener('resize', this.updateDimensions);
+    componentWillUnmount () {
+      this.props.changeListParams(this.props.resource, {
+        ...this.props.params,
+        perPage: this.perPageInitial
+      });
+      window.removeEventListener('resize', this.updateDimensions);
     }
 
-  render() {
-    const {classes, columns, currentSort, total, visible} = this.props;
-    const {orders} = this.state;
+    render () {
+      const {classes, columns, currentSort, total, visible} = this.props;
+      const {orders} = this.state;
 
-    return (/* <div className="list-page List-root-156">
+      return (/* <div className="list-page List-root-156">
             <div className="MuiPaper-root-34 MuiPaper-elevation2-38 MuiPaper-rounded-35 MuiCard-root-160"> */
-      <div className={classes.main}>
-        <div id='dataGridWrapper' style={{position: 'relative', height: '660px'}}>
-          <div style={{position: 'absolute', width: '98%', height: '100%', margin: '1%'}}>
-            <ReactDataGrid
-              className='toto'
-              enableCellSelect
-              columns={this._columns}
-              rowGetter={this.rowGetter}
-              rowsCount={this.state.rows.length}
-              onGridRowsUpdated={this.handleGridRowsUpdated}
-              minColumnWidth='30'
-              minHeight='600px'
-              disabled
-            />
+        <div className={classes.main}>
+          <div id='dataGridWrapper' style={{position: 'relative', height: '660px'}}>
+            <div style={{position: 'absolute', width: '98%', height: '100%', margin: '1%'}}>
+              <ReactDataGrid
+                className='toto'
+                enableCellSelect
+                columns={this._columns}
+                rowGetter={this.rowGetter}
+                rowsCount={this.state.rows.length}
+                onGridRowsUpdated={this.handleGridRowsUpdated}
+                minColumnWidth='30'
+                minHeight='600px'
+                disabled
+              />
+            </div>
           </div>
-        </div>
 
-      </div>
+        </div>
       /* </div>
             </div>
                 </div>
                 </div> */
 
-    );
+      );
     }
 }
 

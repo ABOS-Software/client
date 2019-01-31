@@ -5,14 +5,14 @@ import {CustomSelectInput} from './CustomSelect';
 const requiredValidate = required();
 
 export class ReportType extends React.PureComponent {
-  render() {
+  render () {
     return <CustomSelectInput
       source='template' choices={[{id: 'customers_split', name: 'Year; Split by Customer'}, {
-      id: 'Year Totals',
-      name: 'Year Totals'
-    }, {id: 'Customer Year Totals', name: 'Customer Year Totals'}, {
-      id: 'Customer All-Time Totals',
-      name: 'Customer All-Time Totals'
-    }]} validate={requiredValidate} onChangeCustomHandler={this.props.onChangeCustomHandler}/>;
+        id: 'Year Totals',
+        name: 'Year Totals'
+      }, {id: 'Customer Year Totals', name: 'Customer Year Totals'}, {
+        id: 'Customer All-Time Totals',
+        name: 'Customer All-Time Totals'
+      }]} validate={requiredValidate} onChangeCustomHandler={this.props.onChangeCustomHandler}/>;
   }
 }

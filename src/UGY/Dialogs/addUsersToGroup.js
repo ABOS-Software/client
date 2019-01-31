@@ -23,7 +23,7 @@ class AddUsersToGroupDialog extends React.Component {
     let groupList = [];
     this.props.groups.forEach(group => {
       groupList.push(<MenuItem key={'AddGroupToUser-group-' + group.id}
-                               value={group.id}>{group.groupName}</MenuItem>);
+        value={group.id}>{group.groupName}</MenuItem>);
     });
     return groupList;
   };
@@ -40,7 +40,7 @@ class AddUsersToGroupDialog extends React.Component {
     // this.setState({userChecks: parentState, addUsersToGroupOpen: false});
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
     return (<Dialog
       open={this.props.open}

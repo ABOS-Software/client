@@ -22,7 +22,7 @@ const styles = theme => ({
   }
 });
 
-function NumberFormatCustom(props) {
+function NumberFormatCustom (props) {
   const {inputRef, onChange, ...other} = props;
 
   return (
@@ -111,12 +111,12 @@ class MUICurrencyEditorRaw extends React.Component {
             return ret.join('|');
         }; */
 
-  render(): ?ReactElement {
-    return (<div height={this.props.height} onKeyDown={this.props.onKeyDown} className={this.props.classes.wrapper}>
-      <TextField InputProps={{
-        inputComponent: NumberFormatCustom
-      }} value={this.props.value} onChange={this.props.onChange} className={this.props.classes.textField}/>
-    </div>);
+    render (): ?ReactElement {
+      return (<div height={this.props.height} onKeyDown={this.props.onKeyDown} className={this.props.classes.wrapper}>
+        <TextField InputProps={{
+          inputComponent: NumberFormatCustom
+        }} value={this.props.value} onChange={this.props.onChange} className={this.props.classes.textField}/>
+      </div>);
     }
 }
 

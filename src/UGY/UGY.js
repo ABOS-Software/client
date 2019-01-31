@@ -48,7 +48,7 @@ const drawerWidth = 240;
 
 const dataProvider = restClient;
 
-function TabContainer(props) {
+function TabContainer (props) {
   return (
     <Typography component='div' {...props}>
       {props.children}
@@ -165,7 +165,7 @@ class UGYEditor extends React.PureComponent {
   // users: {}, years: {}, customers: {}
   // users: {}, years: {}, customers: {}
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       tab: 0,
@@ -211,20 +211,20 @@ class UGYEditor extends React.PureComponent {
       })
         .then(response =>
           response.data.reduce((stats, category) => {
-              stats.categories.push({
+            stats.categories.push({
 
-                id: category.id,
-                name: category.categoryName,
-                value: category.categoryName
+              id: category.id,
+              name: category.categoryName,
+              value: category.categoryName
 
-              });
+            });
 
-              return stats;
-            },
-            {
-              categories: []
+            return stats;
+          },
+          {
+            categories: []
 
-            }
+          }
           )
         ).then(({categories}) => {
           categories.push({id: '-1', value: ' '});
@@ -236,14 +236,14 @@ class UGYEditor extends React.PureComponent {
         );
     };
 
-  getYears() {
-    dataProvider(GET_LIST, 'Years', {
-      filter: {},
-      sort: {field: 'id', order: 'DESC'},
-      pagination: {page: 1, perPage: 1000}
-    }).then(response => {
-      this.setState({years: response.data});
-    });
+    getYears () {
+      dataProvider(GET_LIST, 'Years', {
+        filter: {},
+        sort: {field: 'id', order: 'DESC'},
+        pagination: {page: 1, perPage: 1000}
+      }).then(response => {
+        this.setState({years: response.data});
+      });
     }
 
     save = event => {
@@ -357,14 +357,14 @@ class UGYEditor extends React.PureComponent {
       });
     };
 
-  getGroups(yearId) {
-    dataProvider(GET_LIST, 'Group', {
-      filter: {year_id: yearId || this.state.year},
-      sort: {field: 'id', order: 'DESC'},
-      pagination: {page: 1, perPage: 1000}
-    }).then(response => {
-      this.setState({groups: response.data});
-    });
+    getGroups (yearId) {
+      dataProvider(GET_LIST, 'Group', {
+        filter: {year_id: yearId || this.state.year},
+        sort: {field: 'id', order: 'DESC'},
+        pagination: {page: 1, perPage: 1000}
+      }).then(response => {
+        this.setState({groups: response.data});
+      });
     }
 
     handleUpdateUserChecks = (userChecks) => {
@@ -376,23 +376,23 @@ class UGYEditor extends React.PureComponent {
     modifyDialog = (dialog, options, value) => {
       let obj = {};
       switch (dialog) {
-        case 'addUsersToGroup':
-          obj.addUsersToGroupOpen = value;
-          break;
-        case 'addUsersToUser':
-          obj.addUsersToUserOpen = value;
-          break;
-        case 'addUser':
-          obj.addUserOpen = value;
-          break;
-        case 'editUser':
-          obj.editUserOpen = value;
-          if (options.editUser) {
-            obj.editUser = options.editUser;
-          } else {
-            obj.editUser = {id: -1, userName: '', password: '', fullName: ''};
-          }
-          break;
+      case 'addUsersToGroup':
+        obj.addUsersToGroupOpen = value;
+        break;
+      case 'addUsersToUser':
+        obj.addUsersToUserOpen = value;
+        break;
+      case 'addUser':
+        obj.addUserOpen = value;
+        break;
+      case 'editUser':
+        obj.editUserOpen = value;
+        if (options.editUser) {
+          obj.editUser = options.editUser;
+        } else {
+          obj.editUser = {id: -1, userName: '', password: '', fullName: ''};
+        }
+        break;
       }
       this.setState(obj);
     };
@@ -455,98 +455,98 @@ class UGYEditor extends React.PureComponent {
       }
     };
 
-  getUsers(yearId) {
-    dataProvider(GET_LIST, 'UserHierarchy', {filter: {year: yearId || this.state.year}}).then(response => {
-      let users = response.data[0];
-      let userChecks = {};
-      Object.keys(users).forEach(user => {
-        userChecks[user] = {
-          checked: false,
-          id: users[user].id,
-          fullName: users[user].fullName,
-          group: users[user].group,
-          status: users[user].status,
-          subUsers: users[user].subUsers,
-          enabledYear: users[user].enabledYear
-        };
+    getUsers (yearId) {
+      dataProvider(GET_LIST, 'UserHierarchy', {filter: {year: yearId || this.state.year}}).then(response => {
+        let users = response.data[0];
+        let userChecks = {};
+        Object.keys(users).forEach(user => {
+          userChecks[user] = {
+            checked: false,
+            id: users[user].id,
+            fullName: users[user].fullName,
+            group: users[user].group,
+            status: users[user].status,
+            subUsers: users[user].subUsers,
+            enabledYear: users[user].enabledYear
+          };
+        });
+        this.setState({'users': users, 'update': true, 'userChecks': userChecks});
       });
-      this.setState({'users': users, 'update': true, 'userChecks': userChecks});
-    });
     }
     renderYearItems = () => {
       let yearItems = [];
       this.state.years.forEach(year => {
         yearItems.push(<ListItem key={'YearItem-' + year.id} selected={this.state.year === year.id} button
-                                 onClick={this.updateYear(year)}>
+          onClick={this.updateYear(year)}>
           <ListItemText primary={year.year}/>
         </ListItem>);
       });
       return yearItems;
     };
 
-  render() {
-    const {classes, theme} = this.props;
-    if (this.state.ready) {
-      const {tab, anchor, yearNavOpen} = this.state;
+    render () {
+      const {classes, theme} = this.props;
+      if (this.state.ready) {
+        const {tab, anchor, yearNavOpen} = this.state;
 
-      const dialogs = [
-        <AddUsersToGroupDialog key={'addUsersToGroupDialog'}
-                               closeDialog={this.closeDialog('addUsersToGroup')}
-                               userChecks={this.state.userChecks}
-                               updateUserChecks={this.handleUpdateUserChecks}
-                               open={this.state.addUsersToGroupOpen}
-                               groups={this.state.groups}/>,
-        <AddUsersToUserDialog key={'addUsersToUserDialog'}
-                              closeDialog={this.closeDialog('addUsersToUser')}
-                              userChecks={this.state.userChecks}
-                              updateUserChecks={this.handleUpdateUserChecks}
-                              open={this.state.addUsersToUserOpen}/>,
+        const dialogs = [
+          <AddUsersToGroupDialog key={'addUsersToGroupDialog'}
+            closeDialog={this.closeDialog('addUsersToGroup')}
+            userChecks={this.state.userChecks}
+            updateUserChecks={this.handleUpdateUserChecks}
+            open={this.state.addUsersToGroupOpen}
+            groups={this.state.groups}/>,
+          <AddUsersToUserDialog key={'addUsersToUserDialog'}
+            closeDialog={this.closeDialog('addUsersToUser')}
+            userChecks={this.state.userChecks}
+            updateUserChecks={this.handleUpdateUserChecks}
+            open={this.state.addUsersToUserOpen}/>,
 
-        <AddUserDialog key={'addUserDialog'}
-                       closeDialog={this.closeDialog('addUser')}
-                       open={this.state.addUserOpen}/>,
-        <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
-                        closeDialog={this.closeDialog('editUser')}
-                        open={this.state.editUserOpen}
-                        userName={this.state.editUser.userName}
-                        id={this.state.editUser.id}
-                        fullName={this.state.editUser.fullName}/>,
-        <ConfirmDeletionDialog key={'confirmDeletionDialog'}
-                               closeDialog={this.closeDialog('confirmDeletion')}
-                               open={this.state.confirmDeletionDialogOpen}
-                               confirmPassword={this.confirmPassword}/>
+          <AddUserDialog key={'addUserDialog'}
+            closeDialog={this.closeDialog('addUser')}
+            open={this.state.addUserOpen}/>,
+          <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
+            closeDialog={this.closeDialog('editUser')}
+            open={this.state.editUserOpen}
+            userName={this.state.editUser.userName}
+            id={this.state.editUser.id}
+            fullName={this.state.editUser.fullName}/>,
+          <ConfirmDeletionDialog key={'confirmDeletionDialog'}
+            closeDialog={this.closeDialog('confirmDeletion')}
+            open={this.state.confirmDeletionDialogOpen}
+            confirmPassword={this.confirmPassword}/>
 
-      ];
-      const drawer = (
-        <div>
-          <div className={classes.toolbar}/>
-          <Divider/>
-          <List component='nav'>
-            {this.renderYearItems()}
+        ];
+        const drawer = (
+          <div>
+            <div className={classes.toolbar}/>
+            <Divider/>
+            <List component='nav'>
+              {this.renderYearItems()}
 
-          </List>
+            </List>
 
-        </div>
-      );
-
-      const usersTab = (
-        <UsersTab groups={this.state.groups}
-                  showDialog={this.showDialog}
-                  userChecks={this.state.userChecks}
-                  updateUserChecks={this.handleUpdateUserChecks}
-                  year={this.state.year}/>
-      );
-
-      const prodsTab = (
-        <div className={classes.productsGrid}>
-          <div className={classes.fullHeightWidth}>
-            <ProductsGrid year={this.state.year} yearText={this.state.yearText}
-                          addProduct={this.handleAddProduct} updateProduct={this.handleUpdateProduct}
-                          deleteProduct={this.handleDeleteProduct} categories={this.state.categories}/>
           </div>
-        </div>
-      );
-      /*
+        );
+
+        const usersTab = (
+          <UsersTab groups={this.state.groups}
+            showDialog={this.showDialog}
+            userChecks={this.state.userChecks}
+            updateUserChecks={this.handleUpdateUserChecks}
+            year={this.state.year}/>
+        );
+
+        const prodsTab = (
+          <div className={classes.productsGrid}>
+            <div className={classes.fullHeightWidth}>
+              <ProductsGrid year={this.state.year} yearText={this.state.yearText}
+                addProduct={this.handleAddProduct} updateProduct={this.handleUpdateProduct}
+                deleteProduct={this.handleDeleteProduct} categories={this.state.categories}/>
+            </div>
+          </div>
+        );
+        /*
     *                         | Tab Pane
     *                         |    Users | Groups | Products
     *                         |
@@ -573,109 +573,109 @@ class UGYEditor extends React.PureComponent {
     *                         |
     *                         |------------------------------------------------------------------- Save | Cancel ---
      */
-      return (
-        <div>
-          <Modal
+        return (
+          <div>
+            <Modal
 
-            open={this.state.open}
-            disableBackdropClick
-          >
-            <div className={classes.modal}>
-              <div className={classes.root}>
-                <AppBar className={classes.appBar}>
-                  <Toolbar>
-                    <IconButton
-                      color='inherit'
-                      aria-label='Open drawer'
-                      onClick={this.handleDrawerToggle}
-                    >
-                      <MenuIcon/>
-                    </IconButton>
-                    <Typography variant='title' color='inherit' noWrap>
-                                            Users And Products
-                    </Typography>
-                  </Toolbar>
-                </AppBar>
-                <Hidden mdUp>
-
-                  <Drawer
-                    variant='permanent'
-                    open={this.state.yearNavOpen}
-                    onClose={this.handleDrawerToggle}
-                    classes={{
-                      paper: classes.drawerPaper
-                    }}
-                  >
-                    {drawer}
-                  </Drawer>
-                </Hidden>
-                <Hidden smDown implementation='css' className={classes.fullHeight}>
-                  <Drawer
-                    variant='persistent'
-                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-
-                    open={this.state.yearNavOpen}
-                    onClose={this.handleDrawerToggle}
-                    classes={{
-                      paper: classes.drawerPaper
-                    }}
-                    className={classes.fullHeight}
-                  >
-                    {drawer}
-                  </Drawer>
-                </Hidden>
-                <main className={classNames(classes.content, classes[`content-${anchor}`], {
-                  [classes.contentShift]: yearNavOpen,
-                  [classes[`contentShift-${anchor}`]]: yearNavOpen
-                })}>
-                  <div className={classes.toolbar}/>
-                  <Paper className={classes.fullHeightWidth}>
-                    <Tabs value={tab} onChange={this.handleTabChange}>
-                      <Tab label='Users'/>
-                      <Tab label='Products'/>
-                    </Tabs>
-                    {tab === 0 && <TabContainer className={classes.tabScroll}>{usersTab}</TabContainer>}
-                    {tab === 1 &&
-                    <TabContainer className={classes.tabNoScroll}>{prodsTab}</TabContainer>}
+              open={this.state.open}
+              disableBackdropClick
+            >
+              <div className={classes.modal}>
+                <div className={classes.root}>
+                  <AppBar className={classes.appBar}>
                     <Toolbar>
-                      <div className={classes.bottomBar}>
-                        <Button variant='contained' color='secondary' className={classes.button}
-                                onClick={this.cancel}>
-                                                Cancel
-                        </Button>
-                        <Button variant='contained' color='primary' className={classes.button}
-                                onClick={this.save}>
-                          <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)}/>
-                                                Save
-                        </Button>
-                      </div>
+                      <IconButton
+                        color='inherit'
+                        aria-label='Open drawer'
+                        onClick={this.handleDrawerToggle}
+                      >
+                        <MenuIcon/>
+                      </IconButton>
+                      <Typography variant='title' color='inherit' noWrap>
+                                            Users And Products
+                      </Typography>
                     </Toolbar>
-                  </Paper>
-                </main>
+                  </AppBar>
+                  <Hidden mdUp>
+
+                    <Drawer
+                      variant='permanent'
+                      open={this.state.yearNavOpen}
+                      onClose={this.handleDrawerToggle}
+                      classes={{
+                        paper: classes.drawerPaper
+                      }}
+                    >
+                      {drawer}
+                    </Drawer>
+                  </Hidden>
+                  <Hidden smDown implementation='css' className={classes.fullHeight}>
+                    <Drawer
+                      variant='persistent'
+                      anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+
+                      open={this.state.yearNavOpen}
+                      onClose={this.handleDrawerToggle}
+                      classes={{
+                        paper: classes.drawerPaper
+                      }}
+                      className={classes.fullHeight}
+                    >
+                      {drawer}
+                    </Drawer>
+                  </Hidden>
+                  <main className={classNames(classes.content, classes[`content-${anchor}`], {
+                    [classes.contentShift]: yearNavOpen,
+                    [classes[`contentShift-${anchor}`]]: yearNavOpen
+                  })}>
+                    <div className={classes.toolbar}/>
+                    <Paper className={classes.fullHeightWidth}>
+                      <Tabs value={tab} onChange={this.handleTabChange}>
+                        <Tab label='Users'/>
+                        <Tab label='Products'/>
+                      </Tabs>
+                      {tab === 0 && <TabContainer className={classes.tabScroll}>{usersTab}</TabContainer>}
+                      {tab === 1 &&
+                      <TabContainer className={classes.tabNoScroll}>{prodsTab}</TabContainer>}
+                      <Toolbar>
+                        <div className={classes.bottomBar}>
+                          <Button variant='contained' color='secondary' className={classes.button}
+                            onClick={this.cancel}>
+                                                Cancel
+                          </Button>
+                          <Button variant='contained' color='primary' className={classes.button}
+                            onClick={this.save}>
+                            <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)}/>
+                                                Save
+                          </Button>
+                        </div>
+                      </Toolbar>
+                    </Paper>
+                  </main>
+                </div>
               </div>
-            </div>
 
-          </Modal>
-          {dialogs}
+            </Modal>
+            {dialogs}
 
-        </div>
+          </div>
 
-      );
-    } else {
-      return (<h2>Loading...</h2>);
-    }
-    }
-
-  componentWillMount() {
+        );
+      } else {
+        return (<h2>Loading...</h2>);
+      }
     }
 
-  componentDidMount() {
-    this.loadCategories();
+    componentWillMount () {
+    }
 
-    this.getUsers();
-    this.getYears();
-    this.getGroups();
-    this.setState({ready: true});
+    componentDidMount () {
+      this.loadCategories();
+
+      this.getUsers();
+      this.getYears();
+      this.getGroups();
+      this.setState({ready: true});
     }
 }
 

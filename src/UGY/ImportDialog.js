@@ -27,7 +27,7 @@ const CustomSelectInput = ({onChangeCustomHandler, ...rest}) => (
   <SelectInput onChange={(event, key, payload) => {
     onChangeCustomHandler(key);
   }}
-               {...rest}
+    {...rest}
   />
 );
 const formValidate = required();
@@ -151,16 +151,16 @@ class ImportDialog extends React.Component {
       return true;
     };
 
-  finalStepsContent() {
-    this.setState({
+    finalStepsContent () {
+      this.setState({
         importStepsContent: [
 
           [
             <CustomSelectInput
               source='action' choices={[{id: 'CSV', name: 'Import From CSV'}, {
-              id: 'XML',
-              name: 'Import From XML'
-            }]} validate={requiredValidate} onChangeCustomHandler={(key) => this.setImportType(key)}/>
+                id: 'XML',
+                name: 'Import From XML'
+              }]} validate={requiredValidate} onChangeCustomHandler={(key) => this.setImportType(key)}/>
 
           ]
             [<Typography>Please wait while the products are imported</Typography>,
@@ -168,19 +168,19 @@ class ImportDialog extends React.Component {
 
         ]
       }
-    );
+      );
     }
 
-  stepsContent() {
-    this.setState({
+    stepsContent () {
+      this.setState({
         importStepsContent: [
 
           [
             <CustomSelectInput
               source='action' choices={[{id: 'CSV', name: 'Import From CSV'}, {
-              id: 'XML',
-              name: 'Import From XML'
-            }]} validate={requiredValidate} onChangeCustomHandler={(key) => this.setImportType(key)}/>
+                id: 'XML',
+                name: 'Import From XML'
+              }]} validate={requiredValidate} onChangeCustomHandler={(key) => this.setImportType(key)}/>
 
           ], [<FileInput source='file' label='Import File'>
             <FileField source='src' title='title'/>
@@ -190,31 +190,31 @@ class ImportDialog extends React.Component {
 
         ]
       }
-    );
+      );
     }
 
-  componentWillMount() {
-    this.stepsContent();
+    componentWillMount () {
+      this.stepsContent();
     }
 
-  render() {
-    return (
-      <Dialog
-        key={'importDialog'}
-        open={this.props.importDialogOpen}
-        onClose={this.props.closeImportDialog}
-        aria-labelledby='form-dialog-title'
-      >
-        <DialogTitle id='form-dialog-title'>Import</DialogTitle>
-        <DialogContent>
-          <DialogContentText/>
-          <Wizard {...this.props} steps={importSteps()} stepContents={this.state.importStepsContent}
-                  save={this.import}
-                  formName={'record-form'}/>
-        </DialogContent>
+    render () {
+      return (
+        <Dialog
+          key={'importDialog'}
+          open={this.props.importDialogOpen}
+          onClose={this.props.closeImportDialog}
+          aria-labelledby='form-dialog-title'
+        >
+          <DialogTitle id='form-dialog-title'>Import</DialogTitle>
+          <DialogContent>
+            <DialogContentText/>
+            <Wizard {...this.props} steps={importSteps()} stepContents={this.state.importStepsContent}
+              save={this.import}
+              formName={'record-form'}/>
+          </DialogContent>
 
-      </Dialog>
-    );
+        </Dialog>
+      );
     }
 }
 

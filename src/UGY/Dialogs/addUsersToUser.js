@@ -43,7 +43,7 @@ class addUsersToUser extends React.Component {
     this.props.closeDialog();
   };
 
-  render() {
+  render () {
     const {classes} = this.props;
 
     return (

@@ -179,6 +179,6 @@ const saveCreation = (record, redirect) => {
   });
 };
 export const CustomerCreate = (props) => (
-  <CustomerCreateClass {...props} />
+  <CustomerCreateClass {...props}/>
 
 );
