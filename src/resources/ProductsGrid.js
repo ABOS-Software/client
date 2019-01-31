@@ -306,7 +306,7 @@ class ProductsGrid extends Component {
           if (orderUse) {
             this.setState({
               rows: products,
-              order: order.data,
+              order: orderResponse,
               year: order.year,
               userName: order.userName
             });
