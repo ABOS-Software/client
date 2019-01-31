@@ -547,32 +547,32 @@ class UGYEditor extends React.PureComponent {
         </div>
       );
       /*
-        *                         | Tab Pane
-        *                         |    Users | Groups | Products
-        *                         |
-        *                         |     U Menu Bar - Add Element (Dropdown for bulk or simple) Multi Action Menu
-        *                         |     S   Expansion Panels( Enabled, Disabled, Archived)
-        *                         |     E     Selectable Expansion Panels with Delete/Edit buttons on end
-        *                         |     R       Group Selection
-        *                         |     S       Management Selection - Use Selectable Nested List
-        *                         |
-        *      Nested List        |     G Menu Bar - Add Element (Dropdown for bulk or simple) Multi Action Menu
-        * See List on Material UI |     R   Expansion Panels with Delete/Edit buttons on end E
-        *                         |     O     Edit Button Has option to remove all selected groups members from groups
-        *                         |     U   List of Group Members(Selectable)
-        *                         |     P
-        *                         |
-        *                         |     P Mimic Add Customer, but Some Changes
-        *                         |     R   Top Pane
-        *                         |     O     Button for import/export
-        *                         |     D   Add Product inputs/Button
-        *                         |     U   Table - implement row selection Toolbar(see all features, use AdvancedToolbar with custom stuffs)
-        *                         |     C   No Quantity/Extended Cost
-        *                         |     T   Add Category Selection
-        *                         |     S     Include Add Category Button - Should open a modal dialog
-        *                         |
-        *                         |------------------------------------------------------------------- Save | Cancel ---
-         */
+      *                         | Tab Pane
+      *                         |    Users | Groups | Products
+      *                         |
+      *                         |     U Menu Bar - Add Element (Dropdown for bulk or simple) Multi Action Menu
+      *                         |     S   Expansion Panels( Enabled, Disabled, Archived)
+      *                         |     E     Selectable Expansion Panels with Delete/Edit buttons on end
+      *                         |     R       Group Selection
+      *                         |     S       Management Selection - Use Selectable Nested List
+      *                         |
+      *      Nested List        |     G Menu Bar - Add Element (Dropdown for bulk or simple) Multi Action Menu
+      * See List on Material UI |     R   Expansion Panels with Delete/Edit buttons on end E
+      *                         |     O     Edit Button Has option to remove all selected groups members from groups
+      *                         |     U   List of Group Members(Selectable)
+      *                         |     P
+      *                         |
+      *                         |     P Mimic Add Customer, but Some Changes
+      *                         |     R   Top Pane
+      *                         |     O     Button for import/export
+      *                         |     D   Add Product inputs/Button
+      *                         |     U   Table - implement row selection Toolbar(see all features, use AdvancedToolbar with custom stuffs)
+      *                         |     C   No Quantity/Extended Cost
+      *                         |     T   Add Category Selection
+      *                         |     S     Include Add Category Button - Should open a modal dialog
+      *                         |
+      *                         |------------------------------------------------------------------- Save | Cancel ---
+       */
       return (
         <div>
           <Modal

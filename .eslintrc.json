@@ -21,9 +21,10 @@
       {
         "ignore": [
           "classes"
-        ]
-      },
-      "skipUndeclared"
+        ],
+        "skipUndeclared": 1
+      }
+
     ],
     "no-unused-vars": "off",
     "object-curly-spacing": [
