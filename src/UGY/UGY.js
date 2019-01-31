@@ -19,8 +19,6 @@ import Modal from '@material-ui/core/Modal';
 import classNames from 'classnames';
 
 import update from 'immutability-helper';
-import SaveIcon from '@material-ui/icons/Save';
-import Button from '@material-ui/core/Button';
 import {push} from 'react-router-redux';
 import {connect} from 'react-redux';
 
@@ -43,6 +41,7 @@ import {
   ConfirmDeletionDialog,
   EditUserDialog
 } from './Dialogs';
+import UGYToolbar from './UGYToolbar';
 
 const drawerWidth = 240;
 
@@ -485,94 +484,8 @@ class UGYEditor extends React.PureComponent {
     };
 
     render () {
-      const {classes, theme} = this.props;
+      const {classes} = this.props;
       if (this.state.ready) {
-        const {tab, anchor, yearNavOpen} = this.state;
-
-        const dialogs = [
-          <AddUsersToGroupDialog key={'addUsersToGroupDialog'}
-            closeDialog={this.closeDialog('addUsersToGroup')}
-            userChecks={this.state.userChecks}
-            updateUserChecks={this.handleUpdateUserChecks}
-            open={this.state.addUsersToGroupOpen}
-            groups={this.state.groups}/>,
-          <AddUsersToUserDialog key={'addUsersToUserDialog'}
-            closeDialog={this.closeDialog('addUsersToUser')}
-            userChecks={this.state.userChecks}
-            updateUserChecks={this.handleUpdateUserChecks}
-            open={this.state.addUsersToUserOpen}/>,
-
-          <AddUserDialog key={'addUserDialog'}
-            closeDialog={this.closeDialog('addUser')}
-            open={this.state.addUserOpen}/>,
-          <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
-            closeDialog={this.closeDialog('editUser')}
-            open={this.state.editUserOpen}
-            userName={this.state.editUser.userName}
-            id={this.state.editUser.id}
-            fullName={this.state.editUser.fullName}/>,
-          <ConfirmDeletionDialog key={'confirmDeletionDialog'}
-            closeDialog={this.closeDialog('confirmDeletion')}
-            open={this.state.confirmDeletionDialogOpen}
-            confirmPassword={this.confirmPassword}/>
-
-        ];
-        const drawer = (
-          <div>
-            <div className={classes.toolbar}/>
-            <Divider/>
-            <List component='nav'>
-              {this.renderYearItems()}
-
-            </List>
-
-          </div>
-        );
-
-        const usersTab = (
-          <UsersTab groups={this.state.groups}
-            showDialog={this.showDialog}
-            userChecks={this.state.userChecks}
-            updateUserChecks={this.handleUpdateUserChecks}
-            year={this.state.year}/>
-        );
-
-        const prodsTab = (
-          <div className={classes.productsGrid}>
-            <div className={classes.fullHeightWidth}>
-              <ProductsGrid year={this.state.year} yearText={this.state.yearText}
-                addProduct={this.handleAddProduct} updateProduct={this.handleUpdateProduct}
-                deleteProduct={this.handleDeleteProduct} categories={this.state.categories}/>
-            </div>
-          </div>
-        );
-        /*
-    *                         | Tab Pane
-    *                         |    Users | Groups | Products
-    *                         |
-    *                         |     U Menu Bar - Add Element (Dropdown for bulk or simple) Multi Action Menu
-    *                         |     S   Expansion Panels( Enabled, Disabled, Archived)
-    *                         |     E     Selectable Expansion Panels with Delete/Edit buttons on end
-    *                         |     R       Group Selection
-    *                         |     S       Management Selection - Use Selectable Nested List
-    *                         |
-    *      Nested List        |     G Menu Bar - Add Element (Dropdown for bulk or simple) Multi Action Menu
-    * See List on Material UI |     R   Expansion Panels with Delete/Edit buttons on end E
-    *                         |     O     Edit Button Has option to remove all selected groups members from groups
-    *                         |     U   List of Group Members(Selectable)
-    *                         |     P
-    *                         |
-    *                         |     P Mimic Add Customer, but Some Changes
-    *                         |     R   Top Pane
-    *                         |     O     Button for import/export
-    *                         |     D   Add Product inputs/Button
-    *                         |     U   Table - implement row selection Toolbar(see all features, use AdvancedToolbar with custom stuffs)
-    *                         |     C   No Quantity/Extended Cost
-    *                         |     T   Add Category Selection
-    *                         |     S     Include Add Category Button - Should open a modal dialog
-    *                         |
-    *                         |------------------------------------------------------------------- Save | Cancel ---
-     */
         return (
           <div>
             <Modal
@@ -582,81 +495,15 @@ class UGYEditor extends React.PureComponent {
             >
               <div className={classes.modal}>
                 <div className={classes.root}>
-                  <AppBar className={classes.appBar}>
-                    <Toolbar>
-                      <IconButton
-                        color='inherit'
-                        aria-label='Open drawer'
-                        onClick={this.handleDrawerToggle}
-                      >
-                        <MenuIcon/>
-                      </IconButton>
-                      <Typography variant='title' color='inherit' noWrap>
-                                            Users And Products
-                      </Typography>
-                    </Toolbar>
-                  </AppBar>
-                  <Hidden mdUp>
+                  {this.renderTitleBar(classes)}
+                  {this.renderDrawer()}
 
-                    <Drawer
-                      variant='permanent'
-                      open={this.state.yearNavOpen}
-                      onClose={this.handleDrawerToggle}
-                      classes={{
-                        paper: classes.drawerPaper
-                      }}
-                    >
-                      {drawer}
-                    </Drawer>
-                  </Hidden>
-                  <Hidden smDown implementation='css' className={classes.fullHeight}>
-                    <Drawer
-                      variant='persistent'
-                      anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-
-                      open={this.state.yearNavOpen}
-                      onClose={this.handleDrawerToggle}
-                      classes={{
-                        paper: classes.drawerPaper
-                      }}
-                      className={classes.fullHeight}
-                    >
-                      {drawer}
-                    </Drawer>
-                  </Hidden>
-                  <main className={classNames(classes.content, classes[`content-${anchor}`], {
-                    [classes.contentShift]: yearNavOpen,
-                    [classes[`contentShift-${anchor}`]]: yearNavOpen
-                  })}>
-                    <div className={classes.toolbar}/>
-                    <Paper className={classes.fullHeightWidth}>
-                      <Tabs value={tab} onChange={this.handleTabChange}>
-                        <Tab label='Users'/>
-                        <Tab label='Products'/>
-                      </Tabs>
-                      {tab === 0 && <TabContainer className={classes.tabScroll}>{usersTab}</TabContainer>}
-                      {tab === 1 &&
-                      <TabContainer className={classes.tabNoScroll}>{prodsTab}</TabContainer>}
-                      <Toolbar>
-                        <div className={classes.bottomBar}>
-                          <Button variant='contained' color='secondary' className={classes.button}
-                            onClick={this.cancel}>
-                                                Cancel
-                          </Button>
-                          <Button variant='contained' color='primary' className={classes.button}
-                            onClick={this.save}>
-                            <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)}/>
-                                                Save
-                          </Button>
-                        </div>
-                      </Toolbar>
-                    </Paper>
-                  </main>
+                  {this.renderMainView()}
                 </div>
               </div>
 
             </Modal>
-            {dialogs}
+            {this.renderDialogs()}
 
           </div>
 
@@ -664,6 +511,149 @@ class UGYEditor extends React.PureComponent {
       } else {
         return (<h2>Loading...</h2>);
       }
+    }
+
+    renderMainView () {
+      const {classes} = this.props;
+
+      const {anchor, yearNavOpen} = this.state;
+      return <main className={classNames(classes.content, classes[`content-${anchor}`], {
+        [classes.contentShift]: yearNavOpen,
+        [classes[`contentShift-${anchor}`]]: yearNavOpen
+      })}>
+        <div className={classes.toolbar}/>
+        <Paper className={classes.fullHeightWidth}>
+          {this.renderTabView()}
+          <UGYToolbar onCancel={this.cancel} onSave={this.save}/>
+        </Paper>
+      </main>;
+    }
+
+    renderTabView () {
+      const {classes} = this.props;
+
+      const {tab} = this.state;
+      const usersTab = (
+        <UsersTab groups={this.state.groups}
+          showDialog={this.showDialog}
+          userChecks={this.state.userChecks}
+          updateUserChecks={this.handleUpdateUserChecks}
+          year={this.state.year}/>
+      );
+
+      const prodsTab = (
+        <div className={classes.productsGrid}>
+          <div className={classes.fullHeightWidth}>
+            <ProductsGrid year={this.state.year} yearText={this.state.yearText}
+              addProduct={this.handleAddProduct} updateProduct={this.handleUpdateProduct}
+              deleteProduct={this.handleDeleteProduct} categories={this.state.categories}/>
+          </div>
+        </div>
+      );
+      return <div>
+        <Tabs value={tab} onChange={this.handleTabChange}>
+          <Tab label='Users'/>
+          <Tab label='Products'/>
+        </Tabs>
+        {tab === 0 && <TabContainer className={classes.tabScroll}>{usersTab}</TabContainer>}
+        {tab === 1 && <TabContainer className={classes.tabNoScroll}>{prodsTab}</TabContainer>}
+      </div>;
+    }
+
+    renderDrawer () {
+      const {classes, theme} = this.props;
+      const drawer = (
+        <div>
+          <div className={classes.toolbar}/>
+          <Divider/>
+          <List component='nav'>
+            {this.renderYearItems()}
+
+          </List>
+
+        </div>
+      );
+      return (<div>
+        <Hidden mdUp>
+
+          <Drawer
+            variant='permanent'
+            open={this.state.yearNavOpen}
+            onClose={this.handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+        <Hidden smDown implementation='css' className={classes.fullHeight}>
+          <Drawer
+            variant='persistent'
+            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+
+            open={this.state.yearNavOpen}
+            onClose={this.handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper
+            }}
+            className={classes.fullHeight}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+      </div>);
+    }
+
+    renderTitleBar () {
+      const {classes} = this.props;
+
+      return <AppBar className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            color='inherit'
+            aria-label='Open drawer'
+            onClick={this.handleDrawerToggle}
+          >
+            <MenuIcon/>
+          </IconButton>
+          <Typography variant='title' color='inherit' noWrap>
+          Users And Products
+          </Typography>
+        </Toolbar>
+      </AppBar>;
+    }
+
+    renderDialogs () {
+      const dialogs = [
+        <AddUsersToGroupDialog key={'addUsersToGroupDialog'}
+          closeDialog={this.closeDialog('addUsersToGroup')}
+          userChecks={this.state.userChecks}
+          updateUserChecks={this.handleUpdateUserChecks}
+          open={this.state.addUsersToGroupOpen}
+          groups={this.state.groups}/>,
+        <AddUsersToUserDialog key={'addUsersToUserDialog'}
+          closeDialog={this.closeDialog('addUsersToUser')}
+          userChecks={this.state.userChecks}
+          updateUserChecks={this.handleUpdateUserChecks}
+          open={this.state.addUsersToUserOpen}/>,
+
+        <AddUserDialog key={'addUserDialog'}
+          closeDialog={this.closeDialog('addUser')}
+          open={this.state.addUserOpen}/>,
+        <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
+          closeDialog={this.closeDialog('editUser')}
+          open={this.state.editUserOpen}
+          userName={this.state.editUser.userName}
+          id={this.state.editUser.id}
+          fullName={this.state.editUser.fullName}/>,
+        <ConfirmDeletionDialog key={'confirmDeletionDialog'}
+          closeDialog={this.closeDialog('confirmDeletion')}
+          open={this.state.confirmDeletionDialogOpen}
+          confirmPassword={this.confirmPassword}/>
+
+      ];
+      return dialogs;
     }
 
     componentWillMount () {
