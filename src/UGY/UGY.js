@@ -42,158 +42,44 @@ import {
   EditUserDialog
 } from './Dialogs';
 import UGYToolbar from './UGYToolbar';
-
-const drawerWidth = 240;
+import {styles} from "./Styles";
+import {TabContainer} from "./TabContainer";
 
 const dataProvider = restClient;
-
-function TabContainer (props) {
-  return (
-    <Typography component='div' {...props}>
-      {props.children}
-    </Typography>
-  );
-}
-
-TabContainer.propTypes = {
-  children: PropTypes.node.isRequired
-};
-
-const styles = theme => ({
-  root: {
-    flexGrow: 0,
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-    width: '100%',
-    height: '100%'
-  },
-
-  modal: {
-    top: '10%',
-    left: '10%',
-    width: '80%',
-    height: '80%',
-    position: 'absolute'
-  },
-  appBar: {
-    position: 'absolute',
-
-    zIndex: theme.zIndex.drawer + 1
-
-  },
-
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-    [theme.breakpoints.up('md')]: {
-      position: 'relative'
-    }
-  },
-  content: {
-    display: 'flex',
-    width: '100%',
-
-    flexDirection: 'column',
-    flexGrow: 0,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit,
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-
-  flex: {
-    flexGrow: 1
-  },
-
-  'tabScroll': {
-    height: '85%',
-    overflow: 'scroll'
-  },
-  'tabNoScroll': {
-    height: '85%',
-    width: '100%'
-
-  },
-  fullHeight: {
-    height: '100%'
-  },
-  fullHeightWidth: {
-    height: '100%',
-    width: '100%',
-    flexGrow: 0,
-    display: 'flex',
-    flexDirection: 'column'
-
-  },
-  leftIcon: {
-    marginRight: theme.spacing.unit
-  },
-
-  iconSmall: {
-    fontSize: 20
-  },
-  button: {
-    margin: theme.spacing.unit
-  },
-  bottomBar: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10
-  },
-  productsGrid: {
-    height: '100% !important',
-    width: '100% !important',
-    display: 'flex',
-    flexDirection: 'column'
-  }
-
-});
 
 class UGYEditor extends React.PureComponent {
   // users: {}, years: {}, customers: {}
   // users: {}, years: {}, customers: {}
+  state = {
+    tab: 0,
+    yearNavOpen: true,
+    anchor: 'left',
+    update: false,
+    ready: false,
+    userChecks: [],
+    years: [],
+    groups: [],
+    open: true,
+    selectedGroup: 0,
+    addUsersToGroupOpen: false,
+    addUsersToUserOpen: false,
+    addUserOpen: false,
+    importDialogOpen: false,
+    newProducts: [],
+    updatedProducts: [],
+    deletedProducts: [],
+    confirmDeletionDialogOpen: false,
+    importStepsContent: [],
+    importNumber: 0,
+    year: 5,
+    yearText: '2018',
+    categories: [],
+    editUser: {id: -1, userName: '', password: '', fullName: ''},
+    editUserOpen: false
 
+  };
   constructor (props) {
     super(props);
-    this.state = {
-      tab: 0,
-      yearNavOpen: true,
-      anchor: 'left',
-      update: false,
-      ready: false,
-      userChecks: [],
-      years: [],
-      groups: [],
-      open: true,
-      selectedGroup: 0,
-      addUsersToGroupOpen: false,
-      addUsersToUserOpen: false,
-      addUserOpen: false,
-      importDialogOpen: false,
-      newProducts: [],
-      updatedProducts: [],
-      deletedProducts: [],
-      confirmDeletionDialogOpen: false,
-      importStepsContent: [],
-      importNumber: 0,
-      year: 5,
-      yearText: '2018',
-      categories: [],
-      editUser: {id: -1, userName: '', password: '', fullName: ''},
-      editUserOpen: false
-
-    };
   }
 
     loadCategories = (yearId) => {
@@ -284,47 +170,37 @@ class UGYEditor extends React.PureComponent {
       }
     };
     confirmPassword = event => {
-      const url = hostURL + '/ProductsMany';
-
       if (event.currentTarget.value == 2) {
         const username = localStorage.getItem('userName');
         const password = this.state.confirmDeletionPassword;
         feathersClient.authenticate({...authClientConfig, username: username, password: password}).then(() => {
-          dataProvider(CREATE, 'ProductsMany', {
-            data: {
-              newProducts: this.state.newProducts,
-              updatedProducts: this.state.updatedProducts,
-              deletedProducts: this.state.deletedProducts,
-              year: this.state.year
-            }
-          }).then(response => {
-            this.setState({open: false});
-            //  this.setState({open: false});
-            this.props.push('/');
-          });
+          this.updateProducts(this.state.deletedProducts);
         }).catch(() => {
           this.setState({passwordError: true});
           return {};
         });
       } else {
         this.setState({deletedProducts: []});
-
-        dataProvider(CREATE, 'ProductsMany', {
-          data: {
-            newProducts: this.state.newProducts,
-            updatedProducts: this.state.updatedProducts,
-            deletedProducts: [],
-            year: this.state.year
-          }
-        }).then(response => {
-          this.setState({confirmDeletionDialogOpen: false, confirmDeletionPassword: '', open: false});
-          //  this.setState({open: false});
-          this.props.push('/');
-        });
+        this.updateProducts([]);
       }
     };
 
-    handleDrawerToggle = () => {
+  updateProducts(deletedProducts) {
+    dataProvider(CREATE, 'ProductsMany', {
+      data: {
+        newProducts: this.state.newProducts,
+        updatedProducts: this.state.updatedProducts,
+        deletedProducts: deletedProducts,
+        year: this.state.year
+      }
+    }).then(response => {
+      this.setState({confirmDeletionDialogOpen: false, confirmDeletionPassword: '', open: false});
+      //  this.setState({open: false});
+      this.props.push('/');
+    });
+  }
+
+  handleDrawerToggle = () => {
       this.setState(state => ({yearNavOpen: !state.yearNavOpen}));
     };
 
@@ -533,35 +409,43 @@ class UGYEditor extends React.PureComponent {
       const {classes} = this.props;
 
       const {tab} = this.state;
-      const usersTab = (
-        <UsersTab groups={this.state.groups}
-          showDialog={this.showDialog}
-          userChecks={this.state.userChecks}
-          updateUserChecks={this.handleUpdateUserChecks}
-          year={this.state.year}/>
-      );
 
-      const prodsTab = (
-        <div className={classes.productsGrid}>
-          <div className={classes.fullHeightWidth}>
-            <ProductsGrid year={this.state.year} yearText={this.state.yearText}
-              addProduct={this.handleAddProduct} updateProduct={this.handleUpdateProduct}
-              deleteProduct={this.handleDeleteProduct} categories={this.state.categories}/>
-          </div>
-        </div>
-      );
       return <div>
         <Tabs value={tab} onChange={this.handleTabChange}>
           <Tab label='Users'/>
           <Tab label='Products'/>
         </Tabs>
-        {tab === 0 && <TabContainer className={classes.tabScroll}>{usersTab}</TabContainer>}
-        {tab === 1 && <TabContainer className={classes.tabNoScroll}>{prodsTab}</TabContainer>}
+        {tab === 0 && <TabContainer className={classes.tabScroll}>{this.renderUserTab()}</TabContainer>}
+        {tab === 1 && <TabContainer className={classes.tabNoScroll}>{this.renderProductsTab()}</TabContainer>}
       </div>;
     }
 
-    renderDrawer () {
-      const {classes, theme} = this.props;
+  renderUserTab() {
+    return (
+      <UsersTab groups={this.state.groups}
+                showDialog={this.showDialog}
+                userChecks={this.state.userChecks}
+                updateUserChecks={this.handleUpdateUserChecks}
+                year={this.state.year}/>
+    );
+  }
+
+  renderProductsTab() {
+    const {classes} = this.props;
+
+    return (
+      <div className={classes.productsGrid}>
+        <div className={classes.fullHeightWidth}>
+          <ProductsGrid year={this.state.year} yearText={this.state.yearText}
+                        addProduct={this.handleAddProduct} updateProduct={this.handleUpdateProduct}
+                        deleteProduct={this.handleDeleteProduct} categories={this.state.categories}/>
+        </div>
+      </div>
+    );
+  }
+
+  renderDrawer() {
+    const {classes} = this.props;
       const drawer = (
         <div>
           <div className={classes.toolbar}/>
@@ -574,99 +458,109 @@ class UGYEditor extends React.PureComponent {
         </div>
       );
       return (<div>
-        <Hidden mdUp>
-
-          <Drawer
-            variant='permanent'
-            open={this.state.yearNavOpen}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden smDown implementation='css' className={classes.fullHeight}>
-          <Drawer
-            variant='persistent'
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-
-            open={this.state.yearNavOpen}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            className={classes.fullHeight}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
+        {this.renderLargeDrawer(drawer)}
+        {this.renderSmallDrawer(drawer)}
       </div>);
-    }
+  }
 
-    renderTitleBar () {
-      const {classes} = this.props;
+  renderLargeDrawer(drawer) {
+    const {classes, theme} = this.props;
 
-      return <AppBar className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color='inherit'
-            aria-label='Open drawer'
-            onClick={this.handleDrawerToggle}
-          >
-            <MenuIcon/>
-          </IconButton>
-          <Typography variant='title' color='inherit' noWrap>
+    return <Hidden mdUp>
+
+      <Drawer
+        variant='permanent'
+        open={this.state.yearNavOpen}
+        onClose={this.handleDrawerToggle}
+        classes={{
+          paper: classes.drawerPaper
+        }}
+      >
+        {drawer}
+      </Drawer>
+    </Hidden>;
+  }
+
+  renderSmallDrawer(drawer) {
+    const {classes, theme} = this.props;
+
+    return <Hidden smDown implementation='css' className={classes.fullHeight}>
+      <Drawer
+        variant='persistent'
+        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+
+        open={this.state.yearNavOpen}
+        onClose={this.handleDrawerToggle}
+        classes={{
+          paper: classes.drawerPaper
+        }}
+        className={classes.fullHeight}
+      >
+        {drawer}
+      </Drawer>
+    </Hidden>
+      ;
+  }
+
+  renderTitleBar() {
+    const {classes} = this.props;
+
+    return <AppBar className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          color='inherit'
+          aria-label='Open drawer'
+          onClick={this.handleDrawerToggle}
+        >
+          <MenuIcon/>
+        </IconButton>
+        <Typography variant='title' color='inherit' noWrap>
           Users And Products
-          </Typography>
-        </Toolbar>
-      </AppBar>;
-    }
+        </Typography>
+      </Toolbar>
+    </AppBar>;
+  }
 
-    renderDialogs () {
-      const dialogs = [
-        <AddUsersToGroupDialog key={'addUsersToGroupDialog'}
-          closeDialog={this.closeDialog('addUsersToGroup')}
-          userChecks={this.state.userChecks}
-          updateUserChecks={this.handleUpdateUserChecks}
-          open={this.state.addUsersToGroupOpen}
-          groups={this.state.groups}/>,
-        <AddUsersToUserDialog key={'addUsersToUserDialog'}
-          closeDialog={this.closeDialog('addUsersToUser')}
-          userChecks={this.state.userChecks}
-          updateUserChecks={this.handleUpdateUserChecks}
-          open={this.state.addUsersToUserOpen}/>,
+  renderDialogs() {
+    return [
+      <AddUsersToGroupDialog key={'addUsersToGroupDialog'}
+                             closeDialog={this.closeDialog('addUsersToGroup')}
+                             userChecks={this.state.userChecks}
+                             updateUserChecks={this.handleUpdateUserChecks}
+                             open={this.state.addUsersToGroupOpen}
+                             groups={this.state.groups}/>,
+      <AddUsersToUserDialog key={'addUsersToUserDialog'}
+                            closeDialog={this.closeDialog('addUsersToUser')}
+                            userChecks={this.state.userChecks}
+                            updateUserChecks={this.handleUpdateUserChecks}
+                            open={this.state.addUsersToUserOpen}/>,
+      <AddUserDialog key={'addUserDialog'}
+                     closeDialog={this.closeDialog('addUser')}
+                     open={this.state.addUserOpen}/>,
+      <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
+                      closeDialog={this.closeDialog('editUser')}
+                      open={this.state.editUserOpen}
+                      userName={this.state.editUser.userName}
+                      id={this.state.editUser.id} fullName={this.state.editUser.fullName}/>,
+      <ConfirmDeletionDialog key={'confirmDeletionDialog'}
+                             closeDialog={this.closeDialog('confirmDeletion')}
+                             open={this.state.confirmDeletionDialogOpen}
+                             confirmPassword={this.confirmPassword}/>
 
-        <AddUserDialog key={'addUserDialog'}
-          closeDialog={this.closeDialog('addUser')}
-          open={this.state.addUserOpen}/>,
-        <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
-          closeDialog={this.closeDialog('editUser')}
-          open={this.state.editUserOpen}
-          userName={this.state.editUser.userName}
-          id={this.state.editUser.id}
-          fullName={this.state.editUser.fullName}/>,
-        <ConfirmDeletionDialog key={'confirmDeletionDialog'}
-          closeDialog={this.closeDialog('confirmDeletion')}
-          open={this.state.confirmDeletionDialogOpen}
-          confirmPassword={this.confirmPassword}/>
+    ];
+  }
 
-      ];
-      return dialogs;
-    }
+  componentWillMount() {
+  }
 
-    componentWillMount () {
-    }
+  componentDidMount() {
+    this.loadCategories();
 
-    componentDidMount () {
-      this.loadCategories();
-
-      this.getUsers();
-      this.getYears();
-      this.getGroups();
-      this.setState({ready: true});
-    }
+    this.getUsers();
+    this.getYears();
+    this.getGroups();
+    this.setState({ready: true});
+  }
 }
 
 UGYEditor.propTypes = {
