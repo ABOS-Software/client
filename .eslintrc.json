@@ -16,8 +16,12 @@
     "standard-react"
   ],
   "rules": {
+    "react/jsx-tag-spacing": {
+      "beforeSelfClosing": "never",
+      "beforeClosing": "never"
+    },
     "react/prop-types": [
-      1,
+      "warn",
       {
         "ignore": [
           "classes"
