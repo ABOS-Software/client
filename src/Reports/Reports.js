@@ -372,7 +372,7 @@ class reportsWizard extends React.Component {
   stepsContent() {
     const {classes} = this.props;
     this.setState({
-        stepsContent: [<ReportType onChangeCustomHandler={(key) => this.updateReportType(key)}/>,
+      stepsContent: [<ReportType onChangeCustomHandler={(key) => this.updateReportType(key)}/>,
           [
             <TextInput
               source='Scout_name' validate={requiredValidate}/>,

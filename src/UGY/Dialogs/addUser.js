@@ -15,7 +15,6 @@ import restClient from '../../grailsRestClient';
 
 import PropTypes from 'prop-types';
 
-const drawerWidth = 240;
 const dataProvider = restClient;
 
 const styles = theme => ({

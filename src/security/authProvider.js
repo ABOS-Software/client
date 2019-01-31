@@ -67,9 +67,9 @@ export default (client, options = {}) => (type, params) => {
       return Promise.resolve();
     case AUTH_GET_PERMISSIONS:
       /*
-              JWT token may be providen by oauth,
-              so that's why the permissions are decoded here and not in AUTH_LOGIN.
-              */
+                JWT token may be providen by oauth,
+                so that's why the permissions are decoded here and not in AUTH_LOGIN.
+                */
       // Get the permissions from localstorage if any.
       const localStoragePermissions = JSON.parse(localStorage.getItem(permissionsKey));
       // If any, provide them.

@@ -16,6 +16,16 @@
     "standard-react"
   ],
   "rules": {
+    "react/prop-types": [
+      1,
+      {
+        "ignore": [
+          "classes"
+        ]
+      },
+      "skipUndeclared"
+    ],
+    "no-unused-vars": "off",
     "object-curly-spacing": [
       "error",
       "never"

@@ -116,7 +116,7 @@ class MUISelectEditorRaw extends React.Component {
         }}
 
         /*               name= 'category'
-                             id ='category-simple' */
+                           id ='category-simple' */
 
         className={classes.select}
       >
