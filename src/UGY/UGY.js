@@ -42,8 +42,8 @@ import {
   EditUserDialog
 } from './Dialogs';
 import UGYToolbar from './UGYToolbar';
-import {styles} from "./Styles";
-import {TabContainer} from "./TabContainer";
+import {styles} from './Styles';
+import {TabContainer} from './TabContainer';
 
 const dataProvider = restClient;
 
@@ -185,24 +185,24 @@ class UGYEditor extends React.PureComponent {
       }
     };
 
-  updateProducts(deletedProducts) {
-    dataProvider(CREATE, 'ProductsMany', {
-      data: {
-        newProducts: this.state.newProducts,
-        updatedProducts: this.state.updatedProducts,
-        deletedProducts: deletedProducts,
-        year: this.state.year
-      }
-    }).then(response => {
-      this.setState({confirmDeletionDialogOpen: false, confirmDeletionPassword: '', open: false});
-      //  this.setState({open: false});
-      this.props.push('/');
-    });
-  }
+    updateProducts (deletedProducts) {
+      dataProvider(CREATE, 'ProductsMany', {
+        data: {
+          newProducts: this.state.newProducts,
+          updatedProducts: this.state.updatedProducts,
+          deletedProducts: deletedProducts,
+          year: this.state.year
+        }
+      }).then(response => {
+        this.setState({confirmDeletionDialogOpen: false, confirmDeletionPassword: '', open: false});
+        //  this.setState({open: false});
+        this.props.push('/');
+      });
+    }
 
   handleDrawerToggle = () => {
-      this.setState(state => ({yearNavOpen: !state.yearNavOpen}));
-    };
+    this.setState(state => ({yearNavOpen: !state.yearNavOpen}));
+  };
 
     handleTabChange = (event, value) => {
       this.setState({tab: value});
@@ -400,7 +400,7 @@ class UGYEditor extends React.PureComponent {
         <div className={classes.toolbar}/>
         <Paper className={classes.fullHeightWidth}>
           {this.renderTabView()}
-          <UGYToolbar onCancel={this.cancel} onSave={this.save}/>
+          <UGYToolbar className={this.props.classes.bottomBar} onCancel={this.cancel} onSave={this.save}/>
         </Paper>
       </main>;
     }
@@ -410,7 +410,7 @@ class UGYEditor extends React.PureComponent {
 
       const {tab} = this.state;
 
-      return <div>
+      return <div className={classes.fullHeightWidth}>
         <Tabs value={tab} onChange={this.handleTabChange}>
           <Tab label='Users'/>
           <Tab label='Products'/>
@@ -420,32 +420,32 @@ class UGYEditor extends React.PureComponent {
       </div>;
     }
 
-  renderUserTab() {
-    return (
-      <UsersTab groups={this.state.groups}
-                showDialog={this.showDialog}
-                userChecks={this.state.userChecks}
-                updateUserChecks={this.handleUpdateUserChecks}
-                year={this.state.year}/>
-    );
-  }
+    renderUserTab () {
+      return (
+        <UsersTab groups={this.state.groups}
+          showDialog={this.showDialog}
+          userChecks={this.state.userChecks}
+          updateUserChecks={this.handleUpdateUserChecks}
+          year={this.state.year}/>
+      );
+    }
 
-  renderProductsTab() {
-    const {classes} = this.props;
+    renderProductsTab () {
+      const {classes} = this.props;
 
-    return (
-      <div className={classes.productsGrid}>
-        <div className={classes.fullHeightWidth}>
-          <ProductsGrid year={this.state.year} yearText={this.state.yearText}
-                        addProduct={this.handleAddProduct} updateProduct={this.handleUpdateProduct}
-                        deleteProduct={this.handleDeleteProduct} categories={this.state.categories}/>
+      return (
+        <div className={classes.productsGrid}>
+          <div className={classes.fullHeightWidth}>
+            <ProductsGrid year={this.state.year} yearText={this.state.yearText}
+              addProduct={this.handleAddProduct} updateProduct={this.handleUpdateProduct}
+              deleteProduct={this.handleDeleteProduct} categories={this.state.categories}/>
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  renderDrawer() {
-    const {classes} = this.props;
+    renderDrawer () {
+      const {classes} = this.props;
       const drawer = (
         <div>
           <div className={classes.toolbar}/>
@@ -461,106 +461,106 @@ class UGYEditor extends React.PureComponent {
         {this.renderLargeDrawer(drawer)}
         {this.renderSmallDrawer(drawer)}
       </div>);
-  }
+    }
 
-  renderLargeDrawer(drawer) {
-    const {classes, theme} = this.props;
+    renderLargeDrawer (drawer) {
+      const {classes, theme} = this.props;
 
-    return <Hidden mdUp>
+      return <Hidden mdUp>
 
-      <Drawer
-        variant='permanent'
-        open={this.state.yearNavOpen}
-        onClose={this.handleDrawerToggle}
-        classes={{
-          paper: classes.drawerPaper
-        }}
-      >
-        {drawer}
-      </Drawer>
-    </Hidden>;
-  }
-
-  renderSmallDrawer(drawer) {
-    const {classes, theme} = this.props;
-
-    return <Hidden smDown implementation='css' className={classes.fullHeight}>
-      <Drawer
-        variant='persistent'
-        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-
-        open={this.state.yearNavOpen}
-        onClose={this.handleDrawerToggle}
-        classes={{
-          paper: classes.drawerPaper
-        }}
-        className={classes.fullHeight}
-      >
-        {drawer}
-      </Drawer>
-    </Hidden>
-      ;
-  }
-
-  renderTitleBar() {
-    const {classes} = this.props;
-
-    return <AppBar className={classes.appBar}>
-      <Toolbar>
-        <IconButton
-          color='inherit'
-          aria-label='Open drawer'
-          onClick={this.handleDrawerToggle}
+        <Drawer
+          variant='permanent'
+          open={this.state.yearNavOpen}
+          onClose={this.handleDrawerToggle}
+          classes={{
+            paper: classes.drawerPaper
+          }}
         >
-          <MenuIcon/>
-        </IconButton>
-        <Typography variant='title' color='inherit' noWrap>
+          {drawer}
+        </Drawer>
+      </Hidden>;
+    }
+
+    renderSmallDrawer (drawer) {
+      const {classes, theme} = this.props;
+
+      return <Hidden smDown implementation='css' className={classes.fullHeight}>
+        <Drawer
+          variant='persistent'
+          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+
+          open={this.state.yearNavOpen}
+          onClose={this.handleDrawerToggle}
+          classes={{
+            paper: classes.drawerPaper
+          }}
+          className={classes.fullHeight}
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
+      ;
+    }
+
+    renderTitleBar () {
+      const {classes} = this.props;
+
+      return <AppBar className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            color='inherit'
+            aria-label='Open drawer'
+            onClick={this.handleDrawerToggle}
+          >
+            <MenuIcon/>
+          </IconButton>
+          <Typography variant='title' color='inherit' noWrap>
           Users And Products
-        </Typography>
-      </Toolbar>
-    </AppBar>;
-  }
+          </Typography>
+        </Toolbar>
+      </AppBar>;
+    }
 
-  renderDialogs() {
-    return [
-      <AddUsersToGroupDialog key={'addUsersToGroupDialog'}
-                             closeDialog={this.closeDialog('addUsersToGroup')}
-                             userChecks={this.state.userChecks}
-                             updateUserChecks={this.handleUpdateUserChecks}
-                             open={this.state.addUsersToGroupOpen}
-                             groups={this.state.groups}/>,
-      <AddUsersToUserDialog key={'addUsersToUserDialog'}
-                            closeDialog={this.closeDialog('addUsersToUser')}
-                            userChecks={this.state.userChecks}
-                            updateUserChecks={this.handleUpdateUserChecks}
-                            open={this.state.addUsersToUserOpen}/>,
-      <AddUserDialog key={'addUserDialog'}
-                     closeDialog={this.closeDialog('addUser')}
-                     open={this.state.addUserOpen}/>,
-      <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
-                      closeDialog={this.closeDialog('editUser')}
-                      open={this.state.editUserOpen}
-                      userName={this.state.editUser.userName}
-                      id={this.state.editUser.id} fullName={this.state.editUser.fullName}/>,
-      <ConfirmDeletionDialog key={'confirmDeletionDialog'}
-                             closeDialog={this.closeDialog('confirmDeletion')}
-                             open={this.state.confirmDeletionDialogOpen}
-                             confirmPassword={this.confirmPassword}/>
+    renderDialogs () {
+      return [
+        <AddUsersToGroupDialog key={'addUsersToGroupDialog'}
+          closeDialog={this.closeDialog('addUsersToGroup')}
+          userChecks={this.state.userChecks}
+          updateUserChecks={this.handleUpdateUserChecks}
+          open={this.state.addUsersToGroupOpen}
+          groups={this.state.groups}/>,
+        <AddUsersToUserDialog key={'addUsersToUserDialog'}
+          closeDialog={this.closeDialog('addUsersToUser')}
+          userChecks={this.state.userChecks}
+          updateUserChecks={this.handleUpdateUserChecks}
+          open={this.state.addUsersToUserOpen}/>,
+        <AddUserDialog key={'addUserDialog'}
+          closeDialog={this.closeDialog('addUser')}
+          open={this.state.addUserOpen}/>,
+        <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
+          closeDialog={this.closeDialog('editUser')}
+          open={this.state.editUserOpen}
+          userName={this.state.editUser.userName}
+          id={this.state.editUser.id} fullName={this.state.editUser.fullName}/>,
+        <ConfirmDeletionDialog key={'confirmDeletionDialog'}
+          closeDialog={this.closeDialog('confirmDeletion')}
+          open={this.state.confirmDeletionDialogOpen}
+          confirmPassword={this.confirmPassword}/>
 
-    ];
-  }
+      ];
+    }
 
-  componentWillMount() {
-  }
+    componentWillMount () {
+    }
 
-  componentDidMount() {
-    this.loadCategories();
+    componentDidMount () {
+      this.loadCategories();
 
-    this.getUsers();
-    this.getYears();
-    this.getGroups();
-    this.setState({ready: true});
-  }
+      this.getUsers();
+      this.getYears();
+      this.getGroups();
+      this.setState({ready: true});
+    }
 }
 
 UGYEditor.propTypes = {
