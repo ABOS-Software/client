@@ -6,23 +6,12 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {changeListParams, crudGetList as crudGetListAction, crudUpdate, startUndoable} from 'ra-core';
-import {addField, fetchUtils, GET_LIST, GET_ONE} from 'react-admin';
+import {addField, GET_LIST, GET_ONE} from 'react-admin';
 import restClient from '../grailsRestClient';
 import CurrencyFormatter from './Formatters/CurrencyFormatter';
 import MUINumberEditor from './Editors/MUINumberEditor';
 
-const {Editors, Formatters} = require('react-data-grid-addons');
-
-const httpClient = (url, options = {}) => {
-  if (!options.headers) {
-    options.headers = new Headers({Accept: 'application/json'});
-  }
-  const token = localStorage.getItem('access_token');
-  options.headers.set('Authorization', `Bearer ${token}`);
-  return fetchUtils.fetchJson(url, options);
-};
 const dataProvider = restClient;
-// import dataProviderFactory from '../grailsRestClient';
 
 const styles = theme => ({
   main: {
@@ -45,7 +34,62 @@ const styles = theme => ({
 
 });
 
-const emptyRow = {};
+function getColumns () {
+  return [
+    {
+      key: 'humanProductId',
+      name: 'ID',
+      resizable: true
+
+    },
+    {
+      key: 'productName',
+      name: 'Name',
+      editable: false,
+      resizable: true
+    },
+    {
+      key: 'unitSize',
+      name: 'Size',
+      editable: false,
+      resizable: true
+    },
+    {
+      key: 'unitCost',
+      name: 'Unit Cost',
+      editable: false,
+      formatter: CurrencyFormatter,
+      resizable: true
+    },
+    {
+      key: 'quantity',
+      name: 'Quantity',
+      editable: false,
+      editor: MUINumberEditor,
+      resizable: true
+    },
+    {
+      key: 'extended_cost',
+      name: 'Extended Cost',
+      editable: false,
+      formatter: CurrencyFormatter,
+      resizable: true
+
+    }
+  ];
+}
+
+function getBlankOrder () {
+  return {
+    orderedProducts: [],
+    cost: 0.0,
+    quantity: 0,
+    amountPaid: 0.0,
+    delivered: false,
+    year: {},
+    userName: ''
+  };
+}
 
 class ProductsGrid extends Component {
     state = {rows: [], order: {orderedProducts: []}, year: 0, userName: '', customer: {}};
@@ -54,48 +98,7 @@ class ProductsGrid extends Component {
       super(props);
       this.perPageInitial = this.props.perPage;
       this.loading = false;
-      this._columns = [
-        {
-          key: 'humanProductId',
-          name: 'ID',
-          resizable: true
-
-        },
-        {
-          key: 'productName',
-          name: 'Name',
-          editable: false,
-          resizable: true
-        },
-        {
-          key: 'unitSize',
-          name: 'Size',
-          editable: false,
-          resizable: true
-        },
-        {
-          key: 'unitCost',
-          name: 'Unit Cost',
-          editable: false,
-          formatter: CurrencyFormatter,
-          resizable: true
-        },
-        {
-          key: 'quantity',
-          name: 'Quantity',
-          editable: false,
-          editor: MUINumberEditor,
-          resizable: true
-        },
-        {
-          key: 'extended_cost',
-          name: 'Extended Cost',
-          editable: false,
-          formatter: CurrencyFormatter,
-          resizable: true
-
-        }
-      ];
+      this._columns = getColumns();
     }
 
     rowGetter = (i) => {
@@ -119,99 +122,77 @@ class ProductsGrid extends Component {
       this.setState({rows});
     };
 
+    convertOrderedProduct (row, exisiting) {
+      let {year, userName, customer} = this.state;
+      let ret = {
+        products: {
+
+          id: row.id
+        },
+        quantity: row.quantity,
+        extendedCost: row.extended_cost,
+        userName: userName
+
+      };
+      if (exisiting) {
+        ret.year = year;
+        ret.customer = customer;
+        ret.user = customer.user;
+      }
+      return ret;
+    }
+
     convertToOrder = (rows) => {
-      let {order, year, userName, customer} = this.state;
-      const {amountPaid, delivered} = this.props;
+      let {order} = this.state;
       let newOrderedProducts = [];
-      let newOrder = {};
       let quantity = 0;
       let cost = 0;
-      if (order.id) {
-        rows.forEach(row => {
-          let match = order.orderedProducts.filter(order => {
-            return order.products.id === row.id;
-          });
-          if (match.length > 0) {
-            match[0].quantity = row.quantity;
-            match[0].extendedCost = row.extended_cost;
+      let existing = order.hasOwnProperty('id');
+
+      rows.forEach(row => {
+        let match = this.filterOrderedProductsToCurrentRow(row);
+        if (match.length > 0) {
+          match[0].quantity = row.quantity;
+          match[0].extendedCost = row.extended_cost;
+          quantity += row.quantity;
+          cost += row.extended_cost;
+          newOrderedProducts.push(match[0]);
+        } else {
+          if (row.quantity > 0) {
+            newOrderedProducts.push(this.convertOrderedProduct(row, existing));
             quantity += row.quantity;
-            cost += row.extended_cost;
-            newOrderedProducts.push(match[0]);
-          } else {
-            if (row.quantity > 0) {
-              newOrderedProducts.push({
-                products: {
-
-                  id: row.id
-                },
-                quantity: row.quantity,
-                extendedCost: row.extended_cost,
-                year: year,
-                userName: userName,
-
-                customer: customer,
-                user: customer.user
-              });
-              quantity += row.quantity;
-              cost += row.extended_cost || 0;
-            }
+            cost += row.extended_cost || 0;
           }
-        });
-        newOrder = {
-          id: order.id,
-          orderedProducts: newOrderedProducts,
-          cost: cost,
-          quantity: quantity,
-          amountPaid: order.amountPaid,
-          delivered: order.delivered
-          //  year: order.year,
-          // userName: userName
-        };
-        return newOrder;
-      } else {
-        rows.forEach(row => {
-          let match = order.orderedProducts.filter(order => {
-            return order.products.id === row.id;
-          });
-          if (match.length > 0) {
-            match[0].quantity = row.quantity;
-            match[0].extendedCost = row.extended_cost;
-            quantity += row.quantity;
-            cost += row.extended_cost;
-            newOrderedProducts.push(match[0]);
-          } else {
-            if (row.quantity > 0) {
-              newOrderedProducts.push({
-                products: {
+        }
+      });
 
-                  id: row.id
-                },
-                quantity: row.quantity,
-                extendedCost: row.extended_cost,
-                //   year: year,
-                userName: userName
-
-                // customer: customer,
-                //  user: customer.user
-              });
-              quantity += row.quantity;
-              cost += row.extended_cost || 0;
-            }
-          }
-        });
-        newOrder = {
-          //  id: order.id,
-          orderedProducts: newOrderedProducts,
-          cost: cost,
-          quantity: quantity,
-          amountPaid: amountPaid,
-          delivered: delivered
-          //  year: order.year,
-          // userName: userName
-        };
-        return newOrder;
-      }
+      return this.getNewOrderValue(newOrderedProducts, cost, quantity, existing);
     };
+
+    filterOrderedProductsToCurrentRow (row) {
+      let {order} = this.state;
+
+      return order.orderedProducts.filter(order => {
+        return order.products.id === row.id;
+      });
+    }
+
+    getNewOrderValue (newOrderedProducts, cost, quantity, existing) {
+      let {order} = this.state;
+      let ret = {
+        orderedProducts: newOrderedProducts,
+        cost: cost,
+        quantity: quantity,
+        amountPaid: order.amountPaid,
+        delivered: order.delivered
+      //  year: order.year,
+      // userName: userName
+      };
+      if (existing) {
+        ret.id = order.id;
+      }
+      return ret;
+    }
 
     handleGridSort = (sortColumn, sortDirection) => {
       this.props.setSort(sortColumn, sortDirection);
@@ -249,15 +230,7 @@ class ProductsGrid extends Component {
       } else if (order.orderedProducts) {
         orderResponse = order;
       } else {
-        order = {
-          orderedProducts: [],
-          cost: 0.0,
-          quantity: 0,
-          amountPaid: 0.0,
-          delivered: false,
-          year: {},
-          userName: ''
-        };
+        order = getBlankOrder();
         orderResponse = order;
         orderUse = false;
       }
@@ -266,68 +239,81 @@ class ProductsGrid extends Component {
         pagination: {page: 1, perPage: 1000},
         sort: {field: 'id', order: 'ASC'}
       })
-        .then(response =>
-          response.data.reduce((stats, product) => {
-            let match = orderResponse.orderedProducts.filter(orderObj => {
-              return orderObj.products.id == product.id;
-            });
-            if (match.length > 0) {
-              stats.products.push({
-                humanProductId: product.humanProductId,
-                id: product.id,
-                year: {id: product.year.id},
-                productName: product.productName,
-                unitSize: product.unitSize,
-                unitCost: product.unitCost,
-                quantity: match[0].quantity,
-                extended_cost: match[0].extendedCost
-              });
-            } else {
-              stats.products.push({
-                humanProductId: product.humanProductId,
-                id: product.id,
-                year: {id: product.year.id},
-                productName: product.productName,
-                unitSize: product.unitSize,
-                unitCost: product.unitCost,
-                quantity: 0,
-                extended_cost: 0.0
-              });
-            }
+        .then(this.processProductResponse(orderResponse))
+        .then(this.saveProductsResponse(orderUse, orderResponse, order));
+    }
 
-            return stats;
-          },
-          {
-            products: []
-
+    saveProductsResponse = (orderUse, orderResponse, order) => ({products}) => {
+      if (orderUse) {
+        this.setState({
+          rows: products,
+          order: orderResponse,
+          year: order.year,
+          userName: order.userName
+        });
+      } else {
+        this.setState({
+          rows: products,
+          order: {
+            orderedProducts: [],
+            cost: 0.0,
+            quantity: 0,
+            amountPaid: 0.0,
+            delivered: false,
+            year: {},
+            userName: ''
           }
-          )
-        ).then(({products}) => {
-          if (orderUse) {
-            this.setState({
-              rows: products,
-              order: orderResponse,
-              year: order.year,
-              userName: order.userName
-            });
-          } else {
-            this.setState({
-              rows: products,
-              order: {
-                orderedProducts: [],
-                cost: 0.0,
-                quantity: 0,
-                amountPaid: 0.0,
-                delivered: false,
-                year: {},
-                userName: ''
-              }
-            });
-          }
+        });
+      }
 
-          window.dispatchEvent(new Event('resize'));
+      window.dispatchEvent(new Event('resize'));
+    };
+
+    processProductResponse = (orderResponse) => response =>
+      response.data.reduce((stats, product) => {
+        let match = orderResponse.orderedProducts.filter(orderObj => {
+          return orderObj.products.id == product.id;
+        });
+        if (match.length > 0) {
+          stats = this.pushOrderedProductToList(stats, product, match);
+        } else {
+          stats = this.pushProductToList(stats, product);
         }
-        );
+
+        return stats;
+      },
+      {
+        products: []
+
+      }
+      );
+
+    pushProductToList (stats, product) {
+      stats.products.push({
+        humanProductId: product.humanProductId,
+        id: product.id,
+        year: {id: product.year.id},
+        productName: product.productName,
+        unitSize: product.unitSize,
+        unitCost: product.unitCost,
+        quantity: 0,
+        extended_cost: 0.0
+      });
+      return stats;
+    }
+
+    pushOrderedProductToList (stats, product, match) {
+      stats.products.push({
+        humanProductId: product.humanProductId,
+        id: product.id,
+        year: {id: product.year.id},
+        productName: product.productName,
+        unitSize: product.unitSize,
+        unitCost: product.unitCost,
+        quantity: match[0].quantity,
+        extended_cost: match[0].extendedCost
+      });
+      return stats;
     }
 
     loadProducts (year) {
@@ -358,129 +344,9 @@ class ProductsGrid extends Component {
           })
             .then(orderResponse => {
               this.getProducts(orderResponse, filter);
-            /* dataProvider(GET_LIST, 'Products', {
-                        filter: filter,
-                        pagination: {page: 1, perPage: 1000},
-                        sort: {field: 'id', order: 'ASC'}
-                    })
-                      .then(response =>
-                        response.data.reduce((stats, product) => {
-                              let match = orderResponse.data.orderedProducts.filter(order => {
-                                  return order.products.id == product.id;
-                              });
-                              if (match.length > 0) {
-                                  stats.products.push({
-                                      humanProductId: product.humanProductId,
-                                      id: product.id,
-                                      year: {id: product.year.id},
-                                      productName: product.productName,
-                                      unitSize: product.unitSize,
-                                      unitCost: product.unitCost,
-                                      quantity: match[0].quantity,
-                                      extended_cost: match[0].extendedCost
-                                  });
-                              } else {
-                                  stats.products.push({
-                                      humanProductId: product.humanProductId,
-                                      id: product.id,
-                                      year: {id: product.year.id},
-                                      productName: product.productName,
-                                      unitSize: product.unitSize,
-                                      unitCost: product.unitCost,
-                                      quantity: 0,
-                                      extended_cost: 0.0
-                                  });
-                              }
-
-                              return stats;
-                          },
-                          {
-                              products: []
-                              /!*
-                                                                              humanProductId: '0',
-                                                                              id: 0,
-                                                                              year: {id: 0},
-                                                                              productName: '',
-                                                                              unitSize: '',
-                                                                              unitCost: 0.0,
-                                                                              quantity: 0,
-                                                                              extended_cost: 0.0,
-                                                   *!/
-                          }
-                        )
-                      ).then(({products}) => {
-                          this.setState({
-                              rows: products,
-                              order: orderResponse.data,
-                              year: orderResponse.year,
-                              userName: orderResponse.userName
-                          });
-                          window.dispatchEvent(new Event('resize'));
-                      }
-                    ); */
             });
         } else {
           this.getProducts(record.order, filter);
-        /* dataProvider(GET_LIST, 'Products', {
-                  filter: filter,
-                  pagination: {page: 1, perPage: 1000},
-                  sort: {field: 'id', order: 'ASC'}
-              })
-                .then(response =>
-                  response.data.reduce((stats, product) => {
-                        let match = record.order.orderedProducts.filter(order => {
-                            return order.products.id == product.id;
-                        });
-                        if (match.length > 0) {
-                            stats.products.push({
-                                humanProductId: product.humanProductId,
-                                id: product.id,
-                                year: {id: product.year.id},
-                                productName: product.productName,
-                                unitSize: product.unitSize,
-                                unitCost: product.unitCost,
-                                quantity: match[0].quantity,
-                                extended_cost: match[0].extendedCost
-                            });
-                        } else {
-                            stats.products.push({
-                                humanProductId: product.humanProductId,
-                                id: product.id,
-                                year: {id: product.year.id},
-                                productName: product.productName,
-                                unitSize: product.unitSize,
-                                unitCost: product.unitCost,
-                                quantity: 0,
-                                extended_cost: 0.0
-                            });
-                        }
-
-                        return stats;
-                    },
-                    {
-                        products: []
-                        /!*
-                                                                    humanProductId: '0',
-                                                                    id: 0,
-                                                                    year: {id: 0},
-                                                                    productName: '',
-                                                                    unitSize: '',
-                                                                    unitCost: 0.0,
-                                                                    quantity: 0,
-                                                                    extended_cost: 0.0,
-                                         *!/
-                    }
-                  )
-                ).then(({products}) => {
-                    this.setState({
-                        rows: products,
-                        order: record.order,
-                        year: record.order.year,
-                        userName: record.order.userName
-                    });
-                    window.dispatchEvent(new Event('resize'));
-                }
-              ); */
         }
       } else {
         this.getProducts({}, filter);
@@ -498,24 +364,6 @@ class ProductsGrid extends Component {
         this.loading = false;
       }
     }
-
-    /*    rowGetter = index => {
-            const { data, ids, perPage, pageSize, setPerPage } = this.props;
-            if (data[ids[index]]) {
-                return data[ids[index]];
-            }
-            // ReactDataGrid doesn't support lazy loading
-            // https://github.com/adazzle/react-data-grid/issues/152
-            // and React complains if render() causes side effects
-            // so we use setImmediate()
-    /!*        if (!this.loading) {
-                setImmediate(() => {
-                    setPerPage(perPage + pageSize);
-                });
-                this.loading = true;
-            }*!/
-            return emptyRow;
-        }; */
 
     componentWillUnmount () {
       this.props.changeListParams(this.props.resource, {
