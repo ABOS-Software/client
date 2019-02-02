@@ -52,23 +52,7 @@ class AddUsersToGroupDialog extends React.Component {
         <DialogContentText>
           Please select the group to add the users to
         </DialogContentText>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor='addUsersToGroup-GroupSelection'>Group</InputLabel>
-          <Select
-            value={this.state.selectedGroup}
-            onChange={event => {
-              this.setState({selectedGroup: event.target.value});
-            }}
-            inputProps={{
-              name: 'GroupSelection',
-              id: 'addUsersToGroup-GroupSelection'
-            }}
-          >
-            {this.renderGroupItems()
-
-            }
-          </Select>
-        </FormControl>
+        {this.renderGroupSelector(classes)}
       </DialogContent>
       <DialogActions>
         <Button onClick={() => this.props.closeDialog()} color='primary'>
@@ -79,6 +63,26 @@ class AddUsersToGroupDialog extends React.Component {
         </Button>
       </DialogActions>
     </Dialog>);
+  }
+
+  renderGroupSelector (classes) {
+    return <FormControl className={classes.formControl}>
+      <InputLabel htmlFor='addUsersToGroup-GroupSelection'>Group</InputLabel>
+      <Select
+        value={this.state.selectedGroup}
+        onChange={event => {
+          this.setState({selectedGroup: event.target.value});
+        }}
+        inputProps={{
+          name: 'GroupSelection',
+          id: 'addUsersToGroup-GroupSelection'
+        }}
+      >
+        {this.renderGroupItems()
+
+        }
+      </Select>
+    </FormControl>;
   }
 }
 

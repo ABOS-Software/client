@@ -20,8 +20,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import update from 'immutability-helper';
-import {styles} from "../Styles";
-
+import {styles} from '../Styles';
 
 class UserListItem extends React.PureComponent {
   static defaultProps = {
@@ -217,7 +216,60 @@ class UserPanel extends React.Component {
       this.setState({group: event.target.value});
       this.props.handleGroupChange(this.props.userName)(event);
     };
-    renderGroupItems = () => {
+
+    render () {
+      const {id, userName, fullName, classes} = this.props;
+      return (<ExpansionPanel className={classes.userPanel} expanded={this.state.expanded}
+        onChange={this.handleUserPanelExpanded}>
+        {this.renderPanelSummary(userName, classes, id, fullName)}
+        <ExpansionPanelDetails>
+          <div className={classes.flexColumn}>
+            {this.renderGroupSelector(classes, userName)}
+            {this.renderUserManagementList(userName)}
+          </div>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+      );
+    }
+
+    renderPanelSummary (userName, classes, id, fullName) {
+      return <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+        <InputWrapper>
+          <Checkbox
+            checked={this.state.checked}
+            onChange={this.setChecked}
+            value={userName}
+          />
+        </InputWrapper>
+
+        <div className={classes.flexCenter}>
+
+          <Typography className={classes.heading}>{userName}</Typography>
+        </div>
+        {this.renderActionButtons(classes, userName, id, fullName)}
+      </ExpansionPanelSummary>;
+    }
+
+    renderActionButtons (classes, userName, id, fullName) {
+      return <div>
+        <InputWrapper>
+
+          <Button variant='contained' color={'primary'} className={classes.button}
+            onClick={this.props.onEdit(userName, id, fullName)}>
+          Edit
+          </Button>
+        </InputWrapper>
+        <InputWrapper>
+
+          <Button variant='contained' className={classes.deleteButton}>
+          Delete
+          </Button>
+        </InputWrapper>
+
+      </div>;
+    }
+
+    renderGroupItems () {
       let groupList = [];
       this.props.groups.forEach(group => {
         groupList.push(<MenuItem key={'AddGroupToUser-group-' + group.id}
@@ -225,65 +277,24 @@ class UserPanel extends React.Component {
       });
       return groupList;
     };
-    // usage:
 
-    render () {
-      const {id, userName, fullName, classes} = this.props;
-      return (<ExpansionPanel className={classes.userPanel} expanded={this.state.expanded}
-        onChange={this.handleUserPanelExpanded}>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-          <InputWrapper>
-            <Checkbox
-              checked={this.state.checked}
-              onChange={this.setChecked}
-              value={userName}
-            />
-          </InputWrapper>
+    renderGroupSelector = (classes, userName) => {
+      return <div className={classes.flex}>
+        <FormControl className={classes.formControl} fullWidth={false}>
 
-          <div className={classes.flexCenter}>
-
-            <Typography className={classes.heading}>{userName}</Typography>
-          </div>
-          <div>
-            <InputWrapper>
-
-              <Button variant='contained' color={'primary'} className={classes.button}
-                onClick={this.props.onEdit(userName, id, fullName)}>
-                                Edit
-              </Button>
-            </InputWrapper>
-            <InputWrapper>
-
-              <Button variant='contained' className={classes.deleteButton}>
-                                Delete
-              </Button>
-            </InputWrapper>
-
-          </div>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <div className={classes.flexColumn}>
-            <div className={classes.flex}>
-              <FormControl className={classes.formControl} fullWidth={false}>
-
-                <InputLabel htmlFor={userName + '-group-select'}>Group</InputLabel>
-                <Select
-                  value={this.props.group}
-                  onChange={this.handleGroupChange}
-                  inputProps={{
-                    name: userName + '-group-select',
-                    id: userName + '-group-select'
-                  }}
-                >
-                  {this.renderGroupItems()}
-                </Select>
-              </FormControl>
-            </div>
-            {this.renderUserManagementList(userName)}
-          </div>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      );
+          <InputLabel htmlFor={userName + '-group-select'}>Group</InputLabel>
+          <Select
+            value={this.props.group}
+            onChange={this.handleGroupChange}
+            inputProps={{
+              name: userName + '-group-select',
+              id: userName + '-group-select'
+            }}
+          >
+            {this.renderGroupItems()}
+          </Select>
+        </FormControl>
+      </div>;
     }
 }
 
