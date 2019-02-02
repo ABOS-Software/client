@@ -1,4 +1,3 @@
-import {withStyles} from '@material-ui/core';
 import React from 'react';
 
 import {CREATE, Create, SimpleForm} from 'react-admin';
@@ -6,7 +5,6 @@ import restClient from '../../grailsRestClient';
 import CustomerForm from './CustomerForm';
 
 const dataProvider = restClient;
-const styles = {};
 
 const saveCreation = (record, redirect) => {
   let order = record.order;
@@ -40,13 +38,9 @@ const saveCreation = (record, redirect) => {
 };
 
 class CustomerCreate extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {address: '', zipCode: '', city: '', state: '', update: 0};
-  }
 
   render () {
-    const {classes, ...props} = this.props;
+    const {...props} = this.props;
 
     return (
       <Create title='Create a Customer' {...props}>
@@ -58,4 +52,4 @@ class CustomerCreate extends React.Component {
   }
 }
 
-export default withStyles(styles)(CustomerCreate);
+export default CustomerCreate;

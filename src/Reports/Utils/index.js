@@ -3,7 +3,7 @@ import {getCustomersWithUser, getCustomersWithYearAndUser} from './getCustomers'
 import {getCategoriesForYear} from './getCategories';
 import {getUsers} from './getUsers';
 import {getYears} from './getYears';
-import {updateAddress} from './updateAddress';
+import {updateAddress} from '../../utils/updateAddress';
 import {updateReportType} from './updateReportTypes';
 import {convertFileToBase64} from './convertFileToBase64';
 

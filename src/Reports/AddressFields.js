@@ -36,14 +36,14 @@ class AddressFields extends React.PureComponent {
         <FormLabel variant={'headline'}>Enter an Address manually</FormLabel>
         <div className={classes.addressContainer}>
 
-          <TextInput source='Scout_address' className={classes.addressComponent}
+          <TextInput source='streetAddress' className={classes.addressComponent}
             value={value} validate={requiredValidate}/>
 
-          <TextInput source='Scout_Town' className={classes.addressComponent}
+          <TextInput source='city' className={classes.addressComponent}
             validate={requiredValidate}/>
-          <TextInput source='Scout_State' className={classes.addressComponent}
+          <TextInput source='state' className={classes.addressComponent}
             validate={requiredValidate}/>
-          <TextInput source='Scout_Zip' className={classes.addressComponent}
+          <TextInput source='zipCode' className={classes.addressComponent}
             validate={requiredValidate}/>
         </div>
       </div>

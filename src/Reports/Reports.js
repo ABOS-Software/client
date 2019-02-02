@@ -219,10 +219,10 @@ class reportsWizard extends React.Component {
         {({formData, ...rest}) => {
           if (this.state.updateAddress === 1) {
             this.setState({updateAddress: 0});
-            rest.dispatch(change('record-form', 'Scout_address', this.state.address));
-            rest.dispatch(change('record-form', 'Scout_Town', this.state.city));
-            rest.dispatch(change('record-form', 'Scout_State', this.state.state));
-            rest.dispatch(change('record-form', 'Scout_Zip', this.state.zipCode));
+            rest.dispatch(change('record-form', 'streetAddress', this.state.address));
+            rest.dispatch(change('record-form', 'city', this.state.city));
+            rest.dispatch(change('record-form', 'state', this.state.state));
+            rest.dispatch(change('record-form', 'zipCode', this.state.zipCode));
           }
           return (
             <AddressFields updateAddress={this.updateAddress} value={this.state.address}/>
