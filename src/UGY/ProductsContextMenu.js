@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ContextMenu, MenuItem} from 'react-contextmenu';
+import {Menu} from 'react-data-grid-addons';
+
+const {ContextMenu, MenuItem, SubMenu, ContextMenuTrigger} = Menu;
 
 // Create the context menu.
 // Use this.props.rowIdx and this.props.idx to get the row/column where the menu is shown.
