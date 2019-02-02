@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import {change} from 'redux-form';
 
 import {addField, BooleanInput, FormDataConsumer, ReferenceInput, SelectInput, TextInput} from 'react-admin';
-import ProductsGrid from '../ProductsGrid';
+import ProductsGrid from '../Products/ProductsGrid';
 import {withStyles} from '@material-ui/core';
 import {updateAddress} from '../../utils';
 import AddressFields from '../../Reports/AddressFields';

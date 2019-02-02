@@ -5,91 +5,11 @@ import compose from 'recompose/compose';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {changeListParams, crudGetList as crudGetListAction, crudUpdate, startUndoable} from 'ra-core';
-import {addField, GET_LIST, GET_ONE} from 'react-admin';
-import restClient from '../grailsRestClient';
-import CurrencyFormatter from './Formatters/CurrencyFormatter';
-import MUINumberEditor from './Editors/MUINumberEditor';
-
-const dataProvider = restClient;
-
-const styles = theme => ({
-  main: {
-    fontFamily: theme.typography.fontFamily,
-    fontSize: 14,
-    lineHeight: '1.428571429',
-    '& *, &:before, &:after': {
-      boxSizing: 'border-box'
-    },
-    '& .widget-HeaderCell__value': {
-      margin: 0,
-      padding: 0
-    },
-    '& .react-grid-HeaderCell__draggable': {
-      margin: 0,
-      padding: 0
-    }
-
-  }
-
-});
-
-function getColumns () {
-  return [
-    {
-      key: 'humanProductId',
-      name: 'ID',
-      resizable: true
-
-    },
-    {
-      key: 'productName',
-      name: 'Name',
-      editable: false,
-      resizable: true
-    },
-    {
-      key: 'unitSize',
-      name: 'Size',
-      editable: false,
-      resizable: true
-    },
-    {
-      key: 'unitCost',
-      name: 'Unit Cost',
-      editable: false,
-      formatter: CurrencyFormatter,
-      resizable: true
-    },
-    {
-      key: 'quantity',
-      name: 'Quantity',
-      editable: false,
-      editor: MUINumberEditor,
-      resizable: true
-    },
-    {
-      key: 'extended_cost',
-      name: 'Extended Cost',
-      editable: false,
-      formatter: CurrencyFormatter,
-      resizable: true
-
-    }
-  ];
-}
-
-function getBlankOrder () {
-  return {
-    orderedProducts: [],
-    cost: 0.0,
-    quantity: 0,
-    amountPaid: 0.0,
-    delivered: false,
-    year: {},
-    userName: ''
-  };
-}
+import {changeListParams} from 'ra-core';
+import {addField, GET_ONE} from 'react-admin';
+import dataProvider from '../../grailsRestClient';
+import {styles} from './Styles';
+import {getColumns, getProducts, updateDimensions} from './Utils';
 
 class ProductsGrid extends Component {
     state = {rows: [], order: {orderedProducts: []}, year: 0, userName: '', customer: {}};
@@ -198,49 +118,13 @@ class ProductsGrid extends Component {
       this.props.setSort(sortColumn, sortDirection);
     };
 
-    updateDimensions = () => {
-      let w = window;
-
-      let d = document;
-
-      let documentElement = d.documentElement;
-
-      let body = d.getElementsByTagName('body')[0];
-
-      let wrapperDiv = d.getElementById('dataGridWrapper');
-
-      let width = w.innerWidth || documentElement.clientWidth || body.clientWidth;
-
-      let height = w.innerHeight || documentElement.clientHeight || body.clientHeight;
-      wrapperDiv.height = height + 'px';
-    };
-
     componentDidMount () {
-      const aMonthAgo = new Date();
-      aMonthAgo.setDate(aMonthAgo.getDate() - 30);
-      window.addEventListener('resize', this.updateDimensions);
+      window.addEventListener('resize', updateDimensions);
       this.loadProducts();
     }
 
     getProducts (order, filter) {
-      let orderResponse;
-      let orderUse = true;
-      if (order.data) {
-        orderResponse = order.data;
-      } else if (order.orderedProducts) {
-        orderResponse = order;
-      } else {
-        order = getBlankOrder();
-        orderResponse = order;
-        orderUse = false;
-      }
-      dataProvider(GET_LIST, 'Products', {
-        filter: filter,
-        pagination: {page: 1, perPage: 1000},
-        sort: {field: 'id', order: 'ASC'}
-      })
-        .then(this.processProductResponse(orderResponse))
-        .then(this.saveProductsResponse(orderUse, orderResponse, order));
+      getProducts(order, filter, this.saveProductsResponse);
     }
 
     saveProductsResponse = (orderUse, orderResponse, order) => ({products}) => {
@@ -269,72 +153,12 @@ class ProductsGrid extends Component {
       window.dispatchEvent(new Event('resize'));
     };
 
-    processProductResponse = (orderResponse) => response =>
-      response.data.reduce((stats, product) => {
-        let match = orderResponse.orderedProducts.filter(orderObj => {
-          return orderObj.products.id == product.id;
-        });
-        if (match.length > 0) {
-          stats = this.pushOrderedProductToList(stats, product, match);
-        } else {
-          stats = this.pushProductToList(stats, product);
-        }
-
-        return stats;
-      },
-      {
-        products: []
-
-      }
-      );
-
-    pushProductToList (stats, product) {
-      stats.products.push({
-        humanProductId: product.humanProductId,
-        id: product.id,
-        year: {id: product.year.id},
-        productName: product.productName,
-        unitSize: product.unitSize,
-        unitCost: product.unitCost,
-        quantity: 0,
-        extended_cost: 0.0
-      });
-      return stats;
-    }
-
-    pushOrderedProductToList (stats, product, match) {
-      stats.products.push({
-        humanProductId: product.humanProductId,
-        id: product.id,
-        year: {id: product.year.id},
-        productName: product.productName,
-        unitSize: product.unitSize,
-        unitCost: product.unitCost,
-        quantity: match[0].quantity,
-        extended_cost: match[0].extendedCost
-      });
-      return stats;
-    }
-
     loadProducts (year) {
       let {record} = this.props;
       if (record.json) {
         record = record.json;
       }
-      this.props.crudGetList(
-        this.props.resource,
-        {page: 1, perPage: 100},
-        {field: 'id', order: 'DESC'},
-        {}
-      );
-      let filter = {};
-      if (year) {
-        filter = {year: year};
-      } else if (record.year) {
-        filter = {year: record.year.id};
-      } else if (this.props.year) {
-        filter = {year: this.props.year};
-      }
+      let filter = this.getProductFilter(year, record);
 
       this.setState({customer: record});
       if (record.order) {
@@ -351,6 +175,18 @@ class ProductsGrid extends Component {
       } else {
         this.getProducts({}, filter);
       }
+    }
+
+    getProductFilter (year, record) {
+      let filter = {};
+      if (year) {
+        filter = {year: year};
+      } else if (record.year) {
+        filter = {year: record.year.id};
+      } else if (this.props.year) {
+        filter = {year: this.props.year};
+      }
+      return filter;
     }
 
     componentWillReceiveProps (nextProps) {
@@ -370,15 +206,13 @@ class ProductsGrid extends Component {
         ...this.props.params,
         perPage: this.perPageInitial
       });
-      window.removeEventListener('resize', this.updateDimensions);
+      window.removeEventListener('resize', updateDimensions);
     }
 
     render () {
-      const {classes, columns, currentSort, total, visible} = this.props;
-      const {orders} = this.state;
+      const {classes} = this.props;
 
-      return (/* <div className="list-page List-root-156">
-            <div className="MuiPaper-root-34 MuiPaper-elevation2-38 MuiPaper-rounded-35 MuiCard-root-160"> */
+      return (
         <div className={classes.main}>
           <div id='dataGridWrapper' style={{position: 'relative', height: '660px'}}>
             <div style={{position: 'absolute', width: '98%', height: '100%', margin: '1%'}}>
@@ -397,27 +231,22 @@ class ProductsGrid extends Component {
           </div>
 
         </div>
-      /* </div>
-            </div>
-                </div>
-                </div> */
 
       );
     }
 }
 
 ProductsGrid.propTypes = {
-  label: PropTypes.string,
-  options: PropTypes.object,
-  source: PropTypes.string,
+
   input: PropTypes.object,
-  className: PropTypes.string,
-  columns: PropTypes.object,
-  data: PropTypes.object,
-  hasBulkActions: PropTypes.bool,
+  perPage: PropTypes.any,
+  setSort: PropTypes.func,
+  record: PropTypes.any,
+  changeListParams: PropTypes.func,
+  resource: PropTypes.any,
+  params: PropTypes.any,
   ids: PropTypes.array,
-  selectedIds: PropTypes.array,
-  pageSize: PropTypes.number,
+
   year: PropTypes.number
 };
 
@@ -435,10 +264,7 @@ const mapStateToProps = (state, props) => ({
 const ProductsGridRaw = compose(
   withStyles(styles),
   connect(mapStateToProps, {
-    changeListParams,
-    dispatchCrudUpdate: crudUpdate,
-    crudGetList: crudGetListAction,
-    startUndoable
+    changeListParams
   })
 )(ProductsGrid);
 export default addField(ProductsGridRaw); // decorate with redux-form's <Field>
