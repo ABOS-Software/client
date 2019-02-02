@@ -17,31 +17,4 @@ app.configure(auth({
   storageKey: 'token', // the key to store the accessToken in localstorage or AsyncStorage on React Native
   storage: window.localStorage // Passing a WebStorage-compatible object to enable automatic storage on the client.
 }));
-const storeUser = ({...params}) => {
-  /*     const dataProvider = restClient(app, {});
-      dataProvider(GET_ONE, 'currentUser')
-          .then(response => {
-              if (response.status < 200 || response.status >= 300) {
-                  throw new Error(response.statusText);
-              }
-              return response.json();
-          }).then(({userName, fullName, enabledYear}) => {
-          localStorage.setItem('userName', userName);
-          localStorage.setItem('fullName', fullName);
-          localStorage.setItem('enabledYear', enabledYear);
-      }); */
-  console.log(params);
-};
-app.on('authenticated', storeUser);
-
-/* () => {
-   const dataProvider = restClientDp(app, {});
-
-    /!*
-        *!/
-}); */
-
-// Connect to the same as the browser URL (only in the browser)
-
-// Connect to a different URL
 export default app;
