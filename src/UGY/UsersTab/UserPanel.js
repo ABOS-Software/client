@@ -255,7 +255,7 @@ class UserPanel extends React.Component {
     renderGroupItems () {
       let groupList = [];
       this.props.groups.forEach(group => {
-        groupList.push(<MenuItem key={'AddGroupToUser-group-' + group.id}
+        groupList.push(<MenuItem key={'UserPanel-' + this.props.userName + '-group-' + group.id}
           value={group.id}>{group.groupName}</MenuItem>);
       });
       return groupList;
