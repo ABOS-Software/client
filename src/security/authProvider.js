@@ -13,7 +13,21 @@ export const authClientConfig = {
   redirectTo: '/login' // Redirect to this path if an AUTH_CHECK fails. Uses the react-admin default of '/login' if omitted.
 };
 
-function login (client, authenticate, usernameField, username, passwordField, password) {
+function login (client, options = {}) {
+  const {
+    authenticate,
+    username,
+    password,
+    passwordField,
+    usernameField
+  } = Object.assign({}, {
+    storageKey: 'token',
+    authenticate: {type: 'local'},
+    username: '',
+    password: '',
+    passwordField: 'password',
+    usernameField: 'username'
+  }, options);
   return client.authenticate({
     ...authenticate,
     [usernameField]: username,
@@ -47,7 +61,7 @@ function getPermissions (permissionsKey, ret, storageKey, permissionsField) {
     localStorage.setItem(permissionsKey, JSON.stringify(jwtPermissions));
     ret = Promise.resolve(jwtPermissions);
   } catch (e) {
-    ret = Promise.reject();
+    ret = Promise.reject(new Error('Error getting Permissions'));
   }
   return ret;
 }
@@ -75,7 +89,12 @@ export default (client, options = {}) => (type, params) => {
   switch (type) {
   case AUTH_LOGIN:
     const {username, password} = params;
-    ret = login(client, authenticate, usernameField, username, passwordField, password);
+    ret = login(client, {storageKey: storageKey,
+      authenticate: authenticate,
+      username: username,
+      password: password,
+      passwordField: passwordField,
+      usernameField: usernameField});
     break;
 
   case AUTH_LOGOUT:
@@ -84,7 +103,7 @@ export default (client, options = {}) => (type, params) => {
     break;
 
   case AUTH_CHECK:
-    ret = localStorage.getItem(storageKey) ? Promise.resolve() : Promise.reject({redirectTo});
+    ret = localStorage.getItem(storageKey) ? Promise.resolve() : Promise.reject(new Error('Not Logged in'));
     break;
 
   case AUTH_ERROR:
@@ -92,7 +111,7 @@ export default (client, options = {}) => (type, params) => {
     if (code === 401 || code === 403) {
       localStorage.removeItem(storageKey);
       localStorage.removeItem(permissionsKey);
-      ret = Promise.reject();
+      ret = Promise.reject(new Error('Session Expired'));
     }
     ret = Promise.resolve();
     break;
@@ -103,7 +122,7 @@ export default (client, options = {}) => (type, params) => {
     break;
 
   default:
-    ret = Promise.reject(`Unsupported FeathersJS authClient action type ${type}`);
+    ret = Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`));
   }
   return ret;
 };
