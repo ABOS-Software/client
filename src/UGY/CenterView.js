@@ -5,7 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {push} from 'react-router-redux';
 import {connect} from 'react-redux';
-import {CREATE, GET_LIST, UPDATE} from 'react-admin';
+import {CREATE, GET_LIST} from 'react-admin';
 import Paper from '@material-ui/core/Paper';
 import restClient from '../grailsRestClient';
 import hostURL from '../host';
@@ -129,20 +129,6 @@ class CenterView extends React.Component {
   cancel = event => {
     this.setState({open: false});
     this.props.push('/');
-  };
-
-  editUser = event => {
-    dataProvider(UPDATE, 'User', {
-      id: this.state.editUser.id,
-      data: {
-        username: this.state.editUser.userName,
-        full_name: this.state.editUser.fullName,
-
-        password: this.state.editUser.password
-      }
-    }).then(response => {
-      this.setState({editUserOpen: false});
-    });
   };
 
   getGroups (yearId) {
