@@ -41,47 +41,59 @@ class addUser extends React.Component {
 
     return (
       <div>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor='AddUser-Username'>Username</InputLabel>
-          <TextField
-            value={this.state.userName}
-            onChange={event => {
-              this.updateAddUserState('userName', event.target.value);
-            }}
-            inputProps={{
-              name: 'UserName',
-              id: 'AddUser-Username'
-            }}
-          />
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor='AddUser-Password'>Password</InputLabel>
-          <TextField
-            value={this.state.password}
-            type='password'
-            onChange={event => {
-              this.updateAddUserState('password', event.target.value);
-            }}
-            inputProps={{
-              name: 'Password',
-              id: 'AddUser-Password'
-            }}
-          />
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor='AddUser-FullName'>FullName</InputLabel>
-          <TextField
-            value={this.state.fullName}
-            onChange={event => {
-              this.updateAddUserState('fullName', event.target.value);
-            }}
-            inputProps={{
-              name: 'FullName',
-              id: 'AddUser-FullName'
-            }}
-          />
-        </FormControl>
+        {this.renderUserName(classes)}
+        {this.renderPassword(classes)}
+        {this.renderFullName(classes)}
       </div>);
+  }
+
+  renderFullName (classes) {
+    return <FormControl className={classes.formControl}>
+      <InputLabel htmlFor='AddUser-FullName'>FullName</InputLabel>
+      <TextField
+        value={this.state.fullName}
+        onChange={event => {
+          this.updateAddUserState('fullName', event.target.value);
+        }}
+        inputProps={{
+          name: 'FullName',
+          id: 'AddUser-FullName'
+        }}
+      />
+    </FormControl>;
+  }
+
+  renderPassword (classes) {
+    return <FormControl className={classes.formControl}>
+      <InputLabel htmlFor='AddUser-Password'>Password</InputLabel>
+      <TextField
+        value={this.state.password}
+        type='password'
+        onChange={event => {
+          this.updateAddUserState('password', event.target.value);
+        }}
+        inputProps={{
+          name: 'Password',
+          id: 'AddUser-Password'
+        }}
+      />
+    </FormControl>;
+  }
+
+  renderUserName (classes) {
+    return <FormControl className={classes.formControl}>
+      <InputLabel htmlFor='AddUser-Username'>Username</InputLabel>
+      <TextField
+        value={this.state.userName}
+        onChange={event => {
+          this.updateAddUserState('userName', event.target.value);
+        }}
+        inputProps={{
+          name: 'UserName',
+          id: 'AddUser-Username'
+        }}
+      />
+    </FormControl>;
   }
 
   render () {
