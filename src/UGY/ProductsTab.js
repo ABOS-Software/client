@@ -4,7 +4,7 @@ import {withStyles} from '@material-ui/core';
 import update from 'immutability-helper';
 import ProductsGrid, {rowStatus} from './ProductsGrid';
 import dataProvider from '../grailsRestClient';
-import {CREATE, GET_LIST} from 'react-admin';
+import {GET_LIST} from 'react-admin';
 
 const styles = () => ({});
 
@@ -54,21 +54,6 @@ class ProductsTab extends React.Component {
       }
       );
   };
-
-  updateProducts (deletedProducts) {
-    dataProvider(CREATE, 'ProductsMany', {
-      data: {
-        newProducts: this.state.newProducts,
-        updatedProducts: this.state.updatedProducts,
-        deletedProducts: deletedProducts,
-        year: this.props.year
-      }
-    }).then(response => {
-      this.setState({confirmDeletionDialogOpen: false, confirmDeletionPassword: '', open: false});
-      //  this.setState({open: false});
-      this.props.push('/');
-    });
-  }
 
   updateProductsState = (newState) => {
     this.setState(newState);

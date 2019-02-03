@@ -118,43 +118,43 @@ class HorizontalLinearStepper extends React.Component {
           ) : (
             <div>
               <Typography component='div'
-                          className={classes.instructions}>
+                className={classes.instructions}>
                 <SimpleForm record={{}} save={save} saving={'false'} form={formName} redirect={''}
-                            toolbar={<PostCreateToolbar>
-                              <Button
-                                disabled={activeStep === 0}
-                                onClick={this.handleBack}
-                                className={this.props.classes.button}
-                              >
+                  toolbar={<PostCreateToolbar>
+                    <Button
+                      disabled={activeStep === 0}
+                      onClick={this.handleBack}
+                      className={this.props.classes.button}
+                    >
                                 Back
-                              </Button>
-                              {this.isStepOptional(activeStep) && (
-                                <Button
-                                  color='primary'
-                                  onClick={this.handleSkip}
-                                  className={this.props.classes.button}
-                                >
+                    </Button>
+                    {this.isStepOptional(activeStep) && (
+                      <Button
+                        color='primary'
+                        onClick={this.handleSkip}
+                        className={this.props.classes.button}
+                      >
                                   Skip
-                                </Button>
-                              )}
-                              {activeStep === this.props.steps.length - 1
-                                ? <SaveButton
-                                  label='Finish'
-                                  redirect={false}
-                                  submitOnEnter={false}
-                                  variant='raised'
-                                  color={'primary'}
-                                />
-                                : <Button
-                                  variant={'raised'}
-                                  color='primary'
-                                  onClick={this.handleNext}
-                                  className={this.props.classes.button}
-                                > Next
+                      </Button>
+                    )}
+                    {activeStep === this.props.steps.length - 1
+                      ? <SaveButton
+                        label='Finish'
+                        redirect={false}
+                        submitOnEnter={false}
+                        variant='raised'
+                        color={'primary'}
+                      />
+                      : <Button
+                        variant={'raised'}
+                        color='primary'
+                        onClick={this.handleNext}
+                        className={this.props.classes.button}
+                      > Next
 
-                                </Button>
-                              }
-                            </PostCreateToolbar>}
+                      </Button>
+                    }
+                  </PostCreateToolbar>}
                 >
                   {this.getStepContent(activeStep)}
                 </SimpleForm>

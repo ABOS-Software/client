@@ -138,8 +138,6 @@ class ProductsGrid extends Component {
       this.setState({importDialogOpen: false, importNumber: this.state.importNumber + 1});
     };
 
-
-
     componentDidMount () {
       loadProducts(this.props.year).then(products => {
         this.setState({

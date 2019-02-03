@@ -39,7 +39,6 @@ class reportsWizard extends React.Component {
     state = {update: false, address: '', zipCode: '', city: '', state: '', updateAddress: 0};
 
     save = (record, redirect) => {
-
       if (record.LogoLocation) {
         convertFileToBase64(record.LogoLocation).then(b64 => {
           record.LogoLocation.base64 = b64;

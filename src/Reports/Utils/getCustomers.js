@@ -1,7 +1,7 @@
 import dataProvider from '../../grailsRestClient';
 import {GET_LIST} from 'react-admin';
 
-export const getCustomersWithYearAndUser = (Year, User, includeSub) =>  {
+export const getCustomersWithYearAndUser = (Year, User, includeSub) => {
   return dataProvider(GET_LIST, 'customers', {
     filter: {year: Year, user_id: User, includeSub: includeSub},
     sort: {field: 'id', order: 'DESC'},
@@ -10,7 +10,7 @@ export const getCustomersWithYearAndUser = (Year, User, includeSub) =>  {
     return response.data;
   });
 };
-export const getCustomersWithUser = (User, includeSub) =>  {
+export const getCustomersWithUser = (User, includeSub) => {
   return dataProvider(GET_LIST, 'customers', {
     filter: {user_id: User, includeSub: includeSub},
     sort: {field: 'id', order: 'DESC'},

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -13,19 +12,11 @@ import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-
 import Modal from '@material-ui/core/Modal';
 import classNames from 'classnames';
-
-import {push} from 'react-router-redux';
-import {connect} from 'react-redux';
-
-import {GET_LIST, showNotification} from 'react-admin';
-
+import {GET_LIST} from 'react-admin';
 import restClient from '../grailsRestClient';
-
 import {styles} from './Styles';
-
 import CenterView from './CenterView';
 
 const dataProvider = restClient;
@@ -200,12 +191,7 @@ class UGYEditor extends React.PureComponent {
 }
 
 UGYEditor.propTypes = {
-  push: PropTypes.func,
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired
 };
-export default connect(null, {
-  push,
-  showNotification
-
-})(withStyles(styles, {withTheme: true})(UGYEditor));
+export default (withStyles(styles, {withTheme: true})(UGYEditor));

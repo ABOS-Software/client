@@ -1,22 +1,14 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import classNames from 'classnames';
-
 import {push} from 'react-router-redux';
 import {connect} from 'react-redux';
-
-import {CREATE, GET_LIST, showNotification, UPDATE} from 'react-admin';
-
+import {CREATE, GET_LIST, UPDATE} from 'react-admin';
 import Paper from '@material-ui/core/Paper';
-
 import restClient from '../grailsRestClient';
 import hostURL from '../host';
-
 import feathersClient from '../feathersClient';
 import {authClientConfig} from '../security/authProvider';
 import UsersTab from './UsersTab/UsersTab';
@@ -218,10 +210,7 @@ class CenterView extends React.Component {
     const {classes} = this.props;
 
     const {anchor, yearNavOpen} = this.state;
-    return <main className={classNames(classes.content, classes[`content-${anchor}`], {
-      [classes.contentShift]: yearNavOpen,
-      [classes[`contentShift-${anchor}`]]: yearNavOpen
-    })}>
+    return <main className={classes.fullHeightWidth}>
       <div className={classes.toolbar}/>
       <Paper className={classes.fullHeightWidth}>
         {this.renderTabView()}
@@ -319,7 +308,6 @@ CenterView.PropTypes = {
 };
 
 export default connect(null, {
-  push,
-  showNotification
+  push
 
 })(withStyles(styles, {withTheme: true})(CenterView));

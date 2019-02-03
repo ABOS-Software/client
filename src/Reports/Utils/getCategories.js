@@ -1,7 +1,7 @@
 import dataProvider from '../../grailsRestClient';
 import {GET_LIST} from 'react-admin';
 
-export const getCategoriesForYear = (Year) =>  {
+export const getCategoriesForYear = (Year) => {
   // this.setState({year: Year});
 
   return dataProvider(GET_LIST, 'Categories', {
@@ -12,4 +12,4 @@ export const getCategoriesForYear = (Year) =>  {
     response.data.unshift({id: 'All', categoryName: 'All'});
     return response.data;
   });
-}
+};

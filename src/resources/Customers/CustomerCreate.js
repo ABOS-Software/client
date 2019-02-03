@@ -38,7 +38,6 @@ const saveCreation = (record, redirect) => {
 };
 
 class CustomerCreate extends React.Component {
-
   render () {
     const {...props} = this.props;
 

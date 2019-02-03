@@ -22,8 +22,7 @@ const styles = (theme) => ({
     position: 'absolute',
     bottom: 10,
     right: 10
-  },
-
+  }
 
 });
 export class UGYToolbar extends Component {
@@ -31,11 +30,11 @@ export class UGYToolbar extends Component {
     return <Toolbar>
       <div className={this.props.classes.bottomBar}>
         <Button variant='contained' color='secondary' className={this.props.classes.button}
-                onClick={this.props.onCancel}>
+          onClick={this.props.onCancel}>
           Cancel
         </Button>
         <Button variant='contained' color='primary' className={this.props.classes.button}
-                onClick={this.props.onSave}>
+          onClick={this.props.onSave}>
           <SaveIcon className={classNames(this.props.classes.leftIcon, this.props.classes.iconSmall)}/>
           Save
         </Button>

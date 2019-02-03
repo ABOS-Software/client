@@ -8,8 +8,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import PropTypes from 'prop-types';
-import {styles} from "../Styles";
-
+import {styles} from '../Styles';
 
 class userGroupPanel extends React.PureComponent {
   render () {
