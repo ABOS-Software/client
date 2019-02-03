@@ -1,14 +1,9 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import {UPDATE} from 'react-admin';
+import DialogBase from './DialogBase';
 
 import restClient from '../../grailsRestClient';
 
@@ -41,71 +36,58 @@ class EditUser extends React.Component {
       this.props.closeDialog();
     });
   };
-
-  render () {
+  renderDialogContent (classes) {
     return (
-      <Dialog
+      <div>
+        <TextField
+          value={this.state.userName}
+          label={'Username'}
+          onChange={event => {
+            this.updateEditUserState('userName', event.target.value);
+          }}
+          inputProps={{
+            name: 'UserName',
+            id: 'AddUser-Username'
+          }}
+          disabled
+        />
+        <TextField
+          label={'Password'}
 
-        open={this.props.open}
-        onClose={() => this.props.closeDialog()}
-        aria-labelledby='form-dialog-title'
-      >
-        <DialogTitle id='form-dialog-title'>Edit User</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please enter the information about the user
-          </DialogContentText>
-          <TextField
-            value={this.state.userName}
-            label={'Username'}
-            onChange={event => {
-              this.updateEditUserState('userName', event.target.value);
-            }}
-            inputProps={{
-              name: 'UserName',
-              id: 'AddUser-Username'
-            }}
-            disabled
-          />
-          <TextField
-            label={'Password'}
+          value={this.state.password}
+          type='password'
+          onChange={event => {
+            this.updateEditUserState('password', event.target.value);
+          }}
 
-            value={this.state.password}
-            type='password'
-            onChange={event => {
-              this.updateEditUserState('password', event.target.value);
-            }}
+          inputProps={{
+            name: 'Password',
+            id: 'AddUser-Password'
+          }}
+        />
+        <TextField
+          label={'FullName'}
 
-            inputProps={{
-              name: 'Password',
-              id: 'AddUser-Password'
-            }}
-          />
-          <TextField
-            label={'FullName'}
+          value={this.state.fullName}
+          onChange={event => {
+            this.updateEditUserState('fullName', event.target.value);
+          }}
 
-            value={this.state.fullName}
-            onChange={event => {
-              this.updateEditUserState('fullName', event.target.value);
-            }}
-
-            inputProps={{
-              name: 'FullName',
-              id: 'AddUser-FullName'
-            }}
-          />
-
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.props.closeDialog()} color='primary'>
-            Cancel
-          </Button>
-          <Button onClick={this.editUser} color='primary'>
-            Apply
-          </Button>
-        </DialogActions>
-      </Dialog>
+          inputProps={{
+            name: 'FullName',
+            id: 'AddUser-FullName'
+          }}
+        />
+      </div>
     );
+  }
+  render () {
+    const {classes, ...props} = this.props;
+    return (<DialogBase {...props} save={this.editUser}
+      title={'Edit User'}
+      subText={'Please enter the information about the user'}>
+      {this.renderDialogContent(classes)}
+    </DialogBase>);
   }
 }
 

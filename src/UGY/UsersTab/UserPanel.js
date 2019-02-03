@@ -145,35 +145,38 @@ class UserPanel extends React.Component {
 
     renderUserManagementList = currentUser => {
       const {userChecks, handleManageCheckBoxChange, groups, classes} = this.props;
+      const {groups: groupState} = this.state;
       let groupItems = [];
-      if (Object.keys(this.state.groups).length > 0) {
+      if (Object.keys(groupState).length > 0) {
         groups.forEach(group => {
-          let listItems = [];
+          if (groupState[group.groupName]) {
+            let listItems = [];
 
-          Object.keys(userChecks[currentUser].subUsers).filter(grp => userChecks[currentUser].subUsers[grp].group === group.id).forEach(user => {
-            // let userName = user;
-            // let checked = userChecks[userName].subUsers[user].checked;
-            listItems.push(<UserListItem key={currentUser + '-sub-' + user} userName={currentUser}
-              handleManageCheckBoxChange={this.handleUserCheckbox} user={user}
-              checked={this.props.userChecks[currentUser].subUsers[user].checked}/>);
-          });
+            Object.keys(userChecks[currentUser].subUsers).filter(grp => userChecks[currentUser].subUsers[grp].group === group.id).forEach(user => {
+              // let userName = user;
+              // let checked = userChecks[userName].subUsers[user].checked;
+              listItems.push(<UserListItem key={currentUser + '-sub-' + user} userName={currentUser}
+                handleManageCheckBoxChange={this.handleUserCheckbox} user={user}
+                checked={this.props.userChecks[currentUser].subUsers[user].checked}/>);
+            });
 
-          groupItems.push(
-            <UserListItem key={currentUser + '-sub-' + group.groupName + '-' + group.year.id}
-              userName={currentUser}
-              handleManageCheckBoxChange={this.handleGroupCheckbox(group.id)} user={group.groupName}
-              checked={this.state.groups[group.groupName].checked}
-              onClick={this.handleClick(group.groupName)}>
-              {this.state.groups[group.groupName].open ? <ExpandLess/> : <ExpandMore/>}
+            groupItems.push(
+              <UserListItem key={currentUser + '-sub-' + group.groupName + '-' + group.year.id}
+                userName={currentUser}
+                handleManageCheckBoxChange={this.handleGroupCheckbox(group.id)} user={group.groupName}
+                checked={groupState[group.groupName].checked}
+                onClick={this.handleClick(group.groupName)}>
+                {groupState[group.groupName].open ? <ExpandLess/> : <ExpandMore/>}
 
-            </UserListItem>,
-            <Collapse key={currentUser + '-sub-' + group.groupName + '-collapse' + '-' + group.year.id}
-              in={this.state.groups[group.groupName].open} timeout='auto' unmountOnExit
-              className={classes.nested}>
-              <List component='div' disablePadding>
-                {listItems}
-              </List>
-            </Collapse>);
+              </UserListItem>,
+              <Collapse key={currentUser + '-sub-' + group.groupName + '-collapse' + '-' + group.year.id}
+                in={groupState[group.groupName].open} timeout='auto' unmountOnExit
+                className={classes.nested}>
+                <List component='div' disablePadding>
+                  {listItems}
+                </List>
+              </Collapse>);
+          }
         });
       }
       /* .forEach((keyVal) => {
@@ -198,7 +201,17 @@ class UserPanel extends React.Component {
       this.setState({'expanded': expanded, checkboxClicked: false});
       // }
     };
+    componentDidUpdate (prevProps) {
+    // Typical usage (don't forget to compare props):
+      if (this.props.groups !== prevProps.groups) {
+        let groupsList = [];
 
+        this.props.groups.forEach(group => {
+          groupsList[group.groupName] = {open: false, checked: false};
+        });
+        this.setState({checked: this.props.checked, groups: groupsList});
+      }
+    }
     componentDidMount () {
       let groupsList = [];
       const {userName, userChecks} = this.props;

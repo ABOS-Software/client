@@ -1,11 +1,6 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -13,6 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import update from 'immutability-helper';
 import PropTypes from 'prop-types';
 import MenuItem from '@material-ui/core/MenuItem';
+import DialogBase from './DialogBase';
 
 const drawerWidth = 240;
 
@@ -44,48 +40,32 @@ class addUsersToUser extends React.Component {
   };
 
   render () {
-    const {classes} = this.props;
+    const {classes, ...props} = this.props;
+    return (<DialogBase {...props} save={this.addSelectedUsersToUser}
+      title={'Add Selected Users to User'}
+      subText={'Please select the user to add the users to'}>
+      {this.renderDialogContent(classes)}
+    </DialogBase>);
+  }
 
-    return (
-      <Dialog
-
-        open={this.props.open}
-        onClose={() => this.props.closeDialog()}
-        aria-labelledby='form-dialog-title'
+  renderDialogContent (classes) {
+    return <FormControl className={classes.formControl}>
+      <InputLabel htmlFor='addUsersToGroup-GroupSelection'>User</InputLabel>
+      <Select
+        value={this.state.selectedUser}
+        onChange={event => {
+          this.setState({selectedUser: event.target.value});
+        }}
+        inputProps={{
+          name: 'UserSelection',
+          id: 'addUsersToUser-UserSelection'
+        }}
       >
-        <DialogTitle id='form-dialog-title'>Add Selected Users to User</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please select the user to add the users to
-          </DialogContentText>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor='addUsersToGroup-GroupSelection'>User</InputLabel>
-            <Select
-              value={this.state.selectedUser}
-              onChange={event => {
-                this.setState({selectedUser: event.target.value});
-              }}
-              inputProps={{
-                name: 'UserSelection',
-                id: 'addUsersToUser-UserSelection'
-              }}
-            >
-              {this.renderUserItems()
+        {this.renderUserItems()
 
-              }
-            </Select>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.props.closeDialog()} color='primary'>
-            Cancel
-          </Button>
-          <Button onClick={this.addSelectedUsersToUser} color='primary'>
-            Apply
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
+        }
+      </Select>
+    </FormControl>;
   }
 }
 
