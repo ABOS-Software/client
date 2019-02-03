@@ -105,9 +105,6 @@ class ProductsToolbar extends React.Component {
       onExport: PropTypes.func,
       onToggleFilter: PropTypes.func,
       enableFilter: PropTypes.bool,
-      numberOfRows: PropTypes.number,
-      addRowButtonText: PropTypes.string,
-      filterRowsButtonText: PropTypes.string,
       children: PropTypes.any,
       categories: PropTypes.array,
       newRowIndex: PropTypes.number
@@ -190,7 +187,7 @@ class ProductsToolbar extends React.Component {
       });
     };
 
-    renderOptions (): Array<ReactElement> {
+    renderOptions () {
       let options = [];
       // options.push(<MenuItem value={-1}/>);
 
@@ -211,58 +208,7 @@ class ProductsToolbar extends React.Component {
         <div>
 
           <div className={classes.toolBar}>
-            <div className={classes.additionFields}>
-
-              <TextField
-                id='HID'
-                label='Product ID'
-                className={classes.textField}
-                value={this.state.HID}
-                onChange={this.handleChange('HID')}
-                margin='normal'
-              />
-              <TextField
-                id='name'
-                label='Product Name'
-                className={classes.textField}
-                value={this.state.name}
-                onChange={this.handleChange('name')}
-                margin='normal'
-              />
-              <TextField
-                id='size'
-                label='Product size'
-                className={classes.textField}
-                value={this.state.size}
-                onChange={this.handleChange('size')}
-                margin='normal'
-              />
-              <TextField
-                id='cost'
-                label='Product cost'
-
-                className={classes.textField}
-                value={this.state.cost}
-                onChange={this.handleChange('cost')}
-                margin='normal'
-                InputProps={{
-                  inputComponent: NumberFormatCustom
-                }}
-              />
-              <FormControl className={classes.formControl}>
-                <InputLabel htmlFor='category-helper'>Category</InputLabel>
-                <Select
-                  value={this.state.category}
-                  onChange={this.handleChange('category')}
-                  inputProps={{
-                    name: 'category',
-                    id: 'category-simple'
-                  }}
-                >
-                  {this.renderOptions()}
-                </Select>
-              </FormControl>
-            </div>
+            {this.renderAddProductForm(classes)}
             <div className={classes.tools}>
               {this.renderAddRowButton()}
               {this.renderToggleFilterButton()}
@@ -274,6 +220,81 @@ class ProductsToolbar extends React.Component {
           </div>
         </div>
       );
+    }
+
+    renderAddProductForm (classes) {
+      return <div className={classes.additionFields}>
+
+        {this.renderProductIDTextField(classes)}
+        {this.renderProductNameTextField(classes)}
+        {this.renderUnitSizeTextField(classes)}
+        {this.renderProductCostTextField(classes)}
+        {this.renderCategorySelectField(classes)}
+      </div>;
+    }
+
+    renderCategorySelectField (classes) {
+      return <FormControl className={classes.formControl}>
+        <InputLabel htmlFor='category-helper'>Category</InputLabel>
+        <Select
+          value={this.state.category}
+          onChange={this.handleChange('category')}
+          inputProps={{
+            name: 'category',
+            id: 'category-simple'
+          }}
+        >
+          {this.renderOptions()}
+        </Select>
+      </FormControl>;
+    }
+
+    renderProductCostTextField (classes) {
+      return <TextField
+        id='cost'
+        label='Product cost'
+
+        className={classes.textField}
+        value={this.state.cost}
+        onChange={this.handleChange('cost')}
+        margin='normal'
+        InputProps={{
+          inputComponent: NumberFormatCustom
+        }}
+      />;
+    }
+
+    renderUnitSizeTextField (classes) {
+      return <TextField
+        id='size'
+        label='Product size'
+        className={classes.textField}
+        value={this.state.size}
+        onChange={this.handleChange('size')}
+        margin='normal'
+      />;
+    }
+
+    renderProductNameTextField (classes) {
+      return <TextField
+        id='name'
+        label='Product Name'
+        className={classes.textField}
+        value={this.state.name}
+        onChange={this.handleChange('name')}
+        margin='normal'
+      />;
+    }
+
+    renderProductIDTextField (classes) {
+      return <TextField
+        id='HID'
+        label='Product ID'
+        className={classes.textField}
+        value={this.state.HID}
+        onChange={this.handleChange('HID')}
+        margin='normal'
+      />;
     }
 }
 
