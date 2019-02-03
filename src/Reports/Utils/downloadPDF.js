@@ -20,16 +20,30 @@ export default (record) => {
   }).then(downloadPDFFile());
 };
 
-const downloadPDFFile = () => response => {
-  let filename = 'report.pdf';
+function findFileNameInDisposition (disposition) {
+  const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+  return filenameRegex.exec(disposition);
+}
+
+function cleanMatches (matches, filename) {
+  if (matches != null && matches[1]) {
+    filename = matches[1].replace(/['"]/g, '');
+  }
+  return filename;
+}
+
+function getFileName (response, filename) {
   const disposition = response.headers.get('content-disposition');
   if (disposition && disposition.indexOf('attachment') !== -1) {
-    const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-    let matches = filenameRegex.exec(disposition);
-    if (matches != null && matches[1]) {
-      filename = matches[1].replace(/['"]/g, '');
-    }
+    let matches = findFileNameInDisposition(disposition);
+    filename = cleanMatches(matches, filename);
   }
+  return filename;
+}
+
+const downloadPDFFile = () => response => {
+  let filename = 'report.pdf';
+  filename = getFileName(response, filename);
   response.blob().then(blob => {
     download(blob, filename, 'application/pdf');
   });
