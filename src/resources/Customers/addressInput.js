@@ -69,60 +69,84 @@ class AddressInput extends React.Component {
         >
           {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
             <div>
-              <TextField
-                InputProps={{
-                  ...getInputProps({
-                    placeholder: 'Search Places ...',
-                    className: classes.locationInput
-                  })
-                }}
-                fullWidth
-
-              />
-              {suggestions.length > 0 && (
-                <Paper className={classes.autoCompleteDropdown}>
-                  {loading && <div>Loading...</div>}
-                  {suggestions.map(suggestion => {
-                    const className = suggestion.active
-                      ? classes.activeSuggesionItem
-                      : classes.suggesionItem;
-                    // inline style for demonstration purpose
-                    const style = suggestion.active
-                      ? {backgroundColor: '#fafafa', cursor: 'pointer'}
-                      : {backgroundColor: '#ffffff', cursor: 'pointer'};
-                    return (
-                      <div
-                        {...getSuggestionItemProps(suggestion, {
-                          className,
-                          style
-                        })}
-                      >
-                        <MenuItem>
-                          <strong>
-                            {suggestion.formattedSuggestion.mainText + ' '}
-                          </strong>
-                          <strong/>
-                          <small>
-                            {suggestion.formattedSuggestion.secondaryText}
-                          </small>
-                        </MenuItem>
-                      </div>
-                    );
-                  })}
-                  <div className={classes.dropDownFooter}>
-                    <div>
-                      <img
-                        src={process.env.PUBLIC_URL + '/powered_by_google_on_white_hdpi.png'}
-                        className={classes.dropDownFooterImage}
-                      />
-                    </div>
-                  </div>
-                </Paper>
-              )}
+              {this.renderSeachField(getInputProps, classes)}
+              {this.renderSuggestions(suggestions, classes, loading, getSuggestionItemProps)}
             </div>
           )}
         </PlacesAutocomplete>
       );
+    }
+
+    renderSeachField (getInputProps, classes) {
+      return <TextField
+        InputProps={{
+          ...getInputProps({
+            placeholder: 'Search Places ...',
+            className: classes.locationInput
+          })
+        }}
+        fullWidth
+
+      />;
+    }
+
+    renderSuggestions (suggestions, classes, loading, getSuggestionItemProps) {
+      return suggestions.length > 0 && (
+        <Paper className={classes.autoCompleteDropdown}>
+          {loading && <div>Loading...</div>}
+          {suggestions.map(suggestion => {
+            const className = this.getClassName(suggestion, classes);
+            // inline style for demonstration purpose
+            const style = this.getStyle(suggestion);
+            return (
+              <div
+                {...getSuggestionItemProps(suggestion, {
+                  className,
+                  style
+                })}
+              >
+                {this.renderSingleSuggestion(suggestion)}
+              </div>
+            );
+          })}
+          {this.renderFooter(classes)}
+        </Paper>
+      );
+    }
+
+    getClassName (suggestion, classes) {
+      return suggestion.active
+        ? classes.activeSuggesionItem
+        : classes.suggesionItem;
+    }
+
+    getStyle (suggestion) {
+      return suggestion.active
+        ? {backgroundColor: '#fafafa', cursor: 'pointer'}
+        : {backgroundColor: '#ffffff', cursor: 'pointer'};
+    }
+
+    renderSingleSuggestion (suggestion) {
+      return <MenuItem>
+        <strong>
+          {suggestion.formattedSuggestion.mainText + ' '}
+        </strong>
+        <strong/>
+        <small>
+          {suggestion.formattedSuggestion.secondaryText}
+        </small>
+      </MenuItem>;
+    }
+
+    renderFooter (classes) {
+      return <div className={classes.dropDownFooter}>
+        <div>
+          <img
+            src={process.env.PUBLIC_URL + '/powered_by_google_on_white_hdpi.png'}
+            className={classes.dropDownFooterImage}
+          />
+        </div>
+      </div>;
     }
 }
 
