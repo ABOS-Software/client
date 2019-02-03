@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -32,6 +31,28 @@ class UserPanel extends React.Component {
       userChecks: []
     };
 
+  handleCheckBoxChange = name => event => {
+    let {userChecks} = this.props;
+
+    let parentState = update(userChecks, {
+      [name]: {checked: {$set: event.target.checked}}
+    });
+    this.props.updateUserChecks(parentState);
+    // this.setState({userChecks: parentState, update: true});
+    // this.setState({[name]: event.target.checked});
+  };
+
+  handleManageCheckBoxChange = (parent, name) => event => {
+    let {userChecks} = this.props;
+
+    let parentState = update(userChecks, {
+      [parent]: {subUsers: {[name]: {checked: {$set: event.target.checked}}}}
+    });
+    this.props.updateUserChecks(parentState);
+
+    // this.setState({userChecks: parentState, update: true});
+  };
+
     handleClick = group => event => {
       let parentState = update(this.state.groups, {
         [group]: {$toggle: ['open']}
@@ -41,7 +62,7 @@ class UserPanel extends React.Component {
     };
 
     handleGroupCheckbox = groupId => (parentUser, group) => event => {
-      const {userName, handleManageCheckBoxChange, userChecks} = this.props;
+      const {userName, userChecks} = this.props;
       let parentState = update(this.state.groups, {
         [group]: {checked: {$set: event.target.checked}}
       });
@@ -53,13 +74,12 @@ class UserPanel extends React.Component {
           [user]: {$set: event.target.checked}
         });
 
-        handleManageCheckBoxChange(userName, user)(event);
+        this.handleManageCheckBoxChange(userName, user)(event);
       });
       this.setState({userChecks: userChecksState});
     };
 
     handleUserCheckbox = (parentUser, user) => event => {
-      const {handleManageCheckBoxChange} = this.props;
       let parentState = update(this.state.userChecks, {
         [user]: {$set: event.target.checked}
       });
@@ -80,11 +100,11 @@ class UserPanel extends React.Component {
       });
       this.setState({groups: groupState});
 
-      handleManageCheckBoxChange(parentUser, user)(event);
+      this.handleManageCheckBoxChange(parentUser, user)(event);
     };
 
     renderUserManagementList = currentUser => {
-      const {userChecks, handleManageCheckBoxChange, groups, classes} = this.props;
+      const {userChecks, groups, classes} = this.props;
       const {groups: groupState} = this.state;
       let groupItems = [];
       if (Object.keys(groupState).length > 0) {
@@ -130,10 +150,10 @@ class UserPanel extends React.Component {
     };
 
     setChecked = event => {
-      const {userName, handleCheckBoxChange} = this.props;
+      const {userName} = this.props;
       this.setState({checked: event.target.checked, checkboxClicked: true});
 
-      handleCheckBoxChange(userName)(event);
+      this.handleCheckBoxChange(userName)(event);
     };
 
     handleUserPanelExpanded = (event, expanded) => {
@@ -171,7 +191,13 @@ class UserPanel extends React.Component {
 
     handleGroupChange = event => {
       this.setState({group: event.target.value});
-      this.props.handleGroupChange(this.props.userName)(event);
+      let {userChecks} = this.props;
+
+      let parentState = update(userChecks, {
+        [this.props.userName]: {group: {$set: event.target.value}}
+      });
+      this.props.updateUserChecks(parentState);
+      // this.props.handleGroupChange(this.props.userName)(event);
     };
 
     render () {
@@ -190,7 +216,7 @@ class UserPanel extends React.Component {
     }
 
     renderPanelSummary (userName, classes, id, fullName) {
-      return <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+      return <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
         <InputWrapper>
           <Checkbox
             checked={this.state.checked}
@@ -258,15 +284,13 @@ class UserPanel extends React.Component {
 UserPanel.propTypes = {
   id: PropTypes.number.isRequired,
   classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
   userName: PropTypes.string.isRequired,
   fullName: PropTypes.string.isRequired,
   userChecks: PropTypes.object.isRequired,
   groups: PropTypes.array.isRequired,
-  handleManageCheckBoxChange: PropTypes.func.isRequired,
-  handleGroupChange: PropTypes.func.isRequired,
-  handleCheckBoxChange: PropTypes.func.isRequired,
+  updateUserChecks: PropTypes.func.isRequired,
   checked: PropTypes.bool.isRequired,
-  onEdit: PropTypes.func
+  onEdit: PropTypes.func,
+  group: PropTypes.any
 };
 export default withStyles(styles, {withTheme: true})(UserPanel);

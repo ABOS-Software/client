@@ -16,6 +16,7 @@ import {showNotification} from 'react-admin';
 
 import UserPanel from './UserPanel';
 import UserGroupPanel from './userGroupPanel';
+import {BulkMenu} from './BulkMenu';
 
 const drawerWidth = 240;
 
@@ -35,19 +36,6 @@ class UsersTab extends React.PureComponent {
     userAddMenuAnchor: null
   };
 
-  componentWillMount () {
-  }
-
-  addSelectedUsersToGroupClicked = event => {
-    this.props.showDialog('addUsersToGroup');
-    this.handleUserBulkMenuClose(event);
-  };
-
-  addSelectedUsersToUserClicked = event => {
-    this.props.showDialog('addUsersToUser');
-    this.handleUserBulkMenuClose(event);
-  };
-
   addSingleUserClick = event => {
     this.props.showDialog('addUser');
 
@@ -56,10 +44,6 @@ class UsersTab extends React.PureComponent {
 
   editUserClick = (uName, id, fName) => () => {
     this.props.showDialog('editUser', {editUser: {id: id, userName: uName, password: '', fullName: fName}});
-
-    // this.setState({editUserOpen: true, editUser: {id: id, userName: uName, password: '', fullName: fName}});
-
-    // this.handleUserAddMenuClose(event);
   };
 
   handleCheckBoxChange = name => event => {
@@ -112,47 +96,6 @@ class UsersTab extends React.PureComponent {
     this.setState({userAddMenuAnchor: null});
   };
 
-  enableSelectedUsers = event => {
-    let {userChecks} = this.props;
-    let parentState = userChecks;
-    let curYear = this.props.year;
-    Object.keys(userChecks).filter(userName => userChecks[userName].checked).forEach(userName => {
-      parentState = update(parentState, {
-        [userName]: {enabledYear: {$set: curYear}, status: {$set: 'ENABLED'}}
-
-      });
-    });
-    this.props.updateUserChecks(parentState);
-
-    this.handleUserBulkMenuClose(event);
-  };
-
-  archiveSelectedUsers = event => {
-    let {userChecks} = this.props;
-
-    let parentState = userChecks;
-    Object.keys(userChecks).filter(userName => userChecks[userName].checked).forEach(userName => {
-      parentState = update(parentState, {
-        [userName]: {status: {$set: 'ARCHIVED'}, enabledYear: {$set: -1}}
-      });
-    });
-    this.props.updateUserChecks(parentState);
-    this.handleUserBulkMenuClose(event);
-  };
-  removeSelectedUsersFromYear = event => {
-    let {userChecks} = this.props;
-
-    let parentState = userChecks;
-    Object.keys(userChecks).filter(userName => userChecks[userName].checked).forEach(userName => {
-      parentState = update(parentState, {
-        [userName]: {status: {$set: 'DISABLED'}, enabledYear: {$set: -1}}
-
-      });
-    });
-    this.props.updateUserChecks(parentState);
-    this.handleUserBulkMenuClose(event);
-  };
-
   renderEnabledUsers = () => {
     let {userChecks} = this.props;
 
@@ -201,10 +144,8 @@ class UsersTab extends React.PureComponent {
     return (
       <UserPanel id={id} key={userName} userName={userName} fullName={fullName}
         userChecks={userChecks}
-        handleManageCheckBoxChange={this.handleManageCheckBoxChange}
-        handleCheckBoxChange={this.handleCheckBoxChange}
+        updateUserChecks={this.props.updateUserChecks}
         checked={userChecks[userName].checked}
-        handleGroupChange={this.handleGroupChange}
         group={userChecks[userName].group}
         groups={this.props.groups}
         onEdit={this.editUserClick}/>
@@ -258,26 +199,9 @@ class UsersTab extends React.PureComponent {
   }
 
   renderBulkActionMenuComponent (userBulkMenuAnchor, userBulkMenuOpen) {
-    return <Menu
-      id='user-Bulk-Menu'
-      anchorEl={userBulkMenuAnchor}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right'
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right'
-      }}
-      open={userBulkMenuOpen}
-      onClose={this.handleUserBulkMenuClose}
-    >
-      <MenuItem onClick={this.addSelectedUsersToGroupClicked}>Add Selected to Group</MenuItem>
-      <MenuItem onClick={this.removeSelectedUsersFromYear}>Disable Selected</MenuItem>
-      <MenuItem onClick={this.enableSelectedUsers}>Enable Selected</MenuItem>
-      <MenuItem onClick={this.addSelectedUsersToUserClicked}>Add selected to User</MenuItem>
-      <MenuItem onClick={this.archiveSelectedUsers}>Archive selected users</MenuItem>
-    </Menu>;
+    return <BulkMenu anchorEl={userBulkMenuAnchor} open={userBulkMenuOpen} onClose={this.handleUserBulkMenuClose}
+      showDialog={this.props.showDialog}
+      updateUserChecks={this.props.updateUserChecks} userChecks={this.props.userChecks} year={this.props.year}/>;
   }
 
   renderAddUserMenu (userAddMenuOpen, userAddMenuAnchor) {
