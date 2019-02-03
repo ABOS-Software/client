@@ -62,9 +62,10 @@ export const styles = theme => ({
   content: {
     display: 'flex',
     width: '100%',
+    height: '100%',
 
     flexDirection: 'column',
-    flexGrow: 0,
+    flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit,
     transition: theme.transitions.create('margin', {
