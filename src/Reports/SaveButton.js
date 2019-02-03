@@ -62,19 +62,9 @@ export class SaveButton extends Component {
 
     render () {
       const {
-        className,
-        classes = {},
-        invalid,
-        label = 'ra.action.save',
-        pristine,
-        redirect,
-        saving,
-        submitOnEnter,
-        translate,
-        variant = 'raised',
-        ...rest
+        className, classes = {}, invalid, label = 'ra.action.save', pristine,
+        redirect, saving, submitOnEnter, translate, variant = 'raised', ...rest
       } = this.props;
-
       const type = submitOnEnter ? 'submit' : 'button';
       return (
         <Button
@@ -85,15 +75,19 @@ export class SaveButton extends Component {
           color={saving ? 'default' : 'primary'}
           {...sanitizeRestProps(rest)}
         >
-          {saving && saving.redirect === redirect && (
-            <CircularProgress
-              size={25}
-              thickness={2}
-              className={classes.iconPaddingStyle}
-            />
-          )}
+          {this.renderProgress(saving, redirect, classes)}
           {label && translate(label, {_: label})}
         </Button>
+      );
+    }
+
+    renderProgress (saving, redirect, classes) {
+      return saving && saving.redirect === redirect && (
+        <CircularProgress
+          size={25}
+          thickness={2}
+          className={classes.iconPaddingStyle}
+        />
       );
     }
 }
@@ -114,8 +108,6 @@ SaveButton.propTypes = {
 };
 
 SaveButton.defaultProps = {
-  handleSubmitWithRedirect: () => () => {
-  }
 };
 
 const mapStateToProps = state => ({
