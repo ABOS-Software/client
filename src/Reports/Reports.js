@@ -15,13 +15,12 @@ import Wizard from './Wizard';
 import {CustomSelectInput} from './CustomSelect';
 import {ReportType} from './ReportTypeField';
 import {
-  convertFileToBase64,
-  downloadPDF,
   getCategoriesForYear,
   getCustomersWithUser,
   getCustomersWithYearAndUser,
   getUsers,
   getYears,
+  save,
   updateAddress,
   updateReportType
 } from './Utils';
@@ -38,17 +37,7 @@ class reportsWizard extends React.Component {
   // users: {}, years: {}, customers: {}
     state = {update: false, address: '', zipCode: '', city: '', state: '', updateAddress: 0};
 
-    save = (record, redirect) => {
-      if (record.LogoLocation) {
-        convertFileToBase64(record.LogoLocation).then(b64 => {
-          record.LogoLocation.base64 = b64;
-          downloadPDF(record);
-        }
-        );
-      } else {
-        downloadPDF(record);
-      }
-    };
+
 
     updateIncludeSub = (event, key, payload) => {
       this.setState({includeSubUser: key, update: true});
@@ -182,14 +171,16 @@ class reportsWizard extends React.Component {
       return <FormDataConsumer>
         {({formData, ...rest}) => {
           if (this.state.userReq) {
-            return [<CustomSelectInput label='User' source='User' key='UserComboBox'
-              optionText={'fullName'}
-              optionValue={'id'}
-              choices={this.state.users} {...rest}
-              onChangeCustomHandler={(key) => this.updateUser(key)}
-              validate={requiredValidate}/>,
+            return [
+              <CustomSelectInput label='User' source='User' key='UserComboBox'
+                optionText={'fullName'}
+                optionValue={'id'}
+                choices={this.state.users} {...rest}
+                onChangeCustomHandler={(key) => this.updateUser(key)}
+                validate={requiredValidate}/>,
               <BooleanInput key='Include_Sub_Users'
-              source='Include_Sub_Users' onChange={this.updateIncludeSub}/>];
+                source='Include_Sub_Users' onChange={this.updateIncludeSub}/>
+            ];
           }
         }
         }
@@ -242,7 +233,7 @@ class reportsWizard extends React.Component {
     render () {
       this.updateChoices();
       return (
-        <Wizard {...this.props} steps={steps()} stepContents={this.state.stepsContent} save={this.save}
+        <Wizard {...this.props} steps={steps()} stepContents={this.state.stepsContent} save={save}
           formName={'record-form'}/>
       );
     }

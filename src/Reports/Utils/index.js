@@ -6,6 +6,7 @@ import {getYears} from './getYears';
 import {updateAddress} from '../../utils/updateAddress';
 import {updateReportType} from './updateReportTypes';
 import {convertFileToBase64} from './convertFileToBase64';
+import {save} from './getReport';
 
 export {
   downloadPDF,
@@ -16,5 +17,6 @@ export {
   getYears,
   updateAddress,
   updateReportType,
-  convertFileToBase64
+  convertFileToBase64,
+  save
 };
