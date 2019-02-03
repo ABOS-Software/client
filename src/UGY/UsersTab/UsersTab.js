@@ -9,7 +9,6 @@ import AddIcon from '@material-ui/icons/Add';
 import MoreVert from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import update from 'immutability-helper';
 import {push} from 'react-router-redux';
 import {connect} from 'react-redux';
 import {showNotification} from 'react-admin';
@@ -44,40 +43,6 @@ class UsersTab extends React.PureComponent {
 
   editUserClick = (uName, id, fName) => () => {
     this.props.showDialog('editUser', {editUser: {id: id, userName: uName, password: '', fullName: fName}});
-  };
-
-  handleCheckBoxChange = name => event => {
-    let {userChecks} = this.props;
-
-    let parentState = update(userChecks, {
-      [name]: {checked: {$set: event.target.checked}}
-    });
-    this.props.updateUserChecks(parentState);
-    // this.setState({userChecks: parentState, update: true});
-    // this.setState({[name]: event.target.checked});
-  };
-
-  handleGroupChange = name => event => {
-    let {userChecks} = this.props;
-
-    let parentState = update(userChecks, {
-      [name]: {group: {$set: event.target.value}}
-    });
-    this.props.updateUserChecks(parentState);
-
-    // this.setState({userChecks: parentState, update: true});
-    // this.setState({[name]: event.target.checked});
-  };
-
-  handleManageCheckBoxChange = (parent, name) => event => {
-    let {userChecks} = this.props;
-
-    let parentState = update(userChecks, {
-      [parent]: {subUsers: {[name]: {checked: {$set: event.target.checked}}}}
-    });
-    this.props.updateUserChecks(parentState);
-
-    // this.setState({userChecks: parentState, update: true});
   };
 
   handleUserBulkMenu = event => {
