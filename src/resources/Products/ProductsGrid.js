@@ -162,19 +162,26 @@ class ProductsGrid extends Component {
 
       this.setState({customer: record});
       if (record.order) {
-        if (!record.order.orderedProducts) {
-          dataProvider(GET_ONE, 'Orders', {
-            id: record.order.id
-          })
-            .then(orderResponse => {
-              this.getProducts(orderResponse, filter);
-            });
-        } else {
-          this.getProducts(record.order, filter);
-        }
+        this.getProductsForOrder(record, filter);
       } else {
         this.getProducts({}, filter);
       }
+    }
+
+    getProductsForOrder (record, filter) {
+      if (!record.order.orderedProducts) {
+        this.getOrderAndProducts(record, filter);
+      } else {
+        this.getProducts(record.order, filter);
+      }
+    }
+
+    getOrderAndProducts (record, filter) {
+      dataProvider(GET_ONE, 'Orders', {
+        id: record.order.id
+      }).then(orderResponse => {
+        this.getProducts(orderResponse, filter);
+      });
     }
 
     getProductFilter (year, record) {
