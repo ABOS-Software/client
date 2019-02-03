@@ -12,6 +12,46 @@ export const authClientConfig = {
   usernameField: 'username', // The key used to provide the username to Feathers client.authenticate
   redirectTo: '/login' // Redirect to this path if an AUTH_CHECK fails. Uses the react-admin default of '/login' if omitted.
 };
+
+function login (client, authenticate, usernameField, username, passwordField, password) {
+  return client.authenticate({
+    ...authenticate,
+    [usernameField]: username,
+    [passwordField]: password
+  }).then(async response => {
+    console.log('Authenticated!', response);
+    const payload = await client.passport.verifyJWT(response.accessToken);
+    console.log('Authenticated!', payload);
+
+    let user = await client.service('user').get(payload.userId);
+    client.set('user', user);
+    localStorage.setItem('userName', user.username);
+    localStorage.setItem('fullName', user.fullName);
+    localStorage.setItem('enabledYear', user.enabledYear);
+
+    console.log('User', client.get('user'));
+
+    return response;
+  });
+}
+
+function getPermissions (permissionsKey, ret, storageKey, permissionsField) {
+  const localStoragePermissions = JSON.parse(localStorage.getItem(permissionsKey));
+  if (localStoragePermissions && localStoragePermissions.length !== 0) {
+    ret = Promise.resolve(localStoragePermissions);
+  }
+  try {
+    const jwtToken = localStorage.getItem(storageKey);
+    const decodedToken = decodeJwt(jwtToken);
+    const jwtPermissions = decodedToken[permissionsField] ? decodedToken[permissionsField] : [];
+    localStorage.setItem(permissionsKey, JSON.stringify(jwtPermissions));
+    ret = Promise.resolve(jwtPermissions);
+  } catch (e) {
+    ret = Promise.reject();
+  }
+  return ret;
+}
+
 export default (client, options = {}) => (type, params) => {
   const {
     storageKey,
@@ -30,64 +70,40 @@ export default (client, options = {}) => (type, params) => {
     usernameField: 'email'
   }, options);
 
+  let ret;
+
   switch (type) {
   case AUTH_LOGIN:
     const {username, password} = params;
-    return client.authenticate({
-      ...authenticate,
-      [usernameField]: username,
-      [passwordField]: password
-    }).then(async response => {
-      console.log('Authenticated!', response);
-      const payload = await client.passport.verifyJWT(response.accessToken);
-      console.log('Authenticated!', payload);
+    ret = login(client, authenticate, usernameField, username, passwordField, password);
+    break;
 
-      let user = await client.service('user').get(payload.userId);
-      client.set('user', user);
-      localStorage.setItem('userName', user.username);
-      localStorage.setItem('fullName', user.fullName);
-      localStorage.setItem('enabledYear', user.enabledYear);
-
-      console.log('User', client.get('user'));
-
-      return response;
-    });
   case AUTH_LOGOUT:
     localStorage.removeItem(permissionsKey);
-    return client.logout();
+    ret = client.logout();
+    break;
+
   case AUTH_CHECK:
-    return localStorage.getItem(storageKey) ? Promise.resolve() : Promise.reject({redirectTo});
+    ret = localStorage.getItem(storageKey) ? Promise.resolve() : Promise.reject({redirectTo});
+    break;
+
   case AUTH_ERROR:
     const {code} = params;
     if (code === 401 || code === 403) {
       localStorage.removeItem(storageKey);
       localStorage.removeItem(permissionsKey);
-      return Promise.reject();
+      ret = Promise.reject();
     }
-    return Promise.resolve();
+    ret = Promise.resolve();
+    break;
+
   case AUTH_GET_PERMISSIONS:
-    /*
-                    JWT token may be providen by oauth,
-                    so that's why the permissions are decoded here and not in AUTH_LOGIN.
-                    */
-    // Get the permissions from localstorage if any.
-    const localStoragePermissions = JSON.parse(localStorage.getItem(permissionsKey));
-    // If any, provide them.
-    if (localStoragePermissions && localStoragePermissions.length !== 0) {
-      return Promise.resolve(localStoragePermissions);
-    }
-    // Or find them from the token, save them and provide them.
-    try {
-      const jwtToken = localStorage.getItem(storageKey);
-      const decodedToken = decodeJwt(jwtToken);
-      const jwtPermissions = decodedToken[permissionsField] ? decodedToken[permissionsField] : [];
-      localStorage.setItem(permissionsKey, JSON.stringify(jwtPermissions));
-      return Promise.resolve(jwtPermissions);
-    } catch (e) {
-      return Promise.reject();
-    }
+
+    ret = getPermissions(permissionsKey, ret, storageKey, permissionsField);
+    break;
 
   default:
-    return Promise.reject(`Unsupported FeathersJS authClient action type ${type}`);
+    ret = Promise.reject(`Unsupported FeathersJS authClient action type ${type}`);
   }
+  return ret;
 };
