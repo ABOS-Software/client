@@ -37,8 +37,6 @@ class reportsWizard extends React.Component {
   // users: {}, years: {}, customers: {}
     state = {update: false, address: '', zipCode: '', city: '', state: '', updateAddress: 0};
 
-
-
     updateIncludeSub = (event, key, payload) => {
       this.setState({includeSubUser: key, update: true});
     };
@@ -113,17 +111,6 @@ class reportsWizard extends React.Component {
           ]
         ]
       });
-    }
-
-    renderPrintHeaderField () {
-      return <FormDataConsumer>
-        {({formData, ...rest}) => {
-          if (this.state.dueReq) {
-            return <BooleanInput
-              source='Print_Due_Header'/>;
-          }
-        }}
-      </FormDataConsumer>;
     }
 
     checkCustomerConditionsYear () {
@@ -217,6 +204,17 @@ class reportsWizard extends React.Component {
           return (
             <AddressFields updateAddress={this.updateAddress} value={this.state.address}/>
           );
+        }}
+      </FormDataConsumer>;
+    }
+
+    renderPrintHeaderField () {
+      return <FormDataConsumer>
+        {({formData, ...rest}) => {
+          if (this.state.dueReq) {
+            return <BooleanInput
+              source='Print_Due_Header'/>;
+          }
         }}
       </FormDataConsumer>;
     }
