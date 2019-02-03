@@ -1,5 +1,5 @@
 import React from 'react';
-import Wizard from '../Reports/Wizard';
+import Wizard from '../../Reports/Wizard';
 import {push} from 'react-router-redux';
 import {connect} from 'react-redux';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -13,7 +13,7 @@ import parse from 'csv-parse/lib/sync';
 import convert from 'xml-js';
 
 import {FileField, FileInput, required, SelectInput, showNotification} from 'react-admin';
-import {rowStatus} from './ProductsGrid';
+import {rowStatus} from '../ProductsGrid';
 
 const importSteps = () => [
   'Import Type', 'File Selection'
@@ -70,8 +70,7 @@ class ImportDialog extends React.Component {
       });
     };
 
-    convertXML (input) {
-      let records = convert.xml2js(input, {compact: true});
+    convertNewXML (records) {
       let newRowIndex = this.state.newRowIndex;
       let products = [];
       let categories = [];
@@ -83,48 +82,70 @@ class ImportDialog extends React.Component {
 
               })
           }); */
-      let recordsProds = [];
-
-      if (records.Export.Products) {
-        recordsProds = records.Export.Products;
-        recordsProds.forEach(product => {
-          let cat = (this.props.categories.find(cat => cat.name === (product.category._text)) || {id: -1}).id;
-          products.push(
-            {
-              humanProductId: product.humanProductId._text,
-              id: 'i-' + this.props.importNumber + '-' + newRowIndex,
-              year: {id: this.props.year},
-              productName: product.productName._text,
-              unitSize: product.unitSize._text,
-              unitCost: product.unitCost._text,
-              category: cat,
-              status: rowStatus.INSERT
-            }
-          );
-          newRowIndex++;
-        });
-      } else if (records.LawnGarden && records.LawnGarden.Products) {
-        recordsProds = records.LawnGarden.Products;
-        recordsProds.forEach(product => {
-          let cat = (this.props.categories.find(cat => cat.name === (product.Category._text)) || {id: -1}).id;
-          products.push(
-            {
-              humanProductId: product.ProductID._text,
-              id: 'i-' + this.props.importNumber + '-' + newRowIndex,
-              year: {id: this.props.year},
-              productName: product.ProductName._text,
-              unitSize: product.Size._text,
-              unitCost: product.UnitCost._text,
-              category: cat,
-              status: rowStatus.INSERT
-            }
-          );
-          newRowIndex++;
-        });
-      }
-
+      let recordsProds;
+      recordsProds = records.Export.Products;
+      recordsProds.forEach(product => {
+        let cat = (this.props.categories.find(cat => cat.name === (product.category._text)) || {id: -1}).id;
+        products.push(
+          {
+            humanProductId: product.humanProductId._text,
+            id: 'i-' + this.props.importNumber + '-' + newRowIndex,
+            year: {id: this.props.year},
+            productName: product.productName._text,
+            unitSize: product.unitSize._text,
+            unitCost: product.unitCost._text,
+            category: cat,
+            status: rowStatus.INSERT
+          }
+        );
+        newRowIndex++;
+      });
       this.setState({products: products, newRowIndex: newRowIndex, categories: categories});
       this.props.addProducts(products);
+    }
+
+    convertOldXML (records) {
+      let newRowIndex = this.state.newRowIndex;
+      let products = [];
+      let categories = [];
+      /* records.categories.forEach(cat => {
+              categories.push({
+                  categoryName: cat.categoryName,
+                  deliveryDate: cat.deliveryDate,
+                  id: 'i-' + this.props.importNumber + '-' + newRowIndex,
+
+              })
+          }); */
+      let recordsProds;
+      recordsProds = records.LawnGarden.Products;
+      recordsProds.forEach(product => {
+        let cat = (this.props.categories.find(cat => cat.name === (product.Category._text)) || {id: -1}).id;
+        products.push(
+          {
+            humanProductId: product.ProductID._text,
+            id: 'i-' + this.props.importNumber + '-' + newRowIndex,
+            year: {id: this.props.year},
+            productName: product.ProductName._text,
+            unitSize: product.Size._text,
+            unitCost: product.UnitCost._text,
+            category: cat,
+            status: rowStatus.INSERT
+          }
+        );
+        newRowIndex++;
+      });
+      this.setState({products: products, newRowIndex: newRowIndex, categories: categories});
+      this.props.addProducts(products);
+    }
+
+    convertXML (input) {
+      let records = convert.xml2js(input, {compact: true});
+
+      if (records.Export.Products) {
+        this.convertNewXML(records);
+      } else if (records.LawnGarden && records.LawnGarden.Products) {
+        this.convertOldXML(records);
+      }
     }
 
     convertCSV (input) {
