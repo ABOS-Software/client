@@ -22,8 +22,6 @@ export class UserListItem extends React.PureComponent {
           handleManageCheckBoxChange(userName, user)(event);
       }; */
 
-
-
   componentDidMount () {
     this.setState({checked: this.props.checked});
   }

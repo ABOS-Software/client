@@ -6,7 +6,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import update from 'immutability-helper';
 
 export class BulkMenu extends React.Component {
-
   addSelectedUsersToGroupClicked = event => {
     this.props.showDialog('addUsersToGroup');
     this.props.onClose(event);

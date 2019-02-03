@@ -13,6 +13,15 @@ export const authClientConfig = {
   redirectTo: '/login' // Redirect to this path if an AUTH_CHECK fails. Uses the react-admin default of '/login' if omitted.
 };
 
+async function saveLoginResponse (response, client) {
+  const payload = await client.passport.verifyJWT(response.accessToken);
+  let user = await client.service('user').get(payload.userId);
+  client.set('user', user);
+  localStorage.setItem('userName', user.username);
+  localStorage.setItem('fullName', user.fullName);
+  localStorage.setItem('enabledYear', user.enabledYear);
+}
+
 function login (client, options = {}) {
   const {
     authenticate,
@@ -33,17 +42,7 @@ function login (client, options = {}) {
     [usernameField]: username,
     [passwordField]: password
   }).then(async response => {
-    console.log('Authenticated!', response);
-    const payload = await client.passport.verifyJWT(response.accessToken);
-    console.log('Authenticated!', payload);
-
-    let user = await client.service('user').get(payload.userId);
-    client.set('user', user);
-    localStorage.setItem('userName', user.username);
-    localStorage.setItem('fullName', user.fullName);
-    localStorage.setItem('enabledYear', user.enabledYear);
-
-    console.log('User', client.get('user'));
+    await saveLoginResponse(response, client);
 
     return response;
   });
