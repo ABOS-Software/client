@@ -4,22 +4,8 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import {translate} from 'react-admin';
-
+import styles from './styles';
 import CardIcon from './CardIcon';
-
-const styles = {
-  main: {
-    flex: '1',
-    marginRight: '1em',
-    marginTop: 20
-  },
-  card: {
-    overflow: 'inherit',
-    textAlign: 'right',
-    padding: 16,
-    minHeight: 52
-  }
-};
 
 const Donations = ({value, translate, classes}) => (
   <div className={classes.main}>

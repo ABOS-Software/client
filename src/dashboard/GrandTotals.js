@@ -6,20 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import {translate} from 'react-admin';
 
 import CardIcon from './CardIcon';
-
-const styles = {
-  main: {
-    flex: '1',
-    marginRight: '1em',
-    marginTop: 20
-  },
-  card: {
-    overflow: 'inherit',
-    textAlign: 'right',
-    padding: 16,
-    minHeight: 52
-  }
-};
+import styles from './styles';
 
 const GrandTotals = ({value, translate, classes}) => (
   <div className={classes.main}>
