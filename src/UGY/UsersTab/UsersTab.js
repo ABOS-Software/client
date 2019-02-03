@@ -20,7 +20,9 @@ import UserGroupPanel from './userGroupPanel';
 const drawerWidth = 240;
 
 const styles = theme => ({
-
+  inline: {
+    display: 'inline-flex'
+  },
   flex: {
     flexGrow: 1
   }
@@ -210,73 +212,10 @@ class UsersTab extends React.PureComponent {
   };
 
   render () {
-    const {classes} = this.props;
-    const {userBulkMenuAnchor, userAddMenuAnchor} = this.state;
-    const userBulkMenuOpen = Boolean(userBulkMenuAnchor);
-    const userAddMenuOpen = Boolean(userAddMenuAnchor);
     return (
       <div>
 
-        <Toolbar>
-          <Typography variant='title' color='inherit' className={classes.flex}/>
-          <div>
-            <IconButton
-              aria-owns={userAddMenuOpen ? 'user-add-menu' : null}
-              aria-haspopup='true'
-              onClick={this.handleUserAddMenu}
-              color='inherit'
-            >
-              <AddIcon/>
-            </IconButton>
-            <Menu
-              id='user-add-menu'
-              anchorEl={userAddMenuAnchor}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={userAddMenuOpen}
-              onClose={this.handleUserAddMenuClose}
-            >
-              <MenuItem onClick={this.addSingleUserClick}>Add Single User</MenuItem>
-              <MenuItem onClick={this.addBulkUserClick}>Add Bulk Users</MenuItem>
-            </Menu>
-            <IconButton
-              aria-owns={userBulkMenuOpen ? 'user-Bulk-Menu' : null}
-              aria-haspopup='true'
-              onClick={this.handleUserBulkMenu}
-              color='inherit'
-            >
-              <MoreVert/>
-            </IconButton>
-            <Menu
-              id='user-Bulk-Menu'
-              anchorEl={userBulkMenuAnchor}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={userBulkMenuOpen}
-              onClose={this.handleUserBulkMenuClose}
-            >
-              <MenuItem onClick={this.addSelectedUsersToGroupClicked}>Add Selected to Group</MenuItem>
-              <MenuItem onClick={this.removeSelectedUsersFromYear}>Disable Selected</MenuItem>
-              <MenuItem onClick={this.enableSelectedUsers}>Enable Selected</MenuItem>
-              <MenuItem onClick={this.addSelectedUsersToUserClicked}>Add selected to User</MenuItem>
-              <MenuItem onClick={this.archiveSelectedUsers}>Archive selected users</MenuItem>
-            </Menu>
-
-          </div>
-
-        </Toolbar>
+        {this.renderToolBar()}
         <div>
           {this.renderEnabledUsers()}
           {this.renderArchivedUsers()}
@@ -284,6 +223,97 @@ class UsersTab extends React.PureComponent {
         </div>
       </div>
     );
+  }
+
+  renderToolBar () {
+    const {classes} = this.props;
+    const {userBulkMenuAnchor, userAddMenuAnchor} = this.state;
+    const userBulkMenuOpen = Boolean(userBulkMenuAnchor);
+    const userAddMenuOpen = Boolean(userAddMenuAnchor);
+    return <Toolbar>
+      <Typography variant='title' color='inherit' className={classes.flex}/>
+      <div>
+        {this.renderAddUserMenu(userAddMenuOpen, userAddMenuAnchor)}
+        {this.renderBulkActionMenu(userBulkMenuOpen, userBulkMenuAnchor)}
+
+      </div>
+
+    </Toolbar>;
+  }
+
+  renderBulkActionMenu (userBulkMenuOpen, userBulkMenuAnchor) {
+    const {classes} = this.props;
+
+    return <div className={classes.inline}>
+      <IconButton
+        aria-owns={userBulkMenuOpen ? 'user-Bulk-Menu' : null}
+        aria-haspopup='true'
+        onClick={this.handleUserBulkMenu}
+        color='inherit'
+      >
+        <MoreVert/>
+      </IconButton>
+      {this.renderBulkActionMenuComponent(userBulkMenuAnchor, userBulkMenuOpen)}
+    </div>;
+  }
+
+  renderBulkActionMenuComponent (userBulkMenuAnchor, userBulkMenuOpen) {
+    return <Menu
+      id='user-Bulk-Menu'
+      anchorEl={userBulkMenuAnchor}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
+      }}
+      open={userBulkMenuOpen}
+      onClose={this.handleUserBulkMenuClose}
+    >
+      <MenuItem onClick={this.addSelectedUsersToGroupClicked}>Add Selected to Group</MenuItem>
+      <MenuItem onClick={this.removeSelectedUsersFromYear}>Disable Selected</MenuItem>
+      <MenuItem onClick={this.enableSelectedUsers}>Enable Selected</MenuItem>
+      <MenuItem onClick={this.addSelectedUsersToUserClicked}>Add selected to User</MenuItem>
+      <MenuItem onClick={this.archiveSelectedUsers}>Archive selected users</MenuItem>
+    </Menu>;
+  }
+
+  renderAddUserMenu (userAddMenuOpen, userAddMenuAnchor) {
+    const {classes} = this.props;
+
+    return <div className={classes.inline}>
+      <IconButton
+        aria-owns={userAddMenuOpen ? 'user-add-menu' : null}
+        aria-haspopup='true'
+        onClick={this.handleUserAddMenu}
+        color='inherit'
+      >
+        <AddIcon/>
+      </IconButton>
+      {this.renderAddUserMenuComponent(userAddMenuAnchor, userAddMenuOpen)}
+    </div>;
+  }
+
+  renderAddUserMenuComponent (userAddMenuAnchor, userAddMenuOpen) {
+    return <Menu
+      id='user-add-menu'
+      anchorEl={userAddMenuAnchor}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
+      }}
+      open={userAddMenuOpen}
+      onClose={this.handleUserAddMenuClose}
+    >
+      <MenuItem onClick={this.addSingleUserClick}>Add Single User</MenuItem>
+      <MenuItem onClick={this.addBulkUserClick}>Add Bulk Users</MenuItem>
+    </Menu>;
   }
 }
 
