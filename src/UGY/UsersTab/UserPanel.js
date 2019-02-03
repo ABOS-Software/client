@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -21,62 +19,8 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import update from 'immutability-helper';
 import {styles} from '../Styles';
-
-class UserListItem extends React.PureComponent {
-  static defaultProps = {
-    onClick: (event) => {
-    }
-  };
-    state = {
-      checked: false
-    };
-
-    /*    setChecked = event => {
-            const {userName, user, handleManageCheckBoxChange} = this.props;
-            this.setState({checked: event.target.checked});
-
-            handleManageCheckBoxChange(userName, user)(event);
-        }; */
-
-    constructor (props) {
-      super(props);
-    }
-
-    componentDidMount () {
-      this.setState({checked: this.props.checked});
-    }
-
-    render () {
-      const {user, children, onClick, checked, handleManageCheckBoxChange, userName} = this.props;
-      return (
-        <ListItem button onClick={onClick}>
-          <InputWrapper>
-            <Checkbox
-              checked={checked}
-              onChange={handleManageCheckBoxChange(userName, user)}
-              value={user}
-            />
-          </InputWrapper>
-          <ListItemText primary={user}/>
-          {children}
-        </ListItem>
-      );
-    }
-}
-
-UserListItem.propTypes = {
-  user: PropTypes.string.isRequired,
-  userName: PropTypes.string.isRequired,
-  handleManageCheckBoxChange: PropTypes.func.isRequired,
-  checked: PropTypes.bool.isRequired,
-  onClick: PropTypes.func,
-  children: PropTypes.node
-};
-const stopPropagation = (e) => e.stopPropagation();
-const InputWrapper = ({children}) =>
-  <div onClick={stopPropagation} style={{display: 'inline-flex'}}>
-    {children}
-  </div>;
+import {UserListItem} from './UserListItem';
+import {InputWrapper} from './InputWrapper';
 
 class UserPanel extends React.Component {
     state = {
@@ -87,10 +31,6 @@ class UserPanel extends React.Component {
       groups: [],
       userChecks: []
     };
-
-    constructor (props) {
-      super(props);
-    }
 
     handleClick = group => event => {
       let parentState = update(this.state.groups, {
@@ -204,24 +144,28 @@ class UserPanel extends React.Component {
     componentDidUpdate (prevProps) {
     // Typical usage (don't forget to compare props):
       if (this.props.groups !== prevProps.groups) {
-        let groupsList = [];
-
-        this.props.groups.forEach(group => {
-          groupsList[group.groupName] = {open: false, checked: false};
-        });
+        let groupsList = this.deriveGroups();
         this.setState({checked: this.props.checked, groups: groupsList});
       }
     }
-    componentDidMount () {
+
+    deriveGroups () {
       let groupsList = [];
+
+      this.props.groups.forEach(group => {
+        groupsList[group.groupName] = {open: false, checked: false};
+      });
+      return groupsList;
+    }
+
+    componentDidMount () {
       const {userName, userChecks} = this.props;
       let userCheckList = [];
       Object.keys(userChecks[userName].subUsers).forEach(subUser => {
         userCheckList[subUser] = userChecks[userName].subUsers[subUser].checked;
       });
-      this.props.groups.forEach(group => {
-        groupsList[group.groupName] = {open: false, checked: false};
-      });
+      let groupsList = this.deriveGroups();
+
       this.setState({checked: this.props.checked, groups: groupsList, userChecks: userCheckList});
     }
 
