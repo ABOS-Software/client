@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
     "@feathersjs/authentication-client": "^1.0.9",
     "@feathersjs/client": "^3.7.6",
     "@feathersjs/feathers": "^3.3.0",
@@ -14,6 +17,7 @@
     "downloadjs": "^1.4.7",
     "encoding-japanese": "^1.0.29",
     "eslint-config-standard-react": "^7.0.2",
+    "eslint-loader": "^2.1.1",
     "google-map-react": "^1.0.6",
     "immutability-helper": "^2.7.1",
     "jss": "^9.8.7",

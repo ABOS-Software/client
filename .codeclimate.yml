@@ -1,0 +1,14 @@
+plugins:
+  eslint:
+    enabled: true
+    channel: "eslint-5"
+exclude_patterns:
+  - "**/*.test.js"
+checks:
+  similar-code:
+    enabled: false
+  file-lines:
+    enabled: false
+  method-count:
+    config:
+      threshold: 25

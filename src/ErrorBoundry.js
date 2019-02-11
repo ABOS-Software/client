@@ -5,17 +5,17 @@ import PropTypes from 'prop-types';
 export default class ErrorBoundry extends React.Component {
   constructor (props) {
     super(props);
-    this.state = { error: null };
+    this.state = {error: null};
   }
 
   componentDidCatch (error, errorInfo) {
-    this.setState({ error });
+    this.setState({error});
     Sentry.withScope(scope => {
       const uName = localStorage.getItem('userName');
       if (uName) {
-        scope.setUser({ 'username': localStorage.getItem('userName') });
+        scope.setUser({'username': localStorage.getItem('userName')});
       } else {
-        scope.setUser({ 'ip_address': '' });
+        scope.setUser({'ip_address': ''});
       }
       Object.keys(errorInfo).forEach(key => {
         scope.setExtra(key, errorInfo[key]);

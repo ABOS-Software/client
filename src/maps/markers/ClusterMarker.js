@@ -31,7 +31,7 @@ const styles = theme => ({
 });
 
 class clusterMarker extends React.Component {
-  render() {
+  render () {
     const {
       classes, text,
       defaultMotionStyle, motionStyle
