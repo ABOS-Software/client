@@ -161,7 +161,7 @@ class ProductsGrid extends Component {
       let filter = this.getProductFilter(year, record);
 
       this.setState({customer: record});
-      if (record.order) {
+      if (record.order && record.order.id) {
         this.getProductsForOrder(record, filter);
       } else {
         this.getProducts({}, filter);
