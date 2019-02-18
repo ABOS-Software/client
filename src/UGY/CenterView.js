@@ -23,6 +23,7 @@ import UGYToolbar from './UGYToolbar';
 import {styles} from './Styles';
 import {TabContainer} from './TabContainer';
 import ProductsTab from './ProductsTab';
+import ImportUsersDialog from './Dialogs/ImportUsersDialog';
 
 const dataProvider = restClient;
 
@@ -41,6 +42,7 @@ class CenterView extends React.Component {
     addUsersToUserOpen: false,
     addUserOpen: false,
     importDialogOpen: false,
+    importUsersOpen: false,
     newProducts: [],
     updatedProducts: [],
     deletedProducts: [],
@@ -159,6 +161,9 @@ class CenterView extends React.Component {
     case 'addUser':
       obj.addUserOpen = value;
       break;
+    case 'importUsers':
+      obj.importUsersOpen = value;
+      break;
     case 'editUser':
       obj.editUserOpen = value;
       if (options.editUser) {
@@ -255,6 +260,9 @@ class CenterView extends React.Component {
       <AddUserDialog key={'addUserDialog'}
         closeDialog={this.closeDialog('addUser')}
         open={this.state.addUserOpen}/>,
+      <ImportUsersDialog key={'importUserDialog'}
+        closeImportDialog={this.closeDialog('importUsers')}
+        importDialogOpen={this.state.importUsersOpen}/>,
       <EditUserDialog key={'editUserDialog-' + this.state.editUser.id}
         closeDialog={this.closeDialog('editUser')}
         open={this.state.editUserOpen}

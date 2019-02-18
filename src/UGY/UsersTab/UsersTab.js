@@ -40,6 +40,11 @@ class UsersTab extends React.PureComponent {
 
     this.handleUserAddMenuClose(event);
   };
+  addBulkUserClick = event => {
+    this.props.showDialog('importUsers');
+
+    this.handleUserAddMenuClose(event);
+  };
 
   editUserClick = (uName, id, fName) => () => {
     this.props.showDialog('editUser', {editUser: {id: id, userName: uName, password: '', fullName: fName}});

@@ -105,7 +105,7 @@ const authClient = (client, options = {}) => (type, params) => {
     if (code === 401 || code === 403) {
       localStorage.removeItem(storageKey);
       localStorage.removeItem(permissionsKey);
-      return Promise.reject({ redirectTo });
+      return Promise.reject({redirectTo});
     }
     return Promise.resolve();
 
