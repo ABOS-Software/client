@@ -6,8 +6,11 @@ import Donations from './Donations';
 import GrandTotals from './GrandTotals';
 import NbCustomers from './NbCustomers';
 import OrderedProducts from './OrderedProducts';
-import {GET_LIST} from 'react-admin';
+import {GET_LIST, showNotification} from 'react-admin';
 import restClient from '../grailsRestClient';
+import {push} from 'react-router-redux';
+import {connect} from 'react-redux';
+import {dataProviderCatch} from '../utils';
 
 const dataProvider = restClient;
 
@@ -113,7 +116,7 @@ class Dashboard extends Component {
 
             orderedProductsVal: orderedProducts
           });
-        });
+        }).catch(dataProviderCatch(this.props.push));
     }
 
     getOrder (filter) {
@@ -123,7 +126,8 @@ class Dashboard extends Component {
         pagination: {page: 1, perPage: 1000}
       })
         .then(this.processOrder())
-        .then(this.updateStateWithOrder);
+        .then(this.updateStateWithOrder)
+        .catch(dataProviderCatch(this.props.push));
     }
 
     updateStateWithOrder = (({total, donation, grandTotal, nbCustomers, pendingOrders}) => {
@@ -235,6 +239,11 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  year: PropTypes.number
+  year: PropTypes.number,
+  push: PropTypes.func.isRequired
 };
-export default Dashboard;
+export default connect(null, {
+  push,
+  showNotification
+
+})(Dashboard);

@@ -1,5 +1,6 @@
 import {AUTH_CHECK, AUTH_ERROR, AUTH_GET_PERMISSIONS, AUTH_LOGIN, AUTH_LOGOUT} from 'react-admin';
 import decodeJwt from 'jwt-decode';
+import feathersClient from '../feathersClient';
 
 export const authClientConfig = {
   storageKey: 'token', // The key in localStorage used to store the authentication token
@@ -48,24 +49,23 @@ function login (client, options = {}) {
   });
 }
 
-function getPermissions (permissionsKey, ret, storageKey, permissionsField) {
+function getPermissions (permissionsKey, storageKey, permissionsField) {
   const localStoragePermissions = JSON.parse(localStorage.getItem(permissionsKey));
   if (localStoragePermissions && localStoragePermissions.length !== 0) {
-    ret = Promise.resolve(localStoragePermissions);
+    return Promise.resolve(localStoragePermissions);
   }
   try {
     const jwtToken = localStorage.getItem(storageKey);
     const decodedToken = decodeJwt(jwtToken);
     const jwtPermissions = decodedToken[permissionsField] ? decodedToken[permissionsField] : [];
     localStorage.setItem(permissionsKey, JSON.stringify(jwtPermissions));
-    ret = Promise.resolve(jwtPermissions);
+    return Promise.resolve(jwtPermissions);
   } catch (e) {
-    ret = Promise.reject(new Error('Error getting Permissions'));
+    return Promise.reject(new Error('Error getting Permissions'));
   }
-  return ret;
 }
 
-export default (client, options = {}) => (type, params) => {
+const authClient = (client, options = {}) => (type, params) => {
   const {
     storageKey,
     authenticate,
@@ -83,45 +83,38 @@ export default (client, options = {}) => (type, params) => {
     usernameField: 'email'
   }, options);
 
-  let ret;
-
   switch (type) {
   case AUTH_LOGIN:
     const {username, password} = params;
-    ret = login(client, {storageKey: storageKey,
+    return login(client, {storageKey: storageKey,
       authenticate: authenticate,
       username: username,
       password: password,
       passwordField: passwordField,
       usernameField: usernameField});
-    break;
 
   case AUTH_LOGOUT:
     localStorage.removeItem(permissionsKey);
-    ret = client.logout();
-    break;
+    return client.logout();
 
   case AUTH_CHECK:
-    ret = localStorage.getItem(storageKey) ? Promise.resolve() : Promise.reject(new Error('Not Logged in'));
-    break;
+    return localStorage.getItem(storageKey) ? Promise.resolve() : Promise.reject({redirectTo});
 
   case AUTH_ERROR:
     const {code} = params;
     if (code === 401 || code === 403) {
       localStorage.removeItem(storageKey);
       localStorage.removeItem(permissionsKey);
-      ret = Promise.reject(new Error('Session Expired'));
+      return Promise.reject({ redirectTo });
     }
-    ret = Promise.resolve();
-    break;
+    return Promise.resolve();
 
   case AUTH_GET_PERMISSIONS:
 
-    ret = getPermissions(permissionsKey, ret, storageKey, permissionsField);
-    break;
+    return getPermissions(permissionsKey, storageKey, permissionsField);
 
   default:
-    ret = Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`));
+    return Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`));
   }
-  return ret;
 };
+export default authClient(feathersClient, authClientConfig);
