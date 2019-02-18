@@ -91,7 +91,7 @@ function renderUGY (permissions) {
   return permissions === 'ROLE_ADMIN'
     ? <Resource name='UsersProducts' options={{label: 'Users and Products'}} list={UGY}/>
     // UGY
-    : <Resource name='UsersProducts' options={{label: 'Users and Products'}} list={UGY}/>;
+    : null;
 }
 
 function renderResources () {

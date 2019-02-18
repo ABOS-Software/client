@@ -8,7 +8,7 @@ import update from 'immutability-helper';
 import ProductsToolbar from './ProductsToolBar';
 
 import ProductsContextMenu from './ProductsContextMenu';
-import ImportDialog from './Dialogs/ImportDialog';
+import ImportDialog from './Dialogs/ImportProductsDialog';
 import {styles} from './GridStyles';
 import {createColumns} from './Columns';
 import {exportProducts, loadProducts} from './Utils';

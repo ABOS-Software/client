@@ -15,7 +15,7 @@ const styles = theme => ({
     minHeight: '100vh',
     height: '1px',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start'
   },
   card: {
     minWidth: 300,
