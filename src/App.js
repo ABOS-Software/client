@@ -7,7 +7,7 @@ import {GroupCreate, GroupEdit, GroupList} from './resources/Group.js';
 import {YearCreate, YearEdit, YearList, YearShow} from './resources/Year.js';
 import {CustomerCreate, CustomerEdit, CustomerList} from './resources/Customers.js';
 import restClient from './grailsRestClient';
-import authClient, {authClientConfig} from './security/authProvider';
+import authClient from './security/authProvider';
 import {Dashboard} from './dashboard';
 import {Reports} from './Reports';
 import {UGY} from './UGY';
@@ -19,8 +19,8 @@ import InfoIcon from '@material-ui/icons/Info';
 import {createGenerateClassName, jssPreset} from '@material-ui/core/styles';
 import JssProvider from 'react-jss/lib/JssProvider';
 import {create} from 'jss';
-import feathersClient from './feathersClient';
 import * as Sentry from '@sentry/browser';
+import {Login} from './Login';
 
 const generateClassName = createGenerateClassName();
 const jss = create(jssPreset());
@@ -114,7 +114,7 @@ const App = () => (
     <JssProvider jss={jss} generateClassName={generateClassName}>
 
       <Admin dashboard={Dashboard} dataProvider={dataProvider}
-        authProvider={authClient(feathersClient, authClientConfig)} appLayout={layout} customRoutes={routes}>
+        authProvider={authClient} appLayout={layout} customRoutes={routes} loginPage={Login}>
 
         {renderResources()}
       </Admin>
