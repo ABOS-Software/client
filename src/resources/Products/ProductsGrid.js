@@ -33,8 +33,8 @@ class ProductsGrid extends Component {
       }
       for (let i = fromRow; i <= toRow; i++) {
         let rowToUpdate = rows[i];
-        rowToUpdate.extended_cost = updated.quantity * rowToUpdate.unitCost;
-        rowToUpdate.quantity = updated.quantity;
+        rowToUpdate.extended_cost = Number(updated.quantity * rowToUpdate.unitCost);
+        rowToUpdate.quantity = Number(updated.quantity);
         // let updatedRow = update(rowToUpdate, {$merge: updated});
         rows[i] = rowToUpdate;
       }
@@ -49,8 +49,8 @@ class ProductsGrid extends Component {
 
           id: row.id
         },
-        quantity: row.quantity,
-        extendedCost: row.extended_cost,
+        quantity: Number(row.quantity),
+        extendedCost: Number(row.extended_cost),
         userName: userName
 
       };
@@ -71,17 +71,19 @@ class ProductsGrid extends Component {
 
       rows.forEach(row => {
         let match = this.filterOrderedProductsToCurrentRow(row);
+        let quantNum = Number(row.quantity);
+        let eCostNum = Number(row.extended_cost);
         if (match.length > 0) {
-          match[0].quantity = row.quantity;
-          match[0].extendedCost = row.extended_cost;
-          quantity += row.quantity;
-          cost += row.extended_cost;
+          match[0].quantity = quantNum;
+          match[0].extendedCost = eCostNum;
+          quantity += quantNum;
+          cost += eCostNum;
           newOrderedProducts.push(match[0]);
         } else {
           if (row.quantity > 0) {
             newOrderedProducts.push(this.convertOrderedProduct(row, existing));
-            quantity += row.quantity;
-            cost += row.extended_cost || 0;
+            quantity += quantNum;
+            cost += eCostNum || 0;
           }
         }
       });

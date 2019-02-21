@@ -86,7 +86,7 @@ class MUITextEditorRaw extends React.Component {
     render (): ?ReactElement {
       return (<div height={this.props.height} onKeyDown={this.props.onKeyDown} className={this.props.classes.wrapper}>
         <TextField value={this.props.value} onChange={this.props.onChange}
-          className={this.props.classes.textField}/>
+          className={this.props.classes.textField} onBlur={this.props.onBlur}/>
       </div>);
     }
 }

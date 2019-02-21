@@ -34,6 +34,7 @@ class EditorBase extends React.Component {
     search: PropTypes.string,
     onKeyDown: PropTypes.func,
     onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
     editorDisplayValue: PropTypes.func,
     type: PropTypes.string
   };
@@ -64,13 +65,13 @@ class EditorBase extends React.Component {
     this.setState({value: this.props.value});
   }
 
-  onClick () {
+/*  onClick () {
     this.getInputNode().focus();
   }
 
   onDoubleClick () {
     this.getInputNode().focus();
-  }
+  }*/
   /*
       getLabel = (item: any): string => {
           let label = this.props.label != null ? this.props.label : 'title';
@@ -107,8 +108,8 @@ class EditorBase extends React.Component {
       height: this.props.height,
       onKeyDown: this.props.onKeyDown,
       value: this.state.value,
-      onChange: this.handleChange
-
+      onChange: this.handleChange,
+      onBlur: this.props.onBlur
     };
 
     let editor = <MUITextEditorUnWrapped {...props}/>;

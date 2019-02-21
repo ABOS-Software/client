@@ -1,13 +1,26 @@
 import React, {Component} from 'react';
 import * as PropTypes from 'prop-types';
 import {change} from 'redux-form';
+import Typography from '@material-ui/core/Typography';
 
-import {addField, BooleanInput, FormDataConsumer, ReferenceInput, SelectInput, TextInput} from 'react-admin';
+import {
+  addField,
+  BooleanInput,
+  FormDataConsumer,
+  GET_LIST,
+  Labeled,
+  LinearProgress,
+  ReferenceInput,
+  SelectInput,
+  TextInput
+} from 'react-admin';
 import ProductsGrid from '../Products/ProductsGrid';
 import {withStyles} from '@material-ui/core';
 import {updateAddress} from '../../utils';
 import AddressFields from '../../Reports/AddressFields';
+import restClient from '../../grailsRestClient';
 
+const dataProvider = restClient;
 const styles = {
 
   inlineBlock: {display: 'inline-flex', marginRight: '1rem'},
@@ -43,27 +56,58 @@ const styles = {
 
 };
 
+class YearSelect extends Component {
+  render () {
+    if (this.props.loading) {
+      return (
+        <Labeled
+          label={'Year to add to'}
+          source={'year'}
+          className={this.props.className}
+        >
+          <LinearProgress/>
+        </Labeled>
+      );
+    }
+    return <SelectInput label='Year to add to' optionText='year' source='year' choices={this.props.choices}
+      isLoading={this.props.loading} defaultValue={(this.props.choices[0] || {id: null}).id}/>;
+  }
+}
+
+YearSelect.propTypes = {
+  choices: PropTypes.any,
+  loading: PropTypes.bool
+};
+
 class CustomerForm extends Component {
   constructor (props) {
     super(props);
-    this.state = {address: '', zipCode: '', city: '', state: '', update: 0};
+    this.state = {address: '', zipCode: '', city: '', state: '', update: 0, years: [], loadingYear: true, runningTotal: 0.0};
   }
 
   updateAddress = (address) => {
     let addressObj = updateAddress(address);
     this.setState({...addressObj, update: 1});
   };
-
+  getYears () {
+    dataProvider(GET_LIST, 'Years', {
+      filter: {},
+      sort: {field: 'year', order: 'DESC'},
+      pagination: {page: 1, perPage: 1000}
+    }).then(response => {
+      this.setState({years: response.data, loadingYear: false});
+    });
+  }
   renderCreateOrEditFields () {
     const {classes, ...props} = this.props;
 
     if (!this.props.edit) {
       return (
         <div>
-          <ReferenceInput label='Year to add to' source='year' reference='Years'
-            formClassName={classes.inlineBlock} {...props}>
-            <SelectInput optionText='year'/>
-          </ReferenceInput>
+          {/*          <ReferenceInput label='Year to add to' source='year' reference='Years'
+            formClassName={classes.inlineBlock} {...props} defaultValue={6}> */}
+          <YearSelect choices={this.state.years} loading={this.state.loadingYear}/>
+          {/*          </ReferenceInput> */}
 
           <ReferenceInput label='User to add to' source='user' reference='User'
             formClassName={classes.inlineBlock} {...props}>
@@ -90,8 +134,11 @@ class CustomerForm extends Component {
       <TextInput label='Donation' source='donation' formClassName={classes.inlineBlock}/>
       <TextInput label='Amount Paid' source='order.amountPaid' formClassName={classes.inlineBlock}
         defaultValue={'0.00'}/>
-      <BooleanInput label='Delivered?' source='order.delivered' formClassName={classes.inlineBlock}
-        defaultValue={false}/>
+      <span>
+        <BooleanInput label='Delivered?' source='order.delivered' formClassName={classes.inlineBlock}
+          defaultValue={false} row/>
+        {this.renderRunningTotal()}
+      </span>
       <span/>
       {this.renderCreateOrEditFields()}
       {this.renderPropsGrid(props)}
@@ -115,6 +162,36 @@ class CustomerForm extends Component {
     </FormDataConsumer>);
   }
 
+  renderRunningTotal () {
+    const {classes, ...props} = this.props;
+
+    return <FormDataConsumer {...props}>
+      {({formData, ...rest}) => {
+        if (!formData.order) {
+          formData.order = {
+            cost: '0',
+            delivered: false
+          };
+        }
+        let formatter = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2
+          // the default value for minimumFractionDigits depends on the currency
+          // and is usually already 2
+        });
+
+        return (<Typography
+          variant={'h6'}
+        >
+          Running Total: {formatter.format(formData.order.cost)}
+        </Typography>
+        );
+      }
+      }
+    </FormDataConsumer>;
+  }
+
   renderPropsGrid (props) {
     return <FormDataConsumer {...props}>
       {({formData, ...rest}) => {
@@ -134,6 +211,10 @@ class CustomerForm extends Component {
       }
       }
     </FormDataConsumer>;
+  }
+
+  componentDidMount () {
+    this.getYears();
   }
 }
 
