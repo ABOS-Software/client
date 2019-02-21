@@ -30,8 +30,8 @@ class UGYEditor extends React.PureComponent {
 
     open: true,
 
-    year: 5,
-    yearText: '2018',
+    year: 0,
+    yearText: '',
     years: []
 
   };
@@ -39,10 +39,11 @@ class UGYEditor extends React.PureComponent {
   getYears () {
     dataProvider(GET_LIST, 'Years', {
       filter: {},
-      sort: {field: 'id', order: 'DESC'},
+      sort: {field: 'year', order: 'DESC'},
       pagination: {page: 1, perPage: 1000}
     }).then(response => {
-      this.setState({years: response.data});
+      let year = response.data[0];
+      this.setState({years: response.data, year: year.id, yearText: year.year});
     });
   }
 

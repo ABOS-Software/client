@@ -85,7 +85,7 @@ class MUISelectEditorRaw extends React.Component {
             }
             return ret.join('|');
         }; */
-    renderOptions (): Array<ReactElement> {
+    renderOptions () {
       let options = [];
       // options.push(<MenuItem value={-1}/>);
 
@@ -100,7 +100,7 @@ class MUISelectEditorRaw extends React.Component {
       return options;
     }
 
-    render (): ?ReactElement {
+    render () {
       const {classes} = this.props;
       return (<div onKeyDown={this.props.onKeyDown} className={classes.wrapper}>
         <Select

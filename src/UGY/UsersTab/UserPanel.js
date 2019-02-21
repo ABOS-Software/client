@@ -242,12 +242,7 @@ class UserPanel extends React.Component {
           Edit
           </Button>
         </InputWrapper>
-        <InputWrapper>
 
-          <Button variant='contained' className={classes.deleteButton}>
-          Delete
-          </Button>
-        </InputWrapper>
 
       </div>;
     }
