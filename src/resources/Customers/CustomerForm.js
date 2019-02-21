@@ -2,12 +2,24 @@ import React, {Component} from 'react';
 import * as PropTypes from 'prop-types';
 import {change} from 'redux-form';
 
-import {addField, BooleanInput, FormDataConsumer, ReferenceInput, SelectInput, TextInput} from 'react-admin';
+import {
+  addField,
+  BooleanInput,
+  FormDataConsumer,
+  GET_LIST,
+  Labeled,
+  LinearProgress,
+  ReferenceInput,
+  SelectInput,
+  TextInput
+} from 'react-admin';
 import ProductsGrid from '../Products/ProductsGrid';
 import {withStyles} from '@material-ui/core';
 import {updateAddress} from '../../utils';
 import AddressFields from '../../Reports/AddressFields';
+import restClient from '../../grailsRestClient';
 
+const dataProvider = restClient;
 const styles = {
 
   inlineBlock: {display: 'inline-flex', marginRight: '1rem'},
@@ -43,27 +55,58 @@ const styles = {
 
 };
 
+class YearSelect extends Component {
+  render () {
+    if (this.props.loading) {
+      return (
+        <Labeled
+          label={'Year to add to'}
+          source={'year'}
+          className={this.props.className}
+        >
+          <LinearProgress/>
+        </Labeled>
+      );
+    }
+    return <SelectInput label='Year to add to' optionText='year' source='year' choices={this.props.choices}
+      isLoading={this.props.loading} defaultValue={(this.props.choices[0] || {id: null}).id}/>;
+  }
+}
+
+YearSelect.propTypes = {
+  choices: PropTypes.any,
+  loading: PropTypes.bool
+};
+
 class CustomerForm extends Component {
   constructor (props) {
     super(props);
-    this.state = {address: '', zipCode: '', city: '', state: '', update: 0};
+    this.state = {address: '', zipCode: '', city: '', state: '', update: 0, years: [], loadingYear: true};
   }
 
   updateAddress = (address) => {
     let addressObj = updateAddress(address);
     this.setState({...addressObj, update: 1});
   };
-
+  getYears () {
+    dataProvider(GET_LIST, 'Years', {
+      filter: {},
+      sort: {field: 'year', order: 'DESC'},
+      pagination: {page: 1, perPage: 1000}
+    }).then(response => {
+      this.setState({years: response.data, loadingYear: false});
+    });
+  }
   renderCreateOrEditFields () {
     const {classes, ...props} = this.props;
 
     if (!this.props.edit) {
       return (
         <div>
-          <ReferenceInput label='Year to add to' source='year' reference='Years'
-            formClassName={classes.inlineBlock} {...props}>
-            <SelectInput optionText='year'/>
-          </ReferenceInput>
+          {/*          <ReferenceInput label='Year to add to' source='year' reference='Years'
+            formClassName={classes.inlineBlock} {...props} defaultValue={6}> */}
+          <YearSelect choices={this.state.years} loading={this.state.loadingYear}/>
+          {/*          </ReferenceInput> */}
 
           <ReferenceInput label='User to add to' source='user' reference='User'
             formClassName={classes.inlineBlock} {...props}>
@@ -134,6 +177,10 @@ class CustomerForm extends Component {
       }
       }
     </FormDataConsumer>;
+  }
+
+  componentDidMount () {
+    this.getYears();
   }
 }
 
