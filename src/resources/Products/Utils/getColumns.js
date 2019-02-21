@@ -42,7 +42,7 @@ function getQuantityColumn () {
   return {
     key: 'quantity',
     name: 'Quantity',
-    editable: false,
+    editable: true,
     editor: MUINumberEditor,
     resizable: true
   };

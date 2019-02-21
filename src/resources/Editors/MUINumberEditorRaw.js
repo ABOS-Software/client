@@ -114,7 +114,7 @@ class MUINumberEditorRaw extends React.Component {
       return (<div height={this.props.height} onKeyDown={this.props.onKeyDown} className={this.props.classes.wrapper}>
         <TextField InputProps={{
           inputComponent: NumberFormatCustom
-        }} value={this.props.value} onChange={this.props.onChange} className={this.props.classes.textField}/>
+        }} value={this.props.value} onChange={this.props.onChange} className={this.props.classes.textField} onBlur={this.props.onBlur}/>
       </div>);
     }
 }
