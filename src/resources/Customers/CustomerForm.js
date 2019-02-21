@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import * as PropTypes from 'prop-types';
 import {change} from 'redux-form';
+import Typography from '@material-ui/core/Typography';
 
 import {
   addField,
@@ -81,7 +82,7 @@ YearSelect.propTypes = {
 class CustomerForm extends Component {
   constructor (props) {
     super(props);
-    this.state = {address: '', zipCode: '', city: '', state: '', update: 0, years: [], loadingYear: true};
+    this.state = {address: '', zipCode: '', city: '', state: '', update: 0, years: [], loadingYear: true, runningTotal: 0.0};
   }
 
   updateAddress = (address) => {
@@ -133,8 +134,11 @@ class CustomerForm extends Component {
       <TextInput label='Donation' source='donation' formClassName={classes.inlineBlock}/>
       <TextInput label='Amount Paid' source='order.amountPaid' formClassName={classes.inlineBlock}
         defaultValue={'0.00'}/>
-      <BooleanInput label='Delivered?' source='order.delivered' formClassName={classes.inlineBlock}
-        defaultValue={false}/>
+      <span>
+        <BooleanInput label='Delivered?' source='order.delivered' formClassName={classes.inlineBlock}
+          defaultValue={false} row/>
+        {this.renderRunningTotal()}
+      </span>
       <span/>
       {this.renderCreateOrEditFields()}
       {this.renderPropsGrid(props)}
@@ -156,6 +160,36 @@ class CustomerForm extends Component {
         return (<AddressFields updateAddress={this.updateAddress} value={this.state.address}/>);
       }}
     </FormDataConsumer>);
+  }
+
+  renderRunningTotal () {
+    const {classes, ...props} = this.props;
+
+    return <FormDataConsumer {...props}>
+      {({formData, ...rest}) => {
+        if (!formData.order) {
+          formData.order = {
+            cost: '0',
+            delivered: false
+          };
+        }
+        let formatter = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2
+          // the default value for minimumFractionDigits depends on the currency
+          // and is usually already 2
+        });
+
+        return (<Typography
+          variant={'h6'}
+        >
+          Running Total: {formatter.format(formData.order.cost)}
+        </Typography>
+        );
+      }
+      }
+    </FormDataConsumer>;
   }
 
   renderPropsGrid (props) {
