@@ -28,6 +28,14 @@ const CustomerFilter = (props) => (
     >
       <SelectArrayInput optionText='year' source='year' label='Year'/>
     </ReferenceArrayInput>
+    <ReferenceArrayInput
+      source='user_id'
+      reference='User'
+      sort={{field: 'id', order: 'ASC'}}
+      label='User'
+    >
+      <SelectArrayInput optionText='fullName' source='id' label='User'/>
+    </ReferenceArrayInput>
   </Filter>
 );
 
