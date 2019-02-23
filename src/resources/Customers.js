@@ -17,7 +17,7 @@ import CustomerCreateClass from './Customers/CustomerCreate';
 
 const CustomerFilter = (props) => (
   <Filter {...props}>
-    <TextInput label='Search' source='customerName' alwaysOn/>
+    <TextInput label='Search' source='customer_name' alwaysOn/>
     <ReferenceArrayInput
       source='year'
       reference='Years'

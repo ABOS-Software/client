@@ -30,7 +30,7 @@ class MUISelectEditorRaw extends React.Component {
       value: PropTypes.any,
 
       onKeyDown: PropTypes.func,
-      options: PropTypes.arrayOf(PropTypes.oneOfType(PropTypes.string, PropTypes.object))
+      options: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object]))
     };
 
     static defaultProps = {
