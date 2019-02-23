@@ -4,11 +4,6 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {withStyles} from '@material-ui/core/styles';
 
-let optionPropType = PropTypes.shape({
-  id: PropTypes.required,
-  title: PropTypes.string
-});
-
 const styles = theme => ({
   textField: {
     border: '0 !important',
@@ -38,14 +33,6 @@ class MUITextEditorRaw extends React.Component {
 
     handleChange = () => {
       this.props.onCommit();
-    };
-
-    getValue = () => {
-      let updated = {};
-
-      updated[this.props.column.key] = 'Test';
-
-      return updated;
     };
 
     getInputNode = () => {
@@ -83,12 +70,15 @@ class MUITextEditorRaw extends React.Component {
             return ret.join('|');
         }; */
 
-    render (): ?ReactElement {
+    render () {
       return (<div height={this.props.height} onKeyDown={this.props.onKeyDown} className={this.props.classes.wrapper}>
         <TextField value={this.props.value} onChange={this.props.onChange}
           className={this.props.classes.textField} onBlur={this.props.onBlur}/>
       </div>);
     }
 }
-
+MUITextEditorRaw.propTypes = {
+  onCommit: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired
+};
 export default (withStyles(styles, {withTheme: true})(MUITextEditorRaw));

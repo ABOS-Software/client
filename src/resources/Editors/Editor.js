@@ -7,14 +7,8 @@ import MUICurrencyEditorRaw from './MUICurrencyEditorRaw';
 import MUISelectEditorRaw from './MUISelectEditorUnWrapped';
 
 let optionPropType = PropTypes.shape({
-  id: PropTypes.required,
+  id: PropTypes.isRequired,
   title: PropTypes.string
-});
-
-const styles = theme => ({
-  textField: {
-    border: '0 !important'
-  }
 });
 
 class EditorBase extends React.Component {
@@ -65,13 +59,13 @@ class EditorBase extends React.Component {
     this.setState({value: this.props.value});
   }
 
-/*  onClick () {
+  /*  onClick () {
     this.getInputNode().focus();
   }
 
   onDoubleClick () {
     this.getInputNode().focus();
-  }*/
+  } */
   /*
       getLabel = (item: any): string => {
           let label = this.props.label != null ? this.props.label : 'title';
@@ -112,17 +106,19 @@ class EditorBase extends React.Component {
       onBlur: this.props.onBlur
     };
 
-    let editor = <MUITextEditorUnWrapped {...props}/>;
+    let editor;
     switch (this.props.type) {
-    case 'Number':
-      editor = <MUINumberEditorRaw {...props}/>;
-      break;
-    case 'Currency':
-      editor = <MUICurrencyEditorRaw {...props}/>;
-      break;
-    case 'Select':
-      editor = <MUISelectEditorRaw {...props} options={this.props.options}/>;
-      break;
+      case 'Number':
+        editor = <MUINumberEditorRaw {...props}/>;
+        break;
+      case 'Currency':
+        editor = <MUICurrencyEditorRaw {...props}/>;
+        break;
+      case 'Select':
+        editor = <MUISelectEditorRaw {...props} options={this.props.options}/>;
+        break;
+      default:
+        editor = <MUITextEditorUnWrapped {...props}/>;
     }
     return editor;
     /*      <MUITextEditorUnWrapped height={this.props.height} onKeyDown={this.props.onKeyDown} value={this.state.value}

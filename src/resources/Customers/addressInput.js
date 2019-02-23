@@ -40,6 +40,7 @@ class AddressInput extends React.Component {
       };
 
       new window.google.maps.places.PlacesService(document.createElement('div')).getDetails(request, (place, status) => {
+        // eslint-disable-next-line eqeqeq
         if (status == window.google.maps.places.PlacesServiceStatus.OK) {
           this.props.updateAddress(place);
         } else {
@@ -141,7 +142,7 @@ class AddressInput extends React.Component {
     renderFooter (classes) {
       return <div className={classes.dropDownFooter}>
         <div>
-          <img
+          <img alt={'Powered by Google'}
             src={process.env.PUBLIC_URL + '/powered_by_google_on_white_hdpi.png'}
             className={classes.dropDownFooterImage}
           />

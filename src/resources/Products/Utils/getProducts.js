@@ -26,7 +26,7 @@ export const getProducts = (order, filter, save) => {
 const processProductResponse = (orderResponse) => response =>
   response.data.reduce((stats, product) => {
     let match = orderResponse.orderedProducts.filter(orderObj => {
-      return orderObj.products.id == product.id;
+      return Number(orderObj.products.id) === Number(product.id);
     });
     if (match.length > 0) {
       stats = pushOrderedProductToList(stats, product, match);

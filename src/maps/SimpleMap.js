@@ -163,12 +163,14 @@ class SimpleMap extends Component {
 
     componentDidUpdate (prevProps, prevState) {
       if (this.state.mapProps !== prevState.mapProps || this.state.markers !== prevState.markers) {
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({
           clusters: this.calculateClusters()
         }
         );
       }
       if (this.state.clusters !== prevState.clusters && this.state.hoveredMarkerId !== prevState.hoveredMarkerId) {
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({
           clusters: this.updateHoveredCluster()
         }

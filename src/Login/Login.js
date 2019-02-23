@@ -142,7 +142,8 @@ Login.propTypes = {
   input: PropTypes.object,
   loginForm: PropTypes.element,
   meta: PropTypes.object,
-  previousRoute: PropTypes.string
+  previousRoute: PropTypes.string,
+  theme: PropTypes.any
 };
 
 Login.defaultProps = {

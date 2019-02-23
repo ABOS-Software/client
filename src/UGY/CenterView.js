@@ -8,7 +8,6 @@ import {connect} from 'react-redux';
 import {CREATE, GET_LIST} from 'react-admin';
 import Paper from '@material-ui/core/Paper';
 import restClient from '../grailsRestClient';
-import hostURL from '../host';
 import feathersClient from '../feathersClient';
 import {authClientConfig} from '../security/authProvider';
 import UsersTab from './UsersTab/UsersTab';
@@ -58,7 +57,6 @@ class CenterView extends React.Component {
   save = event => {
     console.log(this.state.userChecks);
     let options = {};
-    let url = hostURL + '/UserHierarchy';
     if (!options.headers) {
       options.headers = new Headers({Accept: 'application/json'});
     }
@@ -94,6 +92,7 @@ class CenterView extends React.Component {
     }
   };
   confirmPassword = event => {
+    // eslint-disable-next-line eqeqeq
     if (event.currentTarget.value == 2) {
       const username = localStorage.getItem('userName');
       const password = this.state.confirmDeletionPassword;
@@ -152,26 +151,28 @@ class CenterView extends React.Component {
   modifyDialog = (dialog, options, value) => {
     let obj = {};
     switch (dialog) {
-    case 'addUsersToGroup':
-      obj.addUsersToGroupOpen = value;
-      break;
-    case 'addUsersToUser':
-      obj.addUsersToUserOpen = value;
-      break;
-    case 'addUser':
-      obj.addUserOpen = value;
-      break;
-    case 'importUsers':
-      obj.importUsersOpen = value;
-      break;
-    case 'editUser':
-      obj.editUserOpen = value;
-      if (options.editUser) {
-        obj.editUser = options.editUser;
-      } else {
-        obj.editUser = {id: -1, userName: '', password: '', fullName: ''};
-      }
-      break;
+      case 'addUsersToGroup':
+        obj.addUsersToGroupOpen = value;
+        break;
+      case 'addUsersToUser':
+        obj.addUsersToUserOpen = value;
+        break;
+      case 'addUser':
+        obj.addUserOpen = value;
+        break;
+      case 'importUsers':
+        obj.importUsersOpen = value;
+        break;
+      case 'editUser':
+        obj.editUserOpen = value;
+        if (options.editUser) {
+          obj.editUser = options.editUser;
+        } else {
+          obj.editUser = {id: -1, userName: '', password: '', fullName: ''};
+        }
+        break;
+      default:
+        throw Error('Invalid Dialog');
     }
     this.setState(obj);
   };
@@ -200,7 +201,6 @@ class CenterView extends React.Component {
   renderMainView () {
     const {classes} = this.props;
 
-    const {anchor, yearNavOpen} = this.state;
     return <main className={classes.fullHeightWidth}>
       <div className={classes.toolbar}/>
       <Paper className={classes.fullHeightWidth}>
@@ -296,9 +296,10 @@ class CenterView extends React.Component {
   }
 }
 
-CenterView.PropTypes = {
+CenterView.propTypes = {
   year: PropTypes.any,
-  yearText: PropTypes.any
+  yearText: PropTypes.any,
+  push: PropTypes.func
 };
 
 export default connect(null, {

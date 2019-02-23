@@ -1,10 +1,8 @@
 import React from 'react';
 import {
   BooleanField,
-  classes,
   Datagrid,
   EditButton,
-  Field,
   Filter,
   List,
   NumberField,

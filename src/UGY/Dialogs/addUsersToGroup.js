@@ -69,7 +69,7 @@ class AddUsersToGroupDialog extends React.Component {
   }
 }
 
-AddUsersToGroupDialog.PropTypes = {
+AddUsersToGroupDialog.propTypes = {
   closeDialog: PropTypes.func.isRequired,
   updateUserChecks: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,

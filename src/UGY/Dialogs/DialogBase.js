@@ -39,7 +39,6 @@ class DialogBase extends React.Component {
   };
 
   render () {
-    const {classes} = this.props;
     return (<Dialog
       open={this.props.open}
       onClose={() => this.props.closeDialog()}
@@ -58,7 +57,7 @@ class DialogBase extends React.Component {
   }
 }
 
-DialogBase.PropTypes = {
+DialogBase.propTypes = {
   open: PropTypes.bool,
   title: PropTypes.string,
   subText: PropTypes.string,

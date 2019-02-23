@@ -127,12 +127,12 @@ class ImportProductsDialog extends React.Component {
 }
 
 ImportProductsDialog.propTypes = {
-  closeImportDialog: PropTypes.func.required,
-  importDialogOpen: PropTypes.bool.required,
-  importNumber: PropTypes.number.required,
-  categories: PropTypes.array.required,
-  year: PropTypes.number.required,
-  addProducts: PropTypes.func.required
+  closeImportDialog: PropTypes.func.isRequired,
+  importDialogOpen: PropTypes.bool.isRequired,
+  importNumber: PropTypes.number.isRequired,
+  categories: PropTypes.array.isRequired,
+  year: PropTypes.number.isRequired,
+  addProducts: PropTypes.func.isRequired
 };
 
 export default connect(null, {

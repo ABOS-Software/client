@@ -50,8 +50,8 @@ class ImportUsersDialog extends React.Component {
 }
 
 ImportUsersDialog.propTypes = {
-  closeImportDialog: PropTypes.func.required,
-  importDialogOpen: PropTypes.bool.required
+  closeImportDialog: PropTypes.func.isRequired,
+  importDialogOpen: PropTypes.bool.isRequired
 };
 
 export default connect(null, {

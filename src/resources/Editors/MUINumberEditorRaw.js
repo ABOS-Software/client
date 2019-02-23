@@ -5,11 +5,6 @@ import ReactDOM from 'react-dom';
 import {withStyles} from '@material-ui/core/styles';
 import NumberFormat from 'react-number-format';
 
-let optionPropType = PropTypes.shape({
-  id: PropTypes.required,
-  title: PropTypes.string
-});
-
 const styles = theme => ({
   textField: {
     border: '0 !important',
@@ -67,14 +62,6 @@ class MUINumberEditorRaw extends React.Component {
       this.props.onCommit();
     };
 
-    getValue = () => {
-      let updated = {};
-
-      updated[this.props.column.key] = 'Test';
-
-      return updated;
-    };
-
     getInputNode = () => {
       return ReactDOM.findDOMNode(this).getElementsByTagName('input')[0];
     };
@@ -110,7 +97,7 @@ class MUINumberEditorRaw extends React.Component {
             return ret.join('|');
         }; */
 
-    render (): ?ReactElement {
+    render () {
       return (<div height={this.props.height} onKeyDown={this.props.onKeyDown} className={this.props.classes.wrapper}>
         <TextField InputProps={{
           inputComponent: NumberFormatCustom
@@ -118,5 +105,9 @@ class MUINumberEditorRaw extends React.Component {
       </div>);
     }
 }
+MUINumberEditorRaw.propTypes = {
+  onCommit: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired
+};
 
 export default (withStyles(styles, {withTheme: true})(MUINumberEditorRaw));

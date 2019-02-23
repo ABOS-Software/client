@@ -80,7 +80,7 @@ class confirmDeletion extends React.Component {
   }
 }
 
-confirmDeletion.PropTypes = {
+confirmDeletion.propTypes = {
   closeDialog: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   confirmPassword: PropTypes.func.isRequired

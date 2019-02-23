@@ -125,7 +125,7 @@ class UGYEditor extends React.PureComponent {
     }
 
     renderLargeDrawer (drawer) {
-      const {classes, theme} = this.props;
+      const {classes} = this.props;
 
       return <Hidden mdUp>
 

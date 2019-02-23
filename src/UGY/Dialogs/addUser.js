@@ -18,7 +18,7 @@ class addUser extends React.Component {
   }
 }
 
-addUser.PropTypes = {
+addUser.propTypes = {
   closeDialog: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired
 
