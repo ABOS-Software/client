@@ -129,7 +129,7 @@ class UserPanel extends React.Component {
                 {groupState[group.groupName].open ? <ExpandLess/> : <ExpandMore/>}
 
               </UserListItem>,
-              <Collapse key={currentUser + '-sub-' + group.groupName + '-collapse' + '-' + group.year.id}
+              <Collapse key={currentUser + '-sub-' + group.groupName + '-collapse-' + group.year.id}
                 in={groupState[group.groupName].open} timeout='auto' unmountOnExit
                 className={classes.nested}>
                 <List component='div' disablePadding>
@@ -165,6 +165,7 @@ class UserPanel extends React.Component {
     // Typical usage (don't forget to compare props):
       if (this.props.groups !== prevProps.groups) {
         let groupsList = this.deriveGroups();
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({checked: this.props.checked, groups: groupsList});
       }
     }
@@ -242,7 +243,6 @@ class UserPanel extends React.Component {
           Edit
           </Button>
         </InputWrapper>
-
 
       </div>;
     }

@@ -80,7 +80,8 @@ const LoginForm = ({classes, isLoading, handleSubmit, translate}) => (
 LoginForm.propTypes = {
   ...propTypes,
   classes: PropTypes.object,
-  redirectTo: PropTypes.string
+  redirectTo: PropTypes.string // eslint-disable-line react/no-unused-prop-types
+
 };
 
 const mapStateToProps = state => ({isLoading: state.admin.loading > 0});

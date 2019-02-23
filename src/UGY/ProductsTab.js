@@ -138,7 +138,7 @@ class ProductsTab extends React.Component {
   }
 }
 
-ProductsTab.PropTypes = {
+ProductsTab.propTypes = {
   year: PropTypes.any,
   yearText: PropTypes.any,
   updateProducts: PropTypes.func

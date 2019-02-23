@@ -10,8 +10,6 @@ import PropTypes from 'prop-types';
 import MenuItem from '@material-ui/core/MenuItem';
 import DialogBase from './DialogBase';
 
-const drawerWidth = 240;
-
 const styles = theme => ({
 
 });
@@ -69,7 +67,7 @@ class addUsersToUser extends React.Component {
   }
 }
 
-addUsersToUser.PropTypes = {
+addUsersToUser.propTypes = {
   closeDialog: PropTypes.func.isRequired,
   updateUserChecks: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,

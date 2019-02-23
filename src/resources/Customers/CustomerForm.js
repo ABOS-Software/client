@@ -63,7 +63,6 @@ class YearSelect extends Component {
         <Labeled
           label={'Year to add to'}
           source={'year'}
-          className={this.props.className}
         >
           <LinearProgress/>
         </Labeled>

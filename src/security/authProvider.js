@@ -84,37 +84,39 @@ const authClient = (client, options = {}) => (type, params) => {
   }, options);
 
   switch (type) {
-  case AUTH_LOGIN:
-    const {username, password} = params;
-    return login(client, {storageKey: storageKey,
-      authenticate: authenticate,
-      username: username,
-      password: password,
-      passwordField: passwordField,
-      usernameField: usernameField});
+    case AUTH_LOGIN:
+      const {username, password} = params;
+      return login(client, {storageKey: storageKey,
+        authenticate: authenticate,
+        username: username,
+        password: password,
+        passwordField: passwordField,
+        usernameField: usernameField});
 
-  case AUTH_LOGOUT:
-    localStorage.removeItem(permissionsKey);
-    return client.logout();
-
-  case AUTH_CHECK:
-    return localStorage.getItem(storageKey) ? Promise.resolve() : Promise.reject({redirectTo});
-
-  case AUTH_ERROR:
-    const {code} = params;
-    if (code === 401 || code === 403) {
-      localStorage.removeItem(storageKey);
+    case AUTH_LOGOUT:
       localStorage.removeItem(permissionsKey);
-      return Promise.reject({redirectTo});
-    }
-    return Promise.resolve();
+      return client.logout();
 
-  case AUTH_GET_PERMISSIONS:
+    case AUTH_CHECK:
+      // eslint-disable-next-line prefer-promise-reject-errors
+      return localStorage.getItem(storageKey) ? Promise.resolve() : Promise.reject({redirectTo});
 
-    return getPermissions(permissionsKey, storageKey, permissionsField);
+    case AUTH_ERROR:
+      const {code} = params;
+      if (code === 401 || code === 403) {
+        localStorage.removeItem(storageKey);
+        localStorage.removeItem(permissionsKey);
+        // eslint-disable-next-line prefer-promise-reject-errors
+        return Promise.reject({redirectTo});
+      }
+      return Promise.resolve();
 
-  default:
-    return Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`));
+    case AUTH_GET_PERMISSIONS:
+
+      return getPermissions(permissionsKey, storageKey, permissionsField);
+
+    default:
+      return Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`));
   }
 };
 export default authClient(feathersClient, authClientConfig);

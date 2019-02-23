@@ -33,10 +33,6 @@ export const CategoryList = (props) => (
   </List>
 );
 
-const CategoryTitle = ({record}) => {
-  return <span>Category {record ? `"${record.name}"` : ''}</span>;
-};
-
 export const CategoryEdit = props => (
   <Edit {...props}>
     <SimpleForm>

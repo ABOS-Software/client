@@ -9,7 +9,7 @@ export const updateDimensions = () => {
 
   let wrapperDiv = d.getElementById('dataGridWrapper');
 
-  let width = w.innerWidth || documentElement.clientWidth || body.clientWidth;
+  // let width = w.innerWidth || documentElement.clientWidth || body.clientWidth;
 
   let height = w.innerHeight || documentElement.clientHeight || body.clientHeight;
   wrapperDiv.height = height + 'px';

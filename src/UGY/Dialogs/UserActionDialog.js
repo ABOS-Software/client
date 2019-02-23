@@ -126,7 +126,7 @@ class UserActionDialog extends React.Component {
   }
 }
 
-UserActionDialog.PropTypes = {
+UserActionDialog.propTypes = {
   closeDialog: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   id: PropTypes.number,

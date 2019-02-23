@@ -1,29 +1,33 @@
 export const updateReportType = (ReportType) => {
-  let response = {
-    reportType: '',
-    yearReq: false,
-    userReq: false,
-    custReq: false,
-    catReq: false,
-    dueReq: false
-  };
+  let response;
   switch (ReportType) {
-  case 'customers_split':
-    response = updateReportSplit(ReportType);
+    case 'customers_split':
+      response = updateReportSplit(ReportType);
 
-    break;
-  case 'Year Totals':
-    response = updateReportYear(ReportType);
+      break;
+    case 'Year Totals':
+      response = updateReportYear(ReportType);
 
-    break;
-  case 'Customer Year Totals':
-    response = updateReportCustomerYear(ReportType);
+      break;
+    case 'Customer Year Totals':
+      response = updateReportCustomerYear(ReportType);
 
-    break;
-  case 'Customer All-Time Totals':
-    response = updateReportCustomerHistorical(ReportType);
+      break;
+    case 'Customer All-Time Totals':
+      response = updateReportCustomerHistorical(ReportType);
 
-    break;
+      break;
+
+    default:
+      response = {
+        reportType: '',
+        yearReq: false,
+        userReq: false,
+        custReq: false,
+        catReq: false,
+        dueReq: false
+      };
+      break;
   }
   return response;
   // this.updateChoices();

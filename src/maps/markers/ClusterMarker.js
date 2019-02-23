@@ -1,7 +1,6 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core/styles';
 
-// import { Motion, spring } from 'react-motion';
 const styles = theme => ({
   marker: {
     position: 'absolute',
@@ -32,10 +31,7 @@ const styles = theme => ({
 
 class clusterMarker extends React.Component {
   render () {
-    const {
-      classes, text,
-      defaultMotionStyle, motionStyle
-    } = this.props;
+    const {classes} = this.props;
 
     return (
       <div>
@@ -55,17 +51,4 @@ clusterMarker.defaultProps = {
   text: '0'
 
 };
-
-/* export const clusterMarkerHOC = compose(
-    defaultProps({
-        text: '0',
-
-        }
-        ),
-    // pure optimization can cause some effects you don't want,
-    // don't use it in development for markers
-    pure,
-
-); */
-
 export default withStyles(styles)(clusterMarker);

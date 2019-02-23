@@ -27,7 +27,6 @@ class HorizontalLinearStepper extends React.Component {
   handleNext = () => {
     const {activeStep} = this.state;
     let {skipped} = this.state;
-    const {steps, save} = this.props;
     /* if (activeStep === steps.length - 1) {
           save();
       } */
@@ -82,7 +81,7 @@ class HorizontalLinearStepper extends React.Component {
   }
 
   render () {
-    const {classes, handleSubmit, save, formName} = this.props;
+    const {classes, save, formName} = this.props;
     const steps = this.getSteps();
     const {activeStep} = this.state;
 
@@ -204,7 +203,8 @@ HorizontalLinearStepper.propTypes = {
   classes: PropTypes.object,
   steps: PropTypes.arrayOf(PropTypes.string),
   stepContents: PropTypes.arrayOf(PropTypes.node),
-  save: PropTypes.func
+  save: PropTypes.func,
+  formName: PropTypes.string
 };
 const HorizontalLinearStepperRaw = compose(
   withStyles(styles)

@@ -240,7 +240,8 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   year: PropTypes.number,
-  push: PropTypes.func.isRequired
+  push: PropTypes.func.isRequired,
+  userId: PropTypes.number
 };
 export default connect(null, {
   push,

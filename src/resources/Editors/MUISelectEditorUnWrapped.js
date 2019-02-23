@@ -3,11 +3,6 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 
-let optionPropType = PropTypes.shape({
-  id: PropTypes.required,
-  title: PropTypes.string
-});
-
 const styles = theme => ({
   select: {
     border: '0 !important',
@@ -33,10 +28,9 @@ class MUISelectEditorRaw extends React.Component {
       onChange: PropTypes.func,
 
       value: PropTypes.any,
-      height: PropTypes.number,
 
-      onKeyDown: PropTypes.func
-
+      onKeyDown: PropTypes.func,
+      options: PropTypes.arrayOf(PropTypes.oneOfType(PropTypes.string, PropTypes.object))
     };
 
     static defaultProps = {
@@ -55,39 +49,8 @@ class MUISelectEditorRaw extends React.Component {
       this.setState({open: true});
     };
 
-    /*
-        getLabel = (item: any): string => {
-            let label = this.props.label != null ? this.props.label : 'title';
-            if (typeof label === 'function') {
-                return label(item);
-            } else if (typeof label === 'string') {
-                return item[label];
-            }
-        };
-
-        hasResults = (): boolean => {
-            return this.autoComplete.state.results.length > 0;
-        };
-
-        isFocusedOnSuggestion = (): boolean => {
-            let autoComplete = this.autoComplete;
-            return autoComplete.state.focusedValue != null;
-        };
-
-        constuctValueFromParams = (obj: any, props: ?Array<string>) => {
-            if (!props) {
-                return '';
-            }
-
-            let ret = [];
-            for (let i = 0, ii = props.length; i < ii; i++) {
-                ret.push(obj[props[i]]);
-            }
-            return ret.join('|');
-        }; */
     renderOptions () {
       let options = [];
-      // options.push(<MenuItem value={-1}/>);
 
       this.props.options.forEach(function (name) {
         if (typeof (name) === 'string') {

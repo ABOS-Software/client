@@ -111,8 +111,8 @@ class ImportDialogBase extends React.Component {
 }
 
 ImportDialogBase.propTypes = {
-  closeImportDialog: PropTypes.func.required,
-  importDialogOpen: PropTypes.bool.required,
+  closeImportDialog: PropTypes.func.isRequired,
+  importDialogOpen: PropTypes.bool.isRequired,
   convertXML: PropTypes.func.isRequired,
   convertCSV: PropTypes.func.isRequired
 };

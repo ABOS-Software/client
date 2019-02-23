@@ -31,7 +31,6 @@ class ProductsGrid extends Component {
 
     constructor (props) {
       super(props);
-      this.perPageInitial = this.props.perPage;
       this.loading = false;
     // this.createColumns();
     }

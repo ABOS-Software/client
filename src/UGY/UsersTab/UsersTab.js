@@ -17,8 +17,6 @@ import UserPanel from './UserPanel';
 import UserGroupPanel from './userGroupPanel';
 import {BulkMenu} from './BulkMenu';
 
-const drawerWidth = 240;
-
 const styles = theme => ({
   inline: {
     display: 'inline-flex'

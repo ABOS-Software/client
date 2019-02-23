@@ -16,7 +16,7 @@ class EditUser extends React.Component {
   }
 }
 
-EditUser.PropTypes = {
+EditUser.propTypes = {
   closeDialog: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   id: PropTypes.number.isRequired,
