@@ -101,7 +101,7 @@ function renderResources () {
     <Resource name='Maps' list={Maps}/>,
     // Reports
     // <Resource name="customers"/>,
-    <Resource name='User' list={UserList} show={UserShow}/>,
+    <Resource name='user' list={UserList} show={UserShow}/>,
     renderCategories(permissions),
     renderYears(permissions),
     renderGroups(permissions),

@@ -6,7 +6,7 @@ import Donations from './Donations';
 import GrandTotals from './GrandTotals';
 import NbCustomers from './NbCustomers';
 import OrderedProducts from './OrderedProducts';
-import {GET_LIST, showNotification} from 'react-admin';
+import {GET_LIST} from 'react-admin';
 import restClient from '../grailsRestClient';
 import {push} from 'react-router-redux';
 import {connect} from 'react-redux';
@@ -244,7 +244,6 @@ Dashboard.propTypes = {
   userId: PropTypes.number
 };
 export default connect(null, {
-  push,
-  showNotification
+  push
 
 })(Dashboard);
