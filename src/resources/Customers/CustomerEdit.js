@@ -10,8 +10,8 @@ class CustomerEdit extends React.Component {
     return (
       <Edit {...props}>
 
-        <SimpleForm>
-          <CustomerForm edit/>
+        <SimpleForm submitOnEnter={false}>
+          <CustomerForm edit />
 
         </SimpleForm>
       </Edit>

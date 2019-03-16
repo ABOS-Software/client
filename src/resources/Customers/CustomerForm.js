@@ -19,6 +19,7 @@ import {withStyles} from '@material-ui/core';
 import {updateAddress} from '../../utils';
 import AddressFields from '../../Reports/AddressFields';
 import restClient from '../../grailsRestClient';
+import CustomerNameAutocomplete from './CustomerNameAutocomplete';
 
 const dataProvider = restClient;
 const styles = {
@@ -123,6 +124,7 @@ class CustomerForm extends Component {
 
     return (<span>
       <TextInput label='Customer Name' source='customerName' formClassName={classes.inlineBlock}/>
+      <CustomerNameAutocomplete label='Customer Name' source='customerName' formClassName={classes.inlineBlock}/>
       <TextInput source='phone' formClassName={classes.inlineBlock}/>
       <TextInput source='custEmail' formClassName={classes.inlineBlock}/>
       <span/>
