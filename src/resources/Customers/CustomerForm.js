@@ -108,7 +108,7 @@ class CustomerForm extends Component {
           <YearSelect choices={this.state.years} loading={this.state.loadingYear}/>
           {/*          </ReferenceInput> */}
 
-          <ReferenceInput label='User to add to' source='user' reference='User'
+          <ReferenceInput label='User to add to' source='user' reference='user'
             formClassName={classes.inlineBlock} {...props}>
             <SelectInput optionText='fullName' optionValue='id'/>
           </ReferenceInput>
