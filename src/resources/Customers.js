@@ -28,7 +28,7 @@ const CustomerFilter = (props) => (
     </ReferenceArrayInput>
     <ReferenceArrayInput
       source='user_id'
-      reference='User'
+      reference='user'
       sort={{field: 'id', order: 'ASC'}}
       label='User'
     >

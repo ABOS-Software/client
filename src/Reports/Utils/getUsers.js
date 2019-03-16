@@ -2,7 +2,7 @@ import dataProvider from '../../grailsRestClient';
 import {GET_LIST} from 'react-admin';
 
 export const getUsers = () => {
-  return dataProvider(GET_LIST, 'User', {
+  return dataProvider(GET_LIST, 'user', {
     filter: {},
     sort: {field: 'id', order: 'DESC'},
     pagination: {page: 1, perPage: 1000}

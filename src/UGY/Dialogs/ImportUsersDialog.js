@@ -23,7 +23,7 @@ class ImportUsersDialog extends React.Component {
           full_name: user.fullName,
           password: user.password
         };
-        dataProvider(CREATE, 'User', {
+        dataProvider(CREATE, 'user', {
           data: data
         });
       });
