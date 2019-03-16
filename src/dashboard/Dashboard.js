@@ -161,11 +161,15 @@ class Dashboard extends Component {
         response.data
           .reduce(
             (stats, order) => {
-              stats.total += order.cost;
-              stats.nbCustomers++;
-              stats.donation += order.customer.donation;
-              stats.grandTotal += order.cost + order.customer.donation;
-              stats.pendingOrders.push(order);
+              if (order && order.customer) {
+                const numDonation = Number(order.customer.donation);
+                const numcost = Number(order.cost);
+                stats.total += numcost;
+                stats.nbCustomers++;
+                stats.donation += numDonation;
+                stats.grandTotal += numcost + numDonation;
+                stats.pendingOrders.push(order);
+              }
 
               return stats;
             },
