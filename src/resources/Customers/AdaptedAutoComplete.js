@@ -344,25 +344,11 @@ export class AdaptedAutoComplete extends React.Component {
   };
 
   handleBlur = () => {
-    const {dirty, searchText, selectedItem} = this.state;
-    const {allowEmpty, input} = this.props;
-    if (dirty) {
-      if (searchText === '' && allowEmpty) {
-        input && input.onBlur && input.onBlur(null);
-      } else {
-        input && input.onBlur && input.onBlur(this.state.inputValue);
-        this.setState({
-          dirty: false,
-          searchText: this.getSuggestionText(selectedItem),
-          suggestions:
-            this.props.limitChoicesToValue && selectedItem
-              ? [selectedItem]
-              : this.props.choices
-        });
-      }
-    } else {
-      input && input.onBlur && input.onBlur(this.state.inputValue);
-    }
+    const {searchText} = this.state;
+    const {input} = this.props;
+    this.setState({inputValue: searchText});
+    input && input.onBlur && input.onBlur(searchText);
+    input.onChange(searchText);
   };
 
   handleFocus = () => {
