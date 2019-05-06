@@ -76,6 +76,10 @@ export class AdaptedAutoComplete extends React.Component {
     const {choices, input, limitChoicesToValue} = nextProps;
     if (input.value !== this.state.inputValue) {
       const selectedItem = this.getSelectedItem(nextProps, input.value);
+      let newChoices = this.props.choices;
+      if (this.props.choices.length === 0) {
+        newChoices = {isAddNew: true};
+      }
       this.setState({
         selectedItem,
         inputValue: input.value,
@@ -84,7 +88,7 @@ export class AdaptedAutoComplete extends React.Component {
         suggestions:
           limitChoicesToValue && selectedItem
             ? [selectedItem]
-            : this.props.choices,
+            : newChoices,
         prevSuggestions: false
       });
       // Avoid displaying the suggestions again when one just has been selected
@@ -100,6 +104,10 @@ export class AdaptedAutoComplete extends React.Component {
         nextProps,
         this.state.inputValue
       );
+      let newChoices = choices;
+      if (choices.length === 0) {
+        newChoices = {isAddNew: true};
+      }
       this.setState(({dirty, searchText}) => ({
         selectedItem,
         searchText: dirty
@@ -108,7 +116,7 @@ export class AdaptedAutoComplete extends React.Component {
         suggestions:
           limitChoicesToValue && !dirty && selectedItem
             ? [selectedItem]
-            : choices,
+            : newChoices,
         prevSuggestions: false
       }));
     }
@@ -121,11 +129,18 @@ export class AdaptedAutoComplete extends React.Component {
       )
       : null;
 
-  getSuggestionValue = suggestion => get(suggestion, this.props.optionValue);
+  getSuggestionValue = suggestion => {
+    if (suggestion.isAddNew) {
+      return this.state.inputValue;
+    }
+    return get(suggestion, this.props.optionValue);
+  };
 
   getSuggestionText = suggestion => {
     if (!suggestion) return '';
-
+    if (suggestion.isAddNew) {
+      return this.state.inputValue;
+    }
     const {optionText, translate, translateChoice} = this.props;
     const suggestionLabel =
       typeof optionText === 'function'
@@ -305,6 +320,9 @@ export class AdaptedAutoComplete extends React.Component {
   }) => <div {...props}/>;
 
   renderSuggestion = (suggestion, {query, isHighlighted}) => {
+    if (suggestion.isAddNew) {
+      return null;
+    }
     const label = this.getSuggestionText(suggestion);
     const matches = match(label, query);
     const parts = parse(label, matches);
@@ -344,25 +362,42 @@ export class AdaptedAutoComplete extends React.Component {
   };
 
   handleBlur = () => {
-    const {dirty, searchText, selectedItem} = this.state;
+   /* const {dirty, searchText, selectedItem} = this.state;
     const {allowEmpty, input} = this.props;
     if (dirty) {
       if (searchText === '' && allowEmpty) {
         input && input.onBlur && input.onBlur(null);
       } else {
         input && input.onBlur && input.onBlur(this.state.inputValue);
+        let newSelectedItem = selectedItem;
+        if (selectedItem === null) {
+          newSelectedItem = {isAddNew: true};
+        }
         this.setState({
           dirty: false,
-          searchText: this.getSuggestionText(selectedItem),
+          searchText: this.getSuggestionText(newSelectedItem),
           suggestions:
-            this.props.limitChoicesToValue && selectedItem
-              ? [selectedItem]
+            this.props.limitChoicesToValue && newSelectedItem
+              ? [newSelectedItem]
               : this.props.choices
         });
       }
     } else {
       input && input.onBlur && input.onBlur(this.state.inputValue);
-    }
+    }*/
+    const {allowEmpty, input} = this.props;
+    const inputValue = this.state.searchText;
+
+    input.onBlur(inputValue);
+    input.onChange(inputValue);
+
+/*    if (input && input.onChange) {
+      input.onChange(inputValue);
+    }*/
+
+/*    if (method === 'enter') {
+      event.preventDefault();
+    }*/
   };
 
   handleFocus = () => {

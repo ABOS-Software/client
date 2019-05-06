@@ -89,6 +89,15 @@ class CustomerForm extends Component {
     let addressObj = updateAddress(address);
     this.setState({...addressObj, update: 1});
   };
+  updateInfo = (dispatch) => (info) => {
+    dispatch(change('record-form', 'streetAddress', info.address));
+    dispatch(change('record-form', 'city', info.city));
+    dispatch(change('record-form', 'state', info.state));
+    dispatch(change('record-form', 'zipCode', info.zipCode));
+    dispatch(change('record-form', 'phone', info.phone));
+    dispatch(change('record-form', 'custEmail', info.custEmail));
+  };
+
   getYears () {
     dataProvider(GET_LIST, 'Years', {
       filter: {},
@@ -123,8 +132,22 @@ class CustomerForm extends Component {
     const {classes, ...props} = this.props;
 
     return (<span>
+{/*
       <TextInput label='Customer Name' source='customerName' formClassName={classes.inlineBlock}/>
-      <CustomerNameAutocomplete label='Customer Name' source='customerName' formClassName={classes.inlineBlock}/>
+*/}
+      <FormDataConsumer className={classes.addressComponent} {...props}>
+        {({formData, ...rest}) => {
+          if (this.state.update === 1) {
+            this.setState({update: 0});
+            rest.dispatch(change('record-form', 'streetAddress', this.state.address));
+            rest.dispatch(change('record-form', 'city', this.state.city));
+            rest.dispatch(change('record-form', 'state', this.state.state));
+            rest.dispatch(change('record-form', 'zipCode', this.state.zipCode));
+          }
+          return (<CustomerNameAutocomplete label='Customer Name' source='customerName' formClassName={classes.inlineBlock} updateCustInfo={this.updateInfo(rest.dispatch)}/>
+          );
+        }}
+      </FormDataConsumer>
       <TextInput source='phone' formClassName={classes.inlineBlock}/>
       <TextInput source='custEmail' formClassName={classes.inlineBlock}/>
       <span/>
