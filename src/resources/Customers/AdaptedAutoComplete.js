@@ -387,9 +387,9 @@ export class AdaptedAutoComplete extends React.Component {
     }*/
     const {allowEmpty, input} = this.props;
     const inputValue = this.state.searchText;
-
+    this.setState({inputValue: inputValue});
     input.onBlur(inputValue);
-    input.onChange(inputValue);
+    //input.onChange(inputValue);
 
 /*    if (input && input.onChange) {
       input.onChange(inputValue);
