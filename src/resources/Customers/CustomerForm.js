@@ -19,6 +19,7 @@ import {withStyles} from '@material-ui/core';
 import {updateAddress} from '../../utils';
 import AddressFields from '../../Reports/AddressFields';
 import restClient from '../../grailsRestClient';
+import CustomerNameAutocomplete from './CustomerNameAutocomplete';
 
 const dataProvider = restClient;
 const styles = {
@@ -132,9 +133,8 @@ class CustomerForm extends Component {
 
     return (<span>
 
-      <TextInput label='Customer Name' source='customerName' formClassName={classes.inlineBlock}/>
 
-{/*      <FormDataConsumer className={classes.addressComponent} {...props}>
+      <FormDataConsumer className={classes.addressComponent} {...props}>
         {({formData, ...rest}) => {
           if (this.state.update === 1) {
             this.setState({update: 0});
@@ -146,7 +146,7 @@ class CustomerForm extends Component {
           return (<CustomerNameAutocomplete label='Customer Name' source='customerName' formClassName={classes.inlineBlock} updateCustInfo={this.updateInfo(rest.dispatch)}/>
           );
         }}
-      </FormDataConsumer>*/}
+      </FormDataConsumer>
       <TextInput source='phone' formClassName={classes.inlineBlock}/>
       <TextInput source='custEmail' formClassName={classes.inlineBlock}/>
       <span/>

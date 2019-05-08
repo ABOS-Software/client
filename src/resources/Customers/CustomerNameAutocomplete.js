@@ -1,8 +1,8 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
-import AdaptedAutoComplete from './AdaptedAutoComplete';
 import {ReferenceInput} from 'react-admin';
 import PropTypes from 'prop-types';
+import SearchSuggest from './SearchSuggest';
 
 const styles = () => ({});
 
@@ -18,12 +18,12 @@ class CustomerNameAutocomplete extends React.Component {
       <ReferenceInput label='Customer Name' source='customerName' reference='customers'
         filterToQuery={searchText => ({customer_name: searchText})}
       >
-
-        <AdaptedAutoComplete handleSelection={this.handleSuggestionSelected}
+        <SearchSuggest handleSelection={this.handleSuggestionSelected}/>
+        {/*<AdaptedAutoComplete handleSelection={this.handleSuggestionSelected}
           translateChoice={false}
           shouldRenderSuggestions={(val) => { return val.trim().length > 2; }}
           optionText={'customerName'}
-          optionValue={'customerName'}/>
+          optionValue={'customerName'}/>*/}
       </ReferenceInput>
     );
   }
