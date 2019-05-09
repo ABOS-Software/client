@@ -21,6 +21,7 @@ import JssProvider from 'react-jss/lib/JssProvider';
 import {create} from 'jss';
 import * as Sentry from '@sentry/browser';
 import {Login} from './Login';
+import {PaymentEdit} from './resources/Payments';
 
 const generateClassName = createGenerateClassName();
 const jss = create(jssPreset());
@@ -87,6 +88,7 @@ function renderGroups (permissions) {
     : <Resource name='Group'/>;
 }
 
+
 function renderUGY (permissions) {
   return permissions === 'ROLE_ADMIN'
     ? <Resource name='UsersProducts' options={{label: 'Users and Products'}} list={UGY}/>
@@ -105,7 +107,11 @@ function renderResources () {
     renderCategories(permissions),
     renderYears(permissions),
     renderGroups(permissions),
-    renderUGY(permissions)
+    renderUGY(permissions),
+    <Resource name='Payments'  edit={PaymentEdit}/>,
+    <Resource name='Notes'/>,
+    <Resource name='payment_methods'/>,
+    <Resource name='note_codes'/>
   ];
 }
 
