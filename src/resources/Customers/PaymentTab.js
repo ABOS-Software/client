@@ -10,7 +10,7 @@ class PaymentsTab extends React.Component {
   state = {};
 
   render () {
-    return <FormTab label='Payment Log' path='PayLog' {...this.props}>
+    return <FormTab label='Payment Log' {...this.props}>
 
       <ReferenceManyField
         addLabel={false}

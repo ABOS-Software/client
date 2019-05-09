@@ -21,7 +21,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 
-const redirect = (basePath, id, data) => `/customers/${data.customer_id}/2`;
+const redirect = (basePath, id, data) => `/customers/${data.customer_id}/payments`;
 
 class PaymentEditButton extends Component {
   state = {
