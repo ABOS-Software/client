@@ -13,7 +13,7 @@ class CustomerEdit extends React.Component {
       <Edit {...props}>
 
         <TabbedForm submitOnEnter={false}>
-          <InfoTab edit path={'info'}/>
+          <InfoTab edit/>
           <OrderTab edit path={'orders'}/>
           <PaymentsTab path={'payments'}/>
 
