@@ -6,7 +6,6 @@ import {
   ImageInput,
   required,
   SelectArrayInput,
-  SelectInput,
   TextInput
 } from 'react-admin';
 import {withStyles} from '@material-ui/core';
@@ -144,7 +143,7 @@ class reportsWizard extends React.Component {
           if (this.state.year && this.state.catReq) {
           // console.log(this.state.year);
 
-            return <SelectInput source='Category' optionText={'categoryName'}
+            return <SelectArrayInput source='Category' optionText={'categoryName'}
               optionValue={'categoryName'}
               choices={this.state.categories} {...rest}
               validate={requiredValidate}/>;
