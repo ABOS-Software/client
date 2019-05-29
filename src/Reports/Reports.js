@@ -32,6 +32,13 @@ const steps = () => [
   'Pick Report Template', 'Fill In Details'
 ];
 
+const categoryParser = v => {
+  if (v.includes('All')) {
+    v = ['All'];
+  }
+  return v;
+};
+
 class reportsWizard extends React.Component {
   // users: {}, years: {}, customers: {}
     state = {update: false, address: '', zipCode: '', city: '', state: '', updateAddress: 0};
@@ -146,7 +153,8 @@ class reportsWizard extends React.Component {
             return <SelectArrayInput source='Category' optionText={'categoryName'}
               optionValue={'categoryName'}
               choices={this.state.categories} {...rest}
-              validate={requiredValidate}/>;
+              validate={requiredValidate}
+              parse={categoryParser}/>;
           }
         }
         }
