@@ -41,8 +41,8 @@ export const GroupEdit = props => (
 export const GroupCreate = props => (
   <Create title='Create a Group' {...props}>
     <SimpleForm>
-      <TextInput source='GroupName'/>
-      <ReferenceInput label='Year' source='year' reference='Years'>
+      <TextInput source='groupName'/>
+      <ReferenceInput label='Year' source='year_id' reference='Years'>
         <SelectInput optionText='year'/>
       </ReferenceInput>
     </SimpleForm>

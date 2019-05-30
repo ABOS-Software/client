@@ -38,6 +38,7 @@ export const CategoryEdit = props => (
     <SimpleForm>
       <DisabledInput source='categoryName'/>
       <DateInput source='deliveryDate'/>
+
     </SimpleForm>
   </Edit>
 );
