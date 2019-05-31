@@ -9,8 +9,12 @@ const styles = () => ({});
 class CustomerNameAutocomplete extends React.Component {
   handleSuggestionSelected = (event, {suggestion, method}) => {
     this.props.updateCustInfo({
-      address: suggestion.streetAddress, city: suggestion.city, state: suggestion.state, zipCode: suggestion.zipCode,
-      phone: suggestion.phone, custEmail: suggestion.custEmail});
+      address: suggestion.streetAddress,
+      city: suggestion.city,
+      state: suggestion.state,
+      zipCode: suggestion.zipCode,
+      phone: suggestion.phone,
+      custEmail: suggestion.custEmail});
   };
   render () {
     const {updateCustInfo, ...rest} = this.props;
@@ -19,11 +23,11 @@ class CustomerNameAutocomplete extends React.Component {
         filterToQuery={searchText => ({customer_name: searchText})} validate={required()}
       >
         <SearchSuggest handleSelection={this.handleSuggestionSelected}/>
-        {/*<AdaptedAutoComplete handleSelection={this.handleSuggestionSelected}
+        {/* <AdaptedAutoComplete handleSelection={this.handleSuggestionSelected}
           translateChoice={false}
           shouldRenderSuggestions={(val) => { return val.trim().length > 2; }}
           optionText={'customerName'}
-          optionValue={'customerName'}/>*/}
+          optionValue={'customerName'}/> */}
       </ReferenceInput>
     );
   }

@@ -362,7 +362,7 @@ export class AdaptedAutoComplete extends React.Component {
   };
 
   handleBlur = () => {
-   /* const {dirty, searchText, selectedItem} = this.state;
+    /* const {dirty, searchText, selectedItem} = this.state;
     const {allowEmpty, input} = this.props;
     if (dirty) {
       if (searchText === '' && allowEmpty) {
@@ -384,20 +384,20 @@ export class AdaptedAutoComplete extends React.Component {
       }
     } else {
       input && input.onBlur && input.onBlur(this.state.inputValue);
-    }*/
+    } */
     const {allowEmpty, input} = this.props;
     const inputValue = this.state.searchText;
     this.setState({inputValue: inputValue});
     input.onBlur(inputValue);
-    //input.onChange(inputValue);
+    // input.onChange(inputValue);
 
-/*    if (input && input.onChange) {
+    /*    if (input && input.onChange) {
       input.onChange(inputValue);
-    }*/
+    } */
 
-/*    if (method === 'enter') {
+    /*    if (method === 'enter') {
       event.preventDefault();
-    }*/
+    } */
   };
 
   handleFocus = () => {

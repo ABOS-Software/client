@@ -14,12 +14,12 @@ const handleUserProfile = dataProvider => (verb, resource, params) => {
 
       if (storedProfile) {
         let data = JSON.parse(storedProfile);
-        /*if (data.LogoLocation && data.LogoLocation.base64) {
+        /* if (data.LogoLocation && data.LogoLocation.base64) {
           let fs = require("fs");
           let image = data.LogoLocation.base64;
           let bitmap = Buffer.from(image, 'base64');
           fs.writeFileSync(data.LogoLocation.src, bitmap);
-        }*/
+        } */
         return Promise.resolve({
           data: data
         });

@@ -37,7 +37,7 @@ Wizard.propTypes = {
   handleSubmit: PropTypes.func,
   save: PropTypes.func,
   formName: PropTypes.string,
-  defaultValue: PropTypes.object,
+  defaultValue: PropTypes.object
 };
 
 Wizard.defaultProps = {

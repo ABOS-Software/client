@@ -9,10 +9,8 @@ class notesTab extends React.Component {
   render () {
 
   }
-
 }
 
 notesTab.propTypes = {};
 
 export default (withStyles(styles, {withTheme: true})(notesTab));
-

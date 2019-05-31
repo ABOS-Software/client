@@ -40,8 +40,7 @@ function renderInputComponent (inputProps) {
         },
         classes: {
           input: classes.input
-        },
-
+        }
 
       }}
       {...other}
@@ -56,10 +55,8 @@ function renderSuggestion (suggestion, {query, isHighlighted}) {
     extraInfo = ' (' + suggestion.year.year + ', ' + suggestion.streetAddress + ')';
   } else if (suggestion.year.year) {
     extraInfo = ' (' + suggestion.year.year + ')';
-
   } else if (suggestion.streetAddress) {
     extraInfo = ' (' + suggestion.streetAddress + ')';
-
   }
   const parts = parse(suggestion.customerName + extraInfo, matches);
 
@@ -223,7 +220,7 @@ class SearchSuggest extends React.Component {
             placeholder: 'Customer Name',
             resource,
             source,
-            value: this.state.single,
+            value: this.state.single
 
           }}
           theme={{
@@ -263,8 +260,7 @@ SearchSuggest.propTypes = {
   setFilter: PropTypes.func,
   shouldRenderSuggestions: PropTypes.func,
   source: PropTypes.string,
-  suggestionComponent: PropTypes.func,
-
+  suggestionComponent: PropTypes.func
 
 };
 
