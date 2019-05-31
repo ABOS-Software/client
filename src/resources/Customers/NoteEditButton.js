@@ -9,6 +9,7 @@ import {
   fetchStart,
   LongTextInput,
   ReferenceInput,
+  required,
   SelectInput,
   showNotification,
   SimpleForm
@@ -60,8 +61,8 @@ class NotesEditButton extends Component {
           <DialogContent>
             <Edit {...editProps}>
               <SimpleForm form={'payment-edit-form'} redirect={redirect}>
-                <LongTextInput source={'note'}/>
-                <ReferenceInput label='Code' source='note_code.id' reference='note_codes'>
+                <LongTextInput source={'note'} validate={required()}/>
+                <ReferenceInput label='Code' source='note_code.id' reference='note_codes' validate={required()}>
                   <SelectInput optionText='name'/>
                 </ReferenceInput>
               </SimpleForm>

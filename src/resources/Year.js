@@ -5,6 +5,7 @@ import {
   DisabledInput,
   Edit,
   List,
+  required,
   Show,
   ShowButton,
   SimpleForm,
@@ -41,7 +42,7 @@ export const YearEdit = props => (
 export const YearCreate = props => (
   <Create title='Create a Year' {...props}>
     <SimpleForm>
-      <TextInput source='year'/>
+      <TextInput source='year' validate={required()}/>
     </SimpleForm>
   </Create>
 );

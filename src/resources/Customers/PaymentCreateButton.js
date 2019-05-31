@@ -119,10 +119,10 @@ class PaymentCreateButton extends Component {
               toolbar={null}
             >
               <TextInput source='amount' validate={required()}/>
-              <ReferenceInput label='Method' source='payment_method_id' reference='payment_methods'>
+              <ReferenceInput label='Method' source='payment_method_id' reference='payment_methods' validate={required()}>
                 <SelectInput optionText='name'/>
               </ReferenceInput>
-              <DateInput source='payment_date'/>
+              <DateInput source='payment_date' validate={required()}/>
               <LongTextInput source={'note'}/>
             </SimpleForm>
           </DialogContent>

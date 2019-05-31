@@ -9,6 +9,7 @@ import {
   fetchStart,
   LongTextInput,
   ReferenceInput,
+  required,
   SaveButton,
   SelectInput,
   showNotification,
@@ -115,8 +116,8 @@ class NoteCreateButton extends Component {
               // We want no toolbar at all as we have our modal actions
               toolbar={null}
             >
-              <LongTextInput source={'note'}/>
-              <ReferenceInput label='Code' source='note_code_id' reference='note_codes'>
+              <LongTextInput source={'note'} validate={required()}/>
+              <ReferenceInput label='Code' source='note_code_id' reference='note_codes' validate={required()}>
                 <SelectInput optionText='name'/>
               </ReferenceInput>
             </SimpleForm>

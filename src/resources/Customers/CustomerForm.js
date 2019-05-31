@@ -6,11 +6,15 @@ import Typography from '@material-ui/core/Typography';
 import {
   addField,
   BooleanInput,
+  email,
   FormDataConsumer,
   GET_LIST,
   Labeled,
   LinearProgress,
+  minValue,
+  number,
   ReferenceInput,
+  required,
   SelectInput,
   TextInput
 } from 'react-admin';
@@ -115,11 +119,11 @@ class CustomerForm extends Component {
         <div>
           {/*          <ReferenceInput label='Year to add to' source='year' reference='Years'
             formClassName={classes.inlineBlock} {...props} defaultValue={6}> */}
-          <YearSelect choices={this.state.years} loading={this.state.loadingYear}/>
+          <YearSelect choices={this.state.years} loading={this.state.loadingYear}  validate={required()}/>
           {/*          </ReferenceInput> */}
 
           <ReferenceInput label='User to add to' source='user' reference='user'
-            formClassName={classes.inlineBlock} {...props}>
+            formClassName={classes.inlineBlock} {...props} validate={required()}>
             <SelectInput optionText='fullName' optionValue='id'/>
           </ReferenceInput>
 
@@ -132,7 +136,6 @@ class CustomerForm extends Component {
     const {classes, ...props} = this.props;
 
     return (<span>
-
 
       <FormDataConsumer className={classes.addressComponent} {...props}>
         {({formData, ...rest}) => {
@@ -147,16 +150,16 @@ class CustomerForm extends Component {
           );
         }}
       </FormDataConsumer>
-      <TextInput source='phone' formClassName={classes.inlineBlock}/>
-      <TextInput source='custEmail' formClassName={classes.inlineBlock}/>
+      <TextInput source='phone' formClassName={classes.inlineBlock} validate={required()}/>
+      <TextInput source='custEmail' formClassName={classes.inlineBlock} validate={email()}/>
       <span/>
       {this.renderAddressFields()}
 
       <span/>
 
-      <TextInput label='Donation' source='donation' formClassName={classes.inlineBlock}/>
+      <TextInput label='Donation' source='donation' formClassName={classes.inlineBlock} validate={[number(), minValue(0)]}/>
       <TextInput label='Amount Paid' source='order.amountPaid' formClassName={classes.inlineBlock}
-        defaultValue={'0.00'}/>
+        defaultValue={'0.00'} validate={[number(), minValue(0)]}/>
       <span>
         <BooleanInput label='Delivered?' source='order.delivered' formClassName={classes.inlineBlock}
           defaultValue={false} row/>

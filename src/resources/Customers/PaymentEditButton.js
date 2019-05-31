@@ -64,10 +64,10 @@ class PaymentEditButton extends Component {
             <Edit {...editProps}>
               <SimpleForm form={'payment-edit-form'} redirect={redirect}>
                 <TextInput source='amount' validate={required()}/>
-                <ReferenceInput label='Method' source='payment_method.id' reference='payment_methods'>
+                <ReferenceInput label='Method' source='payment_method.id' reference='payment_methods' validate={required()}>
                   <SelectInput optionText='name'/>
                 </ReferenceInput>
-                <DateInput source='payment_date'/>
+                <DateInput source='payment_date' validate={required()}/>
                 <LongTextInput source={'note'}/>
               </SimpleForm>
             </Edit>

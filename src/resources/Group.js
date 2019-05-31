@@ -7,6 +7,7 @@ import {
   List,
   ReferenceField,
   ReferenceInput,
+  required,
   SelectInput,
   SimpleForm,
   TextField,
@@ -33,7 +34,7 @@ const GroupTitle = ({record}) => {
 export const GroupEdit = props => (
   <Edit title={<GroupTitle/>} {...props}>
     <SimpleForm>
-      <TextInput source='groupName'/>
+      <TextInput source='groupName' validate={required()}/>
     </SimpleForm>
   </Edit>
 );
@@ -41,8 +42,8 @@ export const GroupEdit = props => (
 export const GroupCreate = props => (
   <Create title='Create a Group' {...props}>
     <SimpleForm>
-      <TextInput source='groupName'/>
-      <ReferenceInput label='Year' source='year_id' reference='Years'>
+      <TextInput source='groupName' validate={required()}/>
+      <ReferenceInput label='Year' source='year_id' reference='Years' validate={required()}>
         <SelectInput optionText='year'/>
       </ReferenceInput>
     </SimpleForm>

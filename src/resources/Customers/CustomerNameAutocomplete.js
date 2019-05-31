@@ -1,6 +1,6 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
-import {ReferenceInput} from 'react-admin';
+import {ReferenceInput, required} from 'react-admin';
 import PropTypes from 'prop-types';
 import SearchSuggest from './SearchSuggest';
 
@@ -16,7 +16,7 @@ class CustomerNameAutocomplete extends React.Component {
     const {updateCustInfo, ...rest} = this.props;
     return (
       <ReferenceInput label='Customer Name' source='customerName' reference='customers'
-        filterToQuery={searchText => ({customer_name: searchText})}
+        filterToQuery={searchText => ({customer_name: searchText})} validate={required()}
       >
         <SearchSuggest handleSelection={this.handleSuggestionSelected}/>
         {/*<AdaptedAutoComplete handleSelection={this.handleSuggestionSelected}

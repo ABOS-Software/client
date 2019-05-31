@@ -26,7 +26,7 @@ class ProfileEdit extends Component {
           rest.dispatch(change('record-form', 'zipCode', this.state.zipCode));
         }
         return (
-          <AddressFields updateAddress={this.updateAddress} value={this.state.address}/>
+          <AddressFields updateAddress={this.updateAddress} value={this.state.address} fieldRequired={false}/>
         );
       }}
     </FormDataConsumer>;
