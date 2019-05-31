@@ -17,6 +17,7 @@ import {
   getCategoriesForYear,
   getCustomersWithUser,
   getCustomersWithYearAndUser,
+  getDefaultValues,
   getUsers,
   getYears,
   save,
@@ -41,7 +42,7 @@ const categoryParser = v => {
 
 class reportsWizard extends React.Component {
   // users: {}, years: {}, customers: {}
-    state = {update: false, address: '', zipCode: '', city: '', state: '', updateAddress: 0};
+    state = {update: false, address: '', zipCode: '', city: '', state: '', updateAddress: 0, defaults: {}};
 
     updateIncludeSub = (event, key, payload) => {
       this.setState({includeSubUser: key, update: true});
@@ -106,7 +107,7 @@ class reportsWizard extends React.Component {
               source='Scout_Rank' validate={requiredValidate}/>,
             <ImageInput
               source='LogoLocation' accept='image/*'>
-              <ImageField source='src' title='title'/>
+              <ImageField source='base64' title='title'/>
             </ImageInput>,
 
             this.renderYearFields(),
@@ -229,6 +230,7 @@ class reportsWizard extends React.Component {
     componentWillReceiveProps () {
       getUsers().then(users => this.setState({users: users}));
       getYears().then(years => this.setState({years: years}));
+      getDefaultValues().then(defaults => this.setState({defaults: defaults}));
     }
 
     componentWillMount () {
@@ -237,8 +239,9 @@ class reportsWizard extends React.Component {
 
     render () {
       this.updateChoices();
+
       return (
-        <Wizard {...this.props} steps={steps()} stepContents={this.state.stepsContent} save={save}
+        <Wizard {...this.props} steps={steps()} stepContents={this.state.stepsContent} save={save} defaultValues={this.state.defaults}
           formName={'record-form'}/>
       );
     }

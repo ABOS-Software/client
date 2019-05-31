@@ -7,6 +7,7 @@ import {updateAddress} from '../../utils/updateAddress';
 import {updateReportType} from './updateReportTypes';
 import {convertFileToBase64} from './convertFileToBase64';
 import {save} from './getReport';
+import {getDefaultValues} from './getDefaultValues';
 
 export {
   downloadPDF,
@@ -18,5 +19,6 @@ export {
   updateAddress,
   updateReportType,
   convertFileToBase64,
-  save
+  save,
+  getDefaultValues
 };
