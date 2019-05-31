@@ -68,6 +68,7 @@ class ImportDialogBase extends React.Component {
       importStepsContent: [
 
         [
+          this.props.notes,
           <CustomSelectInput
             source='action' choices={[{id: 'CSV', name: 'Import From CSV'}, {
               id: 'XML',
@@ -114,7 +115,8 @@ ImportDialogBase.propTypes = {
   closeImportDialog: PropTypes.func.isRequired,
   importDialogOpen: PropTypes.bool.isRequired,
   convertXML: PropTypes.func.isRequired,
-  convertCSV: PropTypes.func.isRequired
+  convertCSV: PropTypes.func.isRequired,
+  notes: PropTypes.arrayOf(PropTypes.node)
 };
 
 export default connect(null, {
