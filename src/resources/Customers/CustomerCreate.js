@@ -43,7 +43,7 @@ class CustomerCreate extends React.Component {
 
     return (
       <Create title='Create a Customer' {...props}>
-        <SimpleForm save={saveCreation}>
+        <SimpleForm save={saveCreation} submitOnEnter={false}>
           <CustomerForm/>
         </SimpleForm>
       </Create>

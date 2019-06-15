@@ -39,7 +39,7 @@ export const UserShow = (props, {record}) => {
   return (<Show title={<UserTitle/>} {...props}>
     <SimpleShowLayout>
 
-      <Dashboard userId={props.id}/>
+      <Dashboard userId={Number(props.id)}/>
     </SimpleShowLayout>
   </Show>);
 };

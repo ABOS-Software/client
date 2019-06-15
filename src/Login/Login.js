@@ -7,6 +7,9 @@ import {createMuiTheme, MuiThemeProvider, withStyles} from '@material-ui/core/st
 import LockIcon from '@material-ui/icons/Lock';
 import {defaultTheme, Notification} from 'react-admin';
 import DefaultLoginForm from './LoginForm';
+import HelpIcon from '@material-ui/icons/Info';
+import Button from '@material-ui/core/Button';
+import AboutDialog from './AboutDialog';
 
 const styles = theme => ({
   main: {
@@ -28,6 +31,15 @@ const styles = theme => ({
   },
   icon: {
     backgroundColor: theme.palette.secondary[500]
+  },
+  fab: {
+    margin: theme.spacing.unit,
+    position: 'absolute',
+    right: 10,
+    bottom: 10
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit
   }
 });
 
@@ -69,6 +81,9 @@ class Login extends Component {
     this.backgroundImageLoaded = false;
   }
 
+  state = {
+    open: false
+  }
     // Even though the React doc ensure the ref creation is done before the
     // componentDidMount, it can happen that the ref is set to null until the
     // next render.
@@ -108,30 +123,43 @@ class Login extends Component {
         this.lazyLoadBackgroundImage(true);
       }
     }
+  handleClickOpen = () => {
+    this.setState({
+      open: true
+    });
+  };
 
-    render () {
-      const {classes, className, loginForm, ...rest} = this.props;
+  handleClose = () => {
+    this.setState({open: false});
+  };
+  render () {
+    const {classes, className, loginForm, ...rest} = this.props;
 
-      return (
-        <MuiThemeProvider theme={this.theme}>
-          <div
-            className={classnames(classes.main, className)}
-            {...sanitizeRestProps(rest)}
-            ref={this.containerRef}
-          >
-            <Card className={classes.card}>
-              <div className={classes.avatar}>
-                <Avatar className={classes.icon}>
-                  <LockIcon/>
-                </Avatar>
-              </div>
-              {loginForm}
-            </Card>
-            <Notification/>
-          </div>
-        </MuiThemeProvider>
-      );
-    }
+    return (
+      <MuiThemeProvider theme={this.theme}>
+        <div
+          className={classnames(classes.main, className)}
+          {...sanitizeRestProps(rest)}
+          ref={this.containerRef}
+        >
+          <AboutDialog open={this.state.open} closeDialog={this.handleClose}/>
+          <Card className={classes.card}>
+            <div className={classes.avatar}>
+              <Avatar className={classes.icon}>
+                <LockIcon/>
+              </Avatar>
+            </div>
+            {loginForm}
+          </Card>
+          <Notification/>
+          <Button variant='fab' color='primary' aria-label='About' className={classes.fab} onClick={this.handleClickOpen}>
+            <HelpIcon/>
+          </Button>
+
+        </div>
+      </MuiThemeProvider>
+    );
+  }
 }
 
 Login.propTypes = {

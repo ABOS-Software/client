@@ -20,7 +20,8 @@ const requiredValidate = required();
 
 class AddressFields extends React.PureComponent {
   render () {
-    const {classes, updateAddress, value} = this.props;
+    const {classes, updateAddress, value, fieldRequired} = this.props;
+    const requiredValidate = fieldRequired ? required() : undefined;
     return <div>
       <div className={classes.addressContainerLabeled}>
         <FormLabel variant={'headline'}>Search For Address</FormLabel>
@@ -54,6 +55,10 @@ class AddressFields extends React.PureComponent {
 AddressFields.propTypes = {
   classes: PropTypes.any,
   updateAddress: PropTypes.func,
-  value: PropTypes.string
+  value: PropTypes.string,
+  fieldRequired: PropTypes.bool
+};
+AddressFields.defaultProps = {
+  fieldRequired: true
 };
 export default withStyles(styles)(AddressFields);

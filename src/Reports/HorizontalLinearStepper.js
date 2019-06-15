@@ -117,7 +117,7 @@ class HorizontalLinearStepper extends React.Component {
   }
 
   renderForm (save, formName, activeStep) {
-    return <SimpleForm record={{}} save={save} saving={'false'} form={formName} redirect={''}
+    return <SimpleForm record={{}} save={save} saving={'false'} form={formName} redirect={''} defaultValue={this.props.defaultValues}
       toolbar={<PostCreateToolbar>
         {this.renderBackButton(activeStep)}
         {this.renderSkipButton(activeStep)}
@@ -204,7 +204,11 @@ HorizontalLinearStepper.propTypes = {
   steps: PropTypes.arrayOf(PropTypes.string),
   stepContents: PropTypes.arrayOf(PropTypes.node),
   save: PropTypes.func,
-  formName: PropTypes.string
+  formName: PropTypes.string,
+  defaultValues: PropTypes.object
+};
+HorizontalLinearStepper.defaultProps = {
+  defaultValues: {}
 };
 const HorizontalLinearStepperRaw = compose(
   withStyles(styles)

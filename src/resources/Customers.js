@@ -28,7 +28,7 @@ const CustomerFilter = (props) => (
     </ReferenceArrayInput>
     <ReferenceArrayInput
       source='user_id'
-      reference='User'
+      reference='user'
       sort={{field: 'id', order: 'ASC'}}
       label='User'
     >
@@ -38,7 +38,7 @@ const CustomerFilter = (props) => (
 );
 
 export const CustomerList = (props) => (
-  <List {...props} filters={<CustomerFilter context='form'/>}>
+  <List {...props} page={1} filters={<CustomerFilter context='form'/>}>
     <Datagrid>
       <CustomerLinkField/>
       <TextField source='streetAddress'/>

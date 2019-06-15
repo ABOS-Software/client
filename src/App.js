@@ -1,6 +1,6 @@
 // in src/App.js
 import React from 'react';
-import {Admin, AppBar, Layout, MenuItemLink, Resource, UserMenu} from 'react-admin';
+import {Admin, AppBar, Layout, Resource} from 'react-admin';
 import ErrorBoundry from './ErrorBoundry';
 import {CategoryCreate, CategoryEdit, CategoryList} from './resources/Categories.js';
 import {GroupCreate, GroupEdit, GroupList} from './resources/Group.js';
@@ -15,27 +15,20 @@ import {UserList, UserShow} from './resources/User';
 import {Maps} from './maps';
 import {Route} from 'react-router-dom';
 import About from './resources/About';
-import InfoIcon from '@material-ui/icons/Info';
 import {createGenerateClassName, jssPreset} from '@material-ui/core/styles';
 import JssProvider from 'react-jss/lib/JssProvider';
 import {create} from 'jss';
 import * as Sentry from '@sentry/browser';
 import {Login} from './Login';
+import {PaymentEdit} from './resources/Payments';
+import profile from './resources/EditProfile';
+import MyUserMenu from './userMenu';
 
 const generateClassName = createGenerateClassName();
 const jss = create(jssPreset());
-
 const dataProvider = restClient;
 // const dataProvider = simpleRestProvider('http://192.168.1.3:8080/api', httpClient);
-const MyUserMenu = props => (
-  <UserMenu {...props}>
-    <MenuItemLink
-      to='/about'
-      primaryText='About'
-      leftIcon={<InfoIcon/>}
-    />
-  </UserMenu>
-);
+
 Sentry.init({
   dsn: 'https://4bd4e85079aa4ba59ddb160b8bfd1484@sentry.io/1365370'
 });
@@ -49,7 +42,8 @@ Sentry.configureScope(scope => {
 });
 const MyAppBar = props => <AppBar {...props} userMenu={<MyUserMenu/>}/>;
 const routes = [
-  <Route exact path='/about' component={About}/>
+  <Route exact path='/about' component={About}/>,
+  <Route exact path='/my-profile' component={profile}/>
 ];
 const layout = (props) => {
   const {
@@ -101,11 +95,16 @@ function renderResources () {
     <Resource name='Maps' list={Maps}/>,
     // Reports
     // <Resource name="customers"/>,
-    <Resource name='User' list={UserList} show={UserShow}/>,
+    <Resource name='user' list={UserList} show={UserShow}/>,
     renderCategories(permissions),
     renderYears(permissions),
     renderGroups(permissions),
-    renderUGY(permissions)
+    renderUGY(permissions),
+    <Resource name='Payments' edit={PaymentEdit}/>,
+    <Resource name='Notes'/>,
+    <Resource name='payment_methods'/>,
+    <Resource name='note_codes'/>,
+    <Resource name='profile'/>
   ];
 }
 

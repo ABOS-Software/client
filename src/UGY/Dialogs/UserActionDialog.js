@@ -30,12 +30,12 @@ class UserActionDialog extends React.Component {
       password: this.state.password
     };
     if (this.props.id) {
-      dataProvider(UPDATE, 'User', {
+      dataProvider(UPDATE, 'user', {
         id: this.state.id,
         data: data
       }).then(this.closeDialog);
     } else {
-      dataProvider(CREATE, 'User', {
+      dataProvider(CREATE, 'user', {
         data: data
       }).then(this.closeDialog);
     }

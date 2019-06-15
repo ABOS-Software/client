@@ -28,6 +28,7 @@
     "ra-data-simple-rest": "^2.2.3",
     "react": "^16.8.3",
     "react-admin": "^2.7.2",
+    "react-autosuggest": "^9.4.3",
     "react-contextmenu": "^2.9.4",
     "react-data-grid": "^4.0.8",
     "react-data-grid-addons": "^4.0.8",

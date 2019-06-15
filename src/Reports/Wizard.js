@@ -36,7 +36,8 @@ Wizard.propTypes = {
   stepContents: PropTypes.arrayOf(PropTypes.node),
   handleSubmit: PropTypes.func,
   save: PropTypes.func,
-  formName: PropTypes.string
+  formName: PropTypes.string,
+  defaultValue: PropTypes.object
 };
 
 Wizard.defaultProps = {

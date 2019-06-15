@@ -121,7 +121,7 @@ class ImportProductsDialog extends React.Component {
 
     render () {
       return (
-        <ImportDialogBase convertCSV={this.convertCSV} convertXML={this.convertXML} {...this.props}/>
+        <ImportDialogBase convertCSV={this.convertCSV} convertXML={this.convertXML} {...this.props} notes={[<div>NOTE: Categories are not imported. IF the products are categorized first create the appropriate categories manually. They are then matched by name and year, so ensure they are created correctly</div>]}/>
       );
     }
 }
