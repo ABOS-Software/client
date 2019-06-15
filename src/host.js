@@ -1,2 +1,2 @@
-const url = 'https://server.rfans.me';
+const url = 'https://develop-fast.server.rfans.me';
 export default url;

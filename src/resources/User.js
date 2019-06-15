@@ -1,6 +1,6 @@
 import React from 'react';
 import {Datagrid, List, Show, ShowButton, SimpleShowLayout, TextField} from 'react-admin';
-import {UserDashboard} from '../userDashboard';
+import {Dashboard} from '../dashboard';
 // import ErrorBoundary from '../ErrorBoundary';
 
 export const UserList = props => (
@@ -39,7 +39,7 @@ export const UserShow = (props, {record}) => {
   return (<Show title={<UserTitle/>} {...props}>
     <SimpleShowLayout>
 
-      <UserDashboard userId={props.id}/>
+      <Dashboard userId={Number(props.id)}/>
     </SimpleShowLayout>
   </Show>);
 };

@@ -1,0 +1,5 @@
+"presets": [
+"react",
+"es2018",
+"stage-1"
+]

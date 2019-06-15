@@ -5,7 +5,7 @@ import {withStyles} from '@material-ui/core';
 
 const styles = theme => ({
   marker: {
-    backgroundImage: 'url(' + process.env.PUBLIC_URL + '/mapIcon.svg' + ')',
+    backgroundImage: 'url(' + process.env.PUBLIC_URL + '/mapIcon.svg)',
     position: 'absolute',
     cursor: 'pointer',
     width: '49px',
@@ -32,10 +32,10 @@ const styles = theme => ({
 });
 
 class simpleMarker extends React.Component {
-  render() {
+  render () {
     const {
       classes,
-      defaultMotionStyle, motionStyle, text, onClick
+      text, onClick
     } = this.props;
     return (
       <div onClick={onClick}>
