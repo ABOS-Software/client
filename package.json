@@ -13,7 +13,7 @@
     "@material-ui/core": "3.3.2",
     "@material-ui/icons": "^3.0.1",
     "@sentry/browser": "^4.4.2",
-    "csv-parse": "^3.0.0",
+    "csv-parse": "^4.4.6",
     "downloadjs": "^1.4.7",
     "encoding-japanese": "^1.0.29",
     "eslint-config-standard-react": "^7.0.2",
